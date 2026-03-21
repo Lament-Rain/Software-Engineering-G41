@@ -17,7 +17,7 @@ tianda wang         Tianda Wang
 
 # the work of first phase:
 
-backlog by Yongxin He 
+Backlog by Yongxin He 
 (the initial model was contributed by Chuyang Huang)
 
 Prototype by Hao Lu & Tianda Wang
