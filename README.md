@@ -1,7 +1,7 @@
 # Software-Engineering-G41
 edited by Yongxin He 3/22/2026
 
-# matching id with name:
+# Matching ID With Name:
 Lament-Rain         Yongxin He
 
 hhccy-25            Chuyang Huang
@@ -15,7 +15,7 @@ Pdddlh              Hao Lu
 tianda wang         Tianda Wang
 
 
-# the work of first phase:
+# the Work of First Phase:
 
 Backlog by Yongxin He 
 (the initial model was contributed by Chuyang Huang)
