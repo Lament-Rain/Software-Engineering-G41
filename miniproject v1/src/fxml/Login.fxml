@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="loginPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+    <VBox alignment="CENTER" spacing="0" styleClass="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <!-- 顶部装饰条 -->
+        <HBox prefHeight="8">
+            <Region styleClass="bg-primary" style="-fx-pref-width: 25%;" />
+            <Region styleClass="bg-secondary" style="-fx-pref-width: 25%;" />
+            <Region styleClass="bg-accent" style="-fx-pref-width: 25%;" />
+            <Region styleClass="bg-success" style="-fx-pref-width: 25%;" />
+        </HBox>
+        
+        <!-- 登录容器 -->
+        <VBox alignment="CENTER" spacing="48" style="-fx-padding: 48px; -fx-fill-width: true;">
+            <!-- 登录表单 -->
+            <VBox alignment="CENTER" styleClass="container shadow-lg" maxWidth="480" style="-fx-pref-width: 90%; -fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px;" spacing="24">
+                <!-- Title Section -->
+                <VBox alignment="CENTER" spacing="16" style="-fx-fill-width: true; -fx-padding: 32px 32px 0 32px;">
+                    <Label text="BUPT International School TA Recruitment System" styleClass="title" />
+                    <Label text="Please log in to access the system" styleClass="subtitle" />
+                </VBox>
+                
+                <!-- Icon Section -->
+                <VBox alignment="CENTER" spacing="16" style="-fx-padding: 16px 0 0 0;">
+                    <Circle radius="48.0" fill="#f8f9fa" stroke="#e9ecef" strokeWidth="2" />
+                    <Label text="👤" style="-fx-font-size: 32px;" />
+                </VBox>
+                
+                <!-- Form Fields -->
+                <VBox spacing="20" style="-fx-pref-width: 100%; -fx-padding: 0 32px;">
+                    <VBox spacing="8" style="-fx-pref-width: 100%;">
+                        <Label text="Username" styleClass="form-label" />
+                        <TextField fx:id="usernameField" promptText="Please enter username" styleClass="form-field" style="-fx-pref-width: 400px; -fx-min-width: 400px; -fx-min-height: 44px;" />
+                    </VBox>
+                    <VBox spacing="8" style="-fx-pref-width: 100%;">
+                        <Label text="Password" styleClass="form-label" />
+                        <PasswordField fx:id="passwordField" promptText="Please enter password" styleClass="form-field" style="-fx-pref-width: 400px; -fx-min-width: 400px; -fx-min-height: 44px;" />
+                    </VBox>
+                    <VBox spacing="8" style="-fx-pref-width: 100%;">
+                        <Label text="Role" styleClass="form-label" />
+                        <ComboBox fx:id="roleComboBox" promptText="Please select role" styleClass="form-field" style="-fx-pref-width: 400px; -fx-min-width: 400px; -fx-min-height: 44px;" />
+                    </VBox>
+                    
+                    <!-- Auxiliary Functions -->
+                    <HBox alignment="CENTER_RIGHT" style="-fx-spacing: 16;">
+                        <CheckBox fx:id="rememberMeCheckBox" text="Remember me" style="-fx-font-size: 14px;" />
+                        <Hyperlink fx:id="forgotPasswordLink" text="Forgot password?" style="-fx-font-size: 14px;" />
+                    </HBox>
+                </VBox>
+                
+                <!-- Error Message -->
+                <Label fx:id="errorMessage" styleClass="error-message" style="-fx-padding: 0 32px;" />
+                
+                <!-- Button Section -->
+                <HBox spacing="16" alignment="CENTER" style="-fx-pref-width: 100%; -fx-padding: 0 32px 32px 32px;">
+                    <Button fx:id="cancelButton" text="Cancel" styleClass="btn btn-secondary" onAction="#handleCancel" style="-fx-pref-width: 120px; -fx-min-height: 44px;" />
+                    <Button fx:id="loginButton" text="Login" styleClass="btn btn-primary" onAction="#handleLogin" style="-fx-pref-width: 120px; -fx-min-height: 44px;" />
+                    <Button fx:id="registerButton" text="Register" styleClass="btn btn-success" onAction="#handleRegister" style="-fx-pref-width: 120px; -fx-min-height: 44px;" />
+                </HBox>
+            </VBox>
+            
+            <!-- Bottom Information -->
+            <VBox alignment="CENTER" style="-fx-padding: 16px 0;">
+                <Label text="© 2026 BUPT International School. All rights reserved." textFill="#6c757d" style="-fx-font-size: 12px;" />
+            </VBox>
+        </VBox>
+    </VBox>
+</AnchorPane>

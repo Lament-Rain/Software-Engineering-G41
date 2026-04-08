@@ -1,0 +1,2 @@
+*.zip filter=lfs diff=lfs merge=lfs -text
+文字资料.zip filter=lfs diff=lfs merge=lfs -text

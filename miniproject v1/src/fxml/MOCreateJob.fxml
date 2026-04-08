@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="createJobPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MOCreateJobController">
+    <VBox alignment="CENTER" spacing="0" styleClass="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <!-- 顶部导航栏 -->
+        <HBox styleClass="navbar" spacing="24" alignment="CENTER_LEFT" style="-fx-padding: 0 24px;">
+            <Label text="BUPT国际学校TA招聘系统" styleClass="navbar-title" />
+            <HBox spacing="16" alignment="CENTER_LEFT" style="-fx-padding: 0 24px;">
+                <Button text="首页" styleClass="navbar-menu" onAction="#handleHome" />
+                <Button text="职位管理" styleClass="navbar-menu active" />
+                <Button text="申请管理" styleClass="navbar-menu" />
+                <Button text="统计分析" styleClass="navbar-menu" />
+            </HBox>
+            <HBox spacing="16" alignment="CENTER_RIGHT" style="-fx-padding: 0 24px; -fx-fill-width: true; -fx-alignment: center-right;">
+                <Label fx:id="welcomeLabel" style="-fx-text-fill: white; -fx-font-size: 14px;" />
+                <Button text="退出" styleClass="btn btn-secondary" onAction="#handleLogout" style="-fx-min-width: 80px;" />
+            </HBox>
+        </HBox>
+        
+        <!-- 主内容区域 -->
+        <ScrollPane style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+            <VBox alignment="CENTER" spacing="32" style="-fx-padding: 32px; -fx-fill-width: true; -fx-background-color: #f8f9fa; -fx-alignment: center; -fx-pref-width: 1200px;">
+                <!-- 页面标题 -->
+                <VBox alignment="CENTER" spacing="8">
+                    <Label text="发布TA职位" styleClass="section-title" />
+                    <Label text="填写职位信息并发布" styleClass="subtitle" />
+                </VBox>
+                
+                <!-- 表单容器 -->
+                <VBox styleClass="container shadow-lg" maxWidth="800" style="-fx-pref-width: 90%; -fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 32px;" spacing="24">
+                    <!-- 表单字段 -->
+                    <GridPane hgap="16" vgap="16" style="-fx-pref-width: 100%;">
+                        <!-- 职位标题 -->
+                        <Label text="职位标题" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="titleField" promptText="请输入职位标题" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.columnSpan="3" />
+                        
+                        <!-- 职位类型 -->
+                        <Label text="职位类型" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="typeComboBox" promptText="请选择职位类型" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        
+                        <!-- 所属院系 -->
+                        <Label text="所属院系" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <ComboBox fx:id="departmentComboBox" promptText="请选择所属院系" styleClass="form-field" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        
+                        <!-- 工作时间 -->
+                        <Label text="工作时间" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="workTimeField" promptText="例如：每周10小时" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="3" />
+                        
+                        <!-- 招募人数 -->
+                        <Label text="招募人数" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                        <TextField fx:id="recruitNumField" promptText="请输入招募人数" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        
+                        <!-- 截止时间 -->
+                        <Label text="截止时间" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <TextField fx:id="deadlineField" promptText="例如：2026-04-30" styleClass="form-field" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        
+                        <!-- 职位描述 -->
+                        <Label text="职位描述" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                        <TextArea fx:id="descriptionArea" promptText="请输入职位描述" styleClass="form-field" style="-fx-min-height: 120px;" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.columnSpan="3" />
+                        
+                        <!-- 技能要求 -->
+                        <Label text="技能要求" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                        <TextArea fx:id="skillsArea" promptText="请输入技能要求，多个技能用逗号分隔" styleClass="form-field" style="-fx-min-height: 80px;" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.columnSpan="3" />
+                    </GridPane>
+                    
+                    <!-- 错误消息 -->
+                    <Label fx:id="errorMessage" styleClass="error-message" />
+                    
+                    <!-- 按钮区域 -->
+                    <HBox spacing="16" alignment="CENTER" style="-fx-pref-width: 100%;">
+                        <Button fx:id="cancelButton" text="取消" styleClass="btn btn-secondary" onAction="#handleCancel" style="-fx-pref-width: 120px;" />
+                        <Button fx:id="submitButton" text="发布职位" styleClass="btn btn-primary" onAction="#handleSubmit" style="-fx-pref-width: 120px;" />
+                    </HBox>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </VBox>
+</AnchorPane>
