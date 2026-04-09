@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="profileViewPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TAProfileViewController">
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 18 24 18 24; -fx-spacing: 18; -fx-alignment: center-left;">
+            <Label text="BUPT国际学校TA招聘系统" styleClass="navbar-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 12; -fx-alignment: center;">
+                <Button text="首页" styleClass="navbar-menu" onAction="#handleHome" />
+                <Button text="申请管理" styleClass="navbar-menu" onAction="#handleApplicationManagement" />
+                <Button text="个人主页" styleClass="navbar-menu active" onAction="#handlePersonalCenter" />
+                <Separator orientation="VERTICAL" styleClass="navbar-separator" />
+                <Button text="退出" styleClass="navbar-menu" onAction="#handleLogout" />
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="68.0">
+        <VBox style="-fx-padding: 28; -fx-spacing: 24; -fx-fill-width: true; -fx-background-color: #f8f9fa; -fx-alignment: top-center;">
+            <HBox maxWidth="1100" style="-fx-alignment: center-left; -fx-spacing: 24; -fx-background-color: linear-gradient(to right, #22364d, #36506b); -fx-background-radius: 18; -fx-padding: 28;">
+                <VBox style="-fx-background-color: rgba(255,255,255,0.14); -fx-background-radius: 999; -fx-min-width: 96; -fx-min-height: 96; -fx-alignment: center;">
+                    <Label fx:id="avatarLabel" text="TA" style="-fx-font-size: 32px; -fx-font-weight: 800; -fx-text-fill: white;" />
+                </VBox>
+                <VBox style="-fx-spacing: 8;">
+                    <Label fx:id="displayNameLabel" text="TA Applicant" style="-fx-font-size: 28px; -fx-font-weight: 800; -fx-text-fill: white;" />
+                    <Label fx:id="headlineLabel" text="查看并维护你的个人信息、简历与审核状态" style="-fx-font-size: 14px; -fx-text-fill: rgba(255,255,255,0.82);" />
+                    <HBox style="-fx-spacing: 10; -fx-padding: 6 0 0 0;">
+                        <Label text="账号状态" style="-fx-text-fill: rgba(255,255,255,0.72); -fx-font-size: 12px;" />
+                        <Label fx:id="accountStatusLabel" style="-fx-background-color: rgba(255,255,255,0.16); -fx-background-radius: 999; -fx-padding: 4 12; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: 700;" />
+                        <Label text="档案审核" style="-fx-text-fill: rgba(255,255,255,0.72); -fx-font-size: 12px;" />
+                        <Label fx:id="profileStatusBadgeLabel" style="-fx-background-color: rgba(255,255,255,0.16); -fx-background-radius: 999; -fx-padding: 4 12; -fx-text-fill: white; -fx-font-size: 12px; -fx-font-weight: 700;" />
+                    </HBox>
+                </VBox>
+            </HBox>
+
+            <HBox maxWidth="1100" style="-fx-spacing: 20; -fx-alignment: top-center;">
+                <VBox prefWidth="320" styleClass="card">
+                    <Label text="账号信息" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #243b53;" />
+                    <VBox style="-fx-spacing: 14; -fx-padding: 18 0 0 0;">
+                        <VBox style="-fx-spacing: 6;">
+                            <Label text="用户名" style="-fx-font-size: 12px; -fx-text-fill: #829ab1;" />
+                            <Label fx:id="usernameLabel" style="-fx-font-size: 16px; -fx-font-weight: 700; -fx-text-fill: #102a43;" />
+                        </VBox>
+                        <VBox style="-fx-spacing: 6;">
+                            <Label text="邮箱" style="-fx-font-size: 12px; -fx-text-fill: #829ab1;" />
+                            <Label fx:id="emailLabel" style="-fx-font-size: 14px; -fx-text-fill: #243b53; -fx-wrap-text: true;" />
+                        </VBox>
+                        <VBox style="-fx-spacing: 6;">
+                            <Label text="手机号" style="-fx-font-size: 12px; -fx-text-fill: #829ab1;" />
+                            <Label fx:id="phoneLabel" style="-fx-font-size: 14px; -fx-text-fill: #243b53;" />
+                        </VBox>
+                        <VBox style="-fx-spacing: 6;">
+                            <Label text="简历状态" style="-fx-font-size: 12px; -fx-text-fill: #829ab1;" />
+                            <Label fx:id="resumeStatusLabel" style="-fx-font-size: 14px; -fx-text-fill: #243b53;" />
+                        </VBox>
+                        <VBox style="-fx-spacing: 6;">
+                            <Label text="最近档案更新时间" style="-fx-font-size: 12px; -fx-text-fill: #829ab1;" />
+                            <Label fx:id="profileUpdatedAtLabel" style="-fx-font-size: 14px; -fx-text-fill: #243b53; -fx-wrap-text: true;" />
+                        </VBox>
+                    </VBox>
+                </VBox>
+
+                <VBox prefWidth="760" style="-fx-spacing: 20;">
+                    <VBox styleClass="card" style="-fx-spacing: 16;">
+                        <Label text="基础资料" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #243b53;" />
+                        <GridPane hgap="18" vgap="14">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="130" />
+                                <ColumnConstraints prefWidth="220" />
+                                <ColumnConstraints prefWidth="130" />
+                                <ColumnConstraints prefWidth="220" />
+                            </columnConstraints>
+                            <Label text="姓名" style="-fx-text-fill: #627d98;" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <Label fx:id="nameLabel" style="-fx-text-fill: #102a43; -fx-font-weight: 600;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <Label text="性别" style="-fx-text-fill: #627d98;" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                            <Label fx:id="genderLabel" style="-fx-text-fill: #102a43; -fx-font-weight: 600;" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                            <Label text="年龄" style="-fx-text-fill: #627d98;" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <Label fx:id="ageLabel" style="-fx-text-fill: #102a43; -fx-font-weight: 600;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="院系" style="-fx-text-fill: #627d98;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                            <Label fx:id="departmentLabel" style="-fx-text-fill: #102a43; -fx-font-weight: 600;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                            <Label text="年级" style="-fx-text-fill: #627d98;" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <Label fx:id="gradeLabel" style="-fx-text-fill: #102a43; -fx-font-weight: 600;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Label text="学号" style="-fx-text-fill: #627d98;" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                            <Label fx:id="studentIdLabel" style="-fx-text-fill: #102a43; -fx-font-weight: 600;" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        </GridPane>
+                    </VBox>
+
+                    <VBox styleClass="card" style="-fx-spacing: 16;">
+                        <Label text="工作与技能" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #243b53;" />
+                        <GridPane hgap="18" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="140" />
+                                <ColumnConstraints prefWidth="560" />
+                            </columnConstraints>
+                            <Label text="可工作时间" style="-fx-text-fill: #627d98;" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <Label fx:id="availableTimeLabel" style="-fx-text-fill: #102a43; -fx-wrap-text: true;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <Label text="专业技能" style="-fx-text-fill: #627d98;" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <Label fx:id="skillsLabel" style="-fx-text-fill: #102a43; -fx-wrap-text: true;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                            <Label text="TA经验" style="-fx-text-fill: #627d98;" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                            <Label fx:id="experienceLabel" style="-fx-text-fill: #102a43; -fx-wrap-text: true;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                            <Label text="获奖情况" style="-fx-text-fill: #627d98;" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                            <Label fx:id="awardsLabel" style="-fx-text-fill: #102a43; -fx-wrap-text: true;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                            <Label text="语言能力" style="-fx-text-fill: #627d98;" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                            <Label fx:id="languageSkillsLabel" style="-fx-text-fill: #102a43; -fx-wrap-text: true;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                            <Label text="其他能力" style="-fx-text-fill: #627d98;" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                            <Label fx:id="otherSkillsLabel" style="-fx-text-fill: #102a43; -fx-wrap-text: true;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        </GridPane>
+                    </VBox>
+
+                    <VBox styleClass="card" style="-fx-spacing: 16;">
+                        <Label text="审核反馈" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #243b53;" />
+                        <GridPane hgap="18" vgap="12">
+                            <columnConstraints>
+                                <ColumnConstraints prefWidth="140" />
+                                <ColumnConstraints prefWidth="560" />
+                            </columnConstraints>
+                            <Label text="当前状态" style="-fx-text-fill: #627d98;" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                            <Label fx:id="profileStatusLabel" style="-fx-text-fill: #102a43; -fx-font-weight: 700;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                            <Label text="审核意见" style="-fx-text-fill: #627d98;" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                            <Label fx:id="profileFeedbackLabel" style="-fx-text-fill: #102a43; -fx-wrap-text: true;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        </GridPane>
+                    </VBox>
+                </VBox>
+            </HBox>
+
+            <HBox maxWidth="1100" style="-fx-alignment: center-right; -fx-spacing: 14; -fx-padding: 4 0 18 0;">
+                <Button text="查看简历" styleClass="btn btn-secondary" onAction="#handleViewResume" style="-fx-pref-width: 132px; -fx-min-height: 40px;" />
+                <Button text="编辑资料" styleClass="btn btn-primary" onAction="#handleEditProfile" style="-fx-pref-width: 132px; -fx-min-height: 40px;" />
+                <Button text="返回" styleClass="btn btn-secondary" onAction="#handleBack" style="-fx-pref-width: 132px; -fx-min-height: 40px;" />
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>

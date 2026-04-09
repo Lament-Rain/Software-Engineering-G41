@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="loginPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
+    <VBox alignment="CENTER" spacing="0" styleClass="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <!-- 顶部装饰条 -->
+        <HBox prefHeight="8">
+            <Region styleClass="bg-primary" style="-fx-pref-width: 25%;" />
+            <Region styleClass="bg-secondary" style="-fx-pref-width: 25%;" />
+            <Region styleClass="bg-accent" style="-fx-pref-width: 25%;" />
+            <Region styleClass="bg-success" style="-fx-pref-width: 25%;" />
+        </HBox>
+        
+        <!-- 登录容器 -->
+        <VBox alignment="CENTER" spacing="40" style="-fx-padding: 20px; -fx-fill-width: true;">
+            <!-- 标题部分 -->
+            <VBox alignment="CENTER" spacing="12" style="-fx-fill-width: true;">
+                <Label text="BUPT国际学校TA招聘系统" styleClass="title" />
+                <Label text="请登录以访问系统" styleClass="subtitle" />
+            </VBox>
+            
+            <!-- 登录表单 -->
+            <VBox alignment="CENTER" styleClass="container shadow-md" maxWidth="440" style="-fx-pref-width: 90%; -fx-fill-width: true;" spacing="24">
+                <!-- 图标部分 -->
+                <VBox alignment="CENTER" spacing="16">
+                    <Circle radius="50.0" fill="#f8f9fa" stroke="#e9ecef" strokeWidth="2" />
+                    <Label text="👤" style="-fx-font-size: 32px;" />
+                </VBox>
+                
+                <!-- 表单字段 -->
+                <VBox spacing="16" style="-fx-pref-width: 100%;">
+                    <VBox spacing="8" style="-fx-pref-width: 100%;">
+                        <Label text="用户名" styleClass="form-label" />
+                        <TextField fx:id="usernameField" promptText="请输入用户名" styleClass="form-field" style="-fx-pref-width: 100%;" />
+                    </VBox>
+                    <VBox spacing="8" style="-fx-pref-width: 100%;">
+                        <Label text="密码" styleClass="form-label" />
+                        <PasswordField fx:id="passwordField" promptText="请输入密码" styleClass="form-field" style="-fx-pref-width: 100%;" />
+                    </VBox>
+                    <VBox spacing="8" style="-fx-pref-width: 100%;">
+                        <Label text="角色" styleClass="form-label" />
+                        <ComboBox fx:id="roleComboBox" styleClass="form-field" style="-fx-pref-width: 100%;" />
+                    </VBox>
+                </VBox>
+                
+                <!-- 错误消息 -->
+                <Label fx:id="errorMessage" styleClass="error-message" />
+                
+                <!-- 按钮部分 -->
+                <HBox spacing="12" alignment="CENTER" style="-fx-pref-width: 100%;">
+                    <Button fx:id="registerButton" text="注册" styleClass="btn btn-secondary" onAction="#handleRegister" style="-fx-pref-width: 48%;" />
+                    <Button fx:id="loginButton" text="登录" styleClass="btn btn-primary" onAction="#handleLogin" style="-fx-pref-width: 48%;" />
+                </HBox>
+            </VBox>
+            
+            <!-- 底部信息 -->
+            <VBox alignment="CENTER">
+                <Label text="© 2026 BUPT国际学校. 保留所有权利." textFill="#6c757d" style="-fx-font-size: 12px;" />
+            </VBox>
+        </VBox>
+    </VBox>
+</AnchorPane>

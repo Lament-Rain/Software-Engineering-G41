@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.beans.binding.*?>
+<?import javafx.beans.property.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.util.*?>
+
+<AnchorPane fx:id="taDashboardPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TADashboardController">
+    <!-- 导航栏 -->
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 0 20 0 20; -fx-spacing: 20; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT国际学校TA招聘系统" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;">
+                <Button text="首页" styleClass="navbar-menu" />
+                <Button text="职位管理" styleClass="navbar-menu" />
+                <Button text="申请管理" styleClass="navbar-menu" />
+                <Button text="个人中心" styleClass="navbar-menu" />
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" style="-fx-spacing: 12; -fx-alignment: center;">
+                <Label text="欢迎，TA申请人" textFill="rgba(255,255,255,0.85)" />
+                <Button text="退出" styleClass="btn btn-secondary" />
+            </HBox>
+        </HBox>
+    </VBox>
+    <!-- 主内容区 -->
+    <VBox layoutY="70.0" style="-fx-padding: 20px; -fx-spacing: 20px; -fx-fill-width: true;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+        <!-- 页面标题 -->
+        <HBox alignment="CENTER_LEFT" style="-fx-spacing: 12; -fx-fill-width: true;">
+            <VBox style="-fx-spacing: 4;">
+                <Label text="TA申请人主页" styleClass="section-title" />
+                <Label text="查看您的申请状态和可用职位" textFill="#6c757d" style="-fx-font-size: 14px;" />
+            </VBox>
+        </HBox>
+        
+        <!-- 统计卡片 -->
+        <HBox style="-fx-spacing: 16; -fx-fill-width: true; -fx-alignment: center;">
+            <VBox styleClass="stat-card shadow-md" style="-fx-pref-width: 32%; -fx-min-width: 200px; -fx-max-width: 300px;">
+                <Label text="📋" style="-fx-font-size: 24px;" />
+                <Label fx:id="openPositionsLabel" text="12" styleClass="stat-value" />
+                <Label text="可用职位" styleClass="stat-label" />
+            </VBox>
+            <VBox styleClass="stat-card shadow-md" style="-fx-pref-width: 32%; -fx-min-width: 200px; -fx-max-width: 300px;">
+                <Label text="👤" style="-fx-font-size: 24px;" />
+                <Label fx:id="myApplicationsLabel" text="3" styleClass="stat-value" />
+                <Label text="我的申请" styleClass="stat-label" />
+            </VBox>
+            <VBox styleClass="stat-card shadow-md" style="-fx-pref-width: 32%; -fx-min-width: 200px; -fx-max-width: 300px;">
+                <Label text="⏰" style="-fx-font-size: 24px;" />
+                <Label fx:id="pendingActionsLabel" text="2" styleClass="stat-value" />
+                <Label text="待处理任务" styleClass="stat-label" />
+            </VBox>
+        </HBox>
+        
+        <!-- 待处理任务 -->
+        <VBox styleClass="card shadow-md" style="-fx-pref-height: 300px; -fx-fill-width: true;">
+            <HBox alignment="CENTER_LEFT" style="-fx-padding: 0 0 16 0; -fx-spacing: 12; -fx-fill-width: true;">
+                <VBox style="-fx-spacing: 4;">
+                    <Label text="待处理任务" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
+                    <Label text="请在截止日期前完成这些任务" textFill="#6c757d" style="-fx-font-size: 14px;" />
+                </VBox>
+            </HBox>
+            <TableView fx:id="tasksTable" style="-fx-pref-height: 240px; -fx-background-radius: 12px;">
+                <columns>
+                    <TableColumn text="任务名称" prefWidth="600">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="name" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="截止日期" prefWidth="250">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="dueDate" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="状态" prefWidth="150">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="status" />
+                        </cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+        </VBox>
+        
+        <!-- 快速操作按钮 -->
+        <VBox styleClass="card shadow-md" style="-fx-fill-width: true; -fx-padding: 20px;">
+            <Label text="快速操作" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #495057; -fx-padding: 0 0 12 0;" />
+            <HBox style="-fx-spacing: 12; -fx-wrap-text: true; -fx-alignment: center-left; -fx-fill-width: true;">
+                <Button text="完善个人档案" styleClass="btn btn-primary" onAction="#handleUpdateProfile" style="-fx-pref-width: 150px;" />
+                <Button text="上传简历" styleClass="btn btn-primary" onAction="#handleUploadResume" style="-fx-pref-width: 150px;" />
+                <Button text="AI职位匹配" styleClass="btn btn-primary" onAction="#handleAIJobMatching" style="-fx-pref-width: 150px;" />
+                <Button text="技能缺口识别" styleClass="btn btn-secondary" onAction="#handleIdentifyMissingSkills" style="-fx-pref-width: 150px;" />
+                <Button text="查看职位" styleClass="btn btn-secondary" onAction="#handleViewJobs" style="-fx-pref-width: 150px;" />
+                <Button text="申请职位" styleClass="btn btn-secondary" onAction="#handleApplyForJob" style="-fx-pref-width: 150px;" />
+            </HBox>
+        </VBox>
+    </VBox>
+</AnchorPane>

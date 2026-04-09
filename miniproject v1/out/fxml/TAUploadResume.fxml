@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="uploadResumePane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TAUploadResumeController">
+    <VBox alignment="CENTER" spacing="20.0" style="-fx-padding: 20px;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <Label text="上传简历" styleClass="title" />
+        <VBox styleClass="container" maxWidth="500" style="-fx-pref-width: 90%;" spacing="20.0">
+            <Label text="请选择简历文件（支持PDF、Word、JPG/PNG格式，大小不超过10MB）" />
+            <HBox spacing="10.0" alignment="CENTER" style="-fx-spacing: 10; -fx-fill-width: true;">
+                <TextField fx:id="filePathField" styleClass="form-field" editable="false" style="-fx-pref-width: 70%;" />
+                <Button text="浏览" styleClass="btn btn-secondary" onAction="#handleBrowse" style="-fx-pref-width: 30%;" />
+            </HBox>
+            <ProgressBar fx:id="progressBar" progress="0" visible="false" style="-fx-pref-width: 100%;" />
+            <Label fx:id="messageLabel" styleClass="error-message" />
+            <HBox spacing="10.0" alignment="CENTER" style="-fx-spacing: 10; -fx-wrap-text: true;">
+                <Button text="上传" styleClass="btn btn-primary" onAction="#handleUpload" />
+                <Button text="返回" styleClass="btn btn-secondary" onAction="#handleBack" />
+            </HBox>
+        </VBox>
+    </VBox>
+</AnchorPane>

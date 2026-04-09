@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane fx:id="registerPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
+    <VBox alignment="CENTER" spacing="0" styleClass="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <!-- 顶部装饰条 -->
+        <HBox prefHeight="8">
+            <Region styleClass="bg-primary" style="-fx-pref-width: 25%;" />
+            <Region styleClass="bg-secondary" style="-fx-pref-width: 25%;" />
+            <Region styleClass="bg-accent" style="-fx-pref-width: 25%;" />
+            <Region styleClass="bg-success" style="-fx-pref-width: 25%;" />
+        </HBox>
+        
+        <!-- 注册容器 -->
+        <VBox alignment="CENTER" spacing="60" style="-fx-padding: 40px;">
+            <!-- 标题部分 -->
+            <VBox alignment="CENTER" spacing="16">
+                <Label text="BUPT国际学校TA招聘系统" styleClass="title" />
+                <Label text="创建新账号" styleClass="subtitle" />
+            </VBox>
+            
+            <!-- 注册表单 -->
+            <VBox alignment="CENTER" styleClass="container shadow-lg" maxWidth="640" style="-fx-pref-width: 90%;" spacing="32">
+                <!-- 角色选择 -->
+                <VBox spacing="16">
+                    <Label text="选择角色" styleClass="form-label" />
+                    <HBox spacing="16" alignment="CENTER" style="-fx-pref-width: 100%;">
+                        <ToggleButton fx:id="taToggle" text="TA申请人" styleClass="btn btn-secondary" style="-fx-pref-width: 32%;" />
+                        <ToggleButton fx:id="moToggle" text="模块组织者" styleClass="btn btn-secondary" style="-fx-pref-width: 32%;" />
+                        <ToggleButton fx:id="adminToggle" text="系统管理员" styleClass="btn btn-secondary" style="-fx-pref-width: 32%;" />
+                    </HBox>
+                </VBox>
+                
+                <!-- 表单字段 -->
+                <GridPane hgap="24.0" vgap="20.0" style="-fx-max-width: 100%;">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="100.0" />
+                        <ColumnConstraints hgrow="ALWAYS" minWidth="100.0" />
+                    </columnConstraints>
+                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="0" spacing="8.0" style="-fx-pref-width: 100%;">
+                        <Label text="邮箱" styleClass="form-label" />
+                        <TextField fx:id="emailField" promptText="请输入邮箱" styleClass="form-field" style="-fx-pref-width: 100%;" />
+                    </VBox>
+                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="0" spacing="8.0" style="-fx-pref-width: 100%;">
+                        <Label text="密码" styleClass="form-label" />
+                        <PasswordField fx:id="passwordField" promptText="请输入密码（至少8位）" styleClass="form-field" style="-fx-pref-width: 100%;" />
+                    </VBox>
+                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" spacing="8.0" style="-fx-pref-width: 100%;">
+                        <Label text="确认密码" styleClass="form-label" />
+                        <PasswordField fx:id="confirmPasswordField" promptText="请确认密码" styleClass="form-field" style="-fx-pref-width: 100%;" />
+                    </VBox>
+                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="1" spacing="8.0" style="-fx-pref-width: 100%;">
+                        <Label text="用户名" styleClass="form-label" />
+                        <TextField fx:id="usernameField" promptText="请输入用户名" styleClass="form-field" style="-fx-pref-width: 100%;" />
+                    </VBox>
+                    <VBox GridPane.columnIndex="0" GridPane.rowIndex="2" spacing="8.0" style="-fx-pref-width: 100%;">
+                        <Label text="手机号" styleClass="form-label" />
+                        <TextField fx:id="phoneField" promptText="请输入手机号" styleClass="form-field" style="-fx-pref-width: 100%;" />
+                    </VBox>
+                    <VBox GridPane.columnIndex="1" GridPane.rowIndex="2" spacing="8.0" style="-fx-pref-width: 100%;">
+                        <Label text="院系" styleClass="form-label" />
+                        <TextField fx:id="departmentField" promptText="请输入院系（MO和Admin必填）" styleClass="form-field" style="-fx-pref-width: 100%;" />
+                    </VBox>
+                </GridPane>
+                
+                <!-- 消息提示 -->
+                <VBox spacing="12">
+                    <Label fx:id="errorMessage" styleClass="error-message" />
+                    <Label fx:id="successMessage" styleClass="success-message" />
+                </VBox>
+                
+                <!-- 按钮部分 -->
+                <HBox spacing="16" alignment="CENTER" style="-fx-pref-width: 100%;">
+                    <Button fx:id="backButton" text="返回登录" styleClass="btn btn-secondary" onAction="#handleBack" style="-fx-pref-width: 48%;" />
+                    <Button fx:id="registerButton" text="完成注册" styleClass="btn btn-primary" onAction="#handleRegister" style="-fx-pref-width: 48%;" />
+                </HBox>
+            </VBox>
+            
+            <!-- 底部信息 -->
+            <VBox alignment="CENTER">
+                <Label text="© 2026 BUPT国际学校. 保留所有权利." textFill="#6c757d" style="-fx-font-size: 12px;" />
+            </VBox>
+        </VBox>
+    </VBox>
+</AnchorPane>

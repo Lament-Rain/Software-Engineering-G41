@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.JobListController">
+    <!-- 导航栏 -->
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT国际学校TA招聘系统" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;" />
+            <HBox style="-fx-spacing: 24; -fx-alignment: center;">
+                <Label text="职位需求列表" textFill="rgba(255,255,255,0.85)" />
+                <Separator orientation="VERTICAL" styleClass="navbar-separator" />
+                <Button text="退出" styleClass="navbar-menu" onAction="#handleLogout" />
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <!-- 主内容区 -->
+    <ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+        <VBox style="-fx-padding: 32px; -fx-spacing: 24px; -fx-fill-width: true; -fx-background-color: #f8f9fa; -fx-alignment: center; -fx-pref-width: 1200px;">
+
+            <!-- 页面标题 -->
+            <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true;">
+                <VBox style="-fx-spacing: 8;">
+                    <Label fx:id="pageTitleLabel" text="职位需求" styleClass="section-title" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                    <Label fx:id="subtitleLabel" text="查看所有已发布的职位" textFill="#6c757d" style="-fx-font-size: 14px;" />
+                </VBox>
+            </HBox>
+
+            <!-- 搜索和筛选区域 -->
+            <VBox styleClass="card shadow-md" style="-fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px;">
+                <FlowPane hgap="14" vgap="12" alignment="CENTER_LEFT" prefWrapLength="1120">
+                    <TextField fx:id="searchField" promptText="搜索职位名称/需求/发布者..." style="-fx-pref-width: 320px; -fx-min-width: 320px; -fx-pref-height: 38px; -fx-font-size: 14px;" />
+                    <ComboBox fx:id="departmentFilter" promptText="选择院系" style="-fx-pref-width: 180px; -fx-min-width: 180px; -fx-pref-height: 38px; -fx-font-size: 13px;" />
+                    <ComboBox fx:id="typeFilter" promptText="选择类型" style="-fx-pref-width: 180px; -fx-min-width: 180px; -fx-pref-height: 38px; -fx-font-size: 13px;" />
+                    <ComboBox fx:id="statusFilter" promptText="选择状态" style="-fx-pref-width: 170px; -fx-min-width: 170px; -fx-pref-height: 38px; -fx-font-size: 13px;" />
+                    <Button text="搜索" styleClass="btn btn-primary" onAction="#handleSearch" style="-fx-pref-width: 96px; -fx-min-width: 96px; -fx-pref-height: 38px; -fx-font-size: 13px;" />
+                    <Button text="重置" styleClass="btn btn-secondary" onAction="#handleReset" style="-fx-pref-width: 96px; -fx-min-width: 96px; -fx-pref-height: 38px; -fx-font-size: 13px;" />
+                </FlowPane>
+            </VBox>
+
+            <!-- 职位列表表格 -->
+            <VBox styleClass="card shadow-md" style="-fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px;">
+                <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true; -fx-padding: 0 0 16 0;">
+                    <Label text="职位列表" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
+                    <Label text="（双击查看详情）" textFill="#6c757d" style="-fx-font-size: 12px;" />
+                </HBox>
+                <TableView fx:id="jobsTable" style="-fx-pref-height: 420px; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-table-cell-border-color: transparent;">
+                    <placeholder>
+                        <Label text="暂无职位数据" />
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+            <!-- 操作按钮 -->
+            <HBox style="-fx-spacing: 16; -fx-alignment: center-left;">
+                <Button fx:id="backButton" text="返回控制台" styleClass="btn btn-secondary" onAction="#handleBack" style="-fx-pref-width: 160px; -fx-min-width: 160px; -fx-min-height: 42px; -fx-font-size: 13px;" />
+                <Button fx:id="createJobButton" text="发布新职位" styleClass="btn btn-primary" onAction="#handleCreateJob" style="-fx-pref-width: 160px; -fx-min-width: 160px; -fx-min-height: 42px; -fx-font-size: 13px;" />
+            </HBox>
+
+        </VBox>
+    </ScrollPane>
+</AnchorPane>

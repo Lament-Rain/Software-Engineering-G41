@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.beans.binding.*?>
+<?import javafx.beans.property.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.util.*?>
+
+<AnchorPane fx:id="moDashboardPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MODashboardController">
+    <!-- 导航栏 -->
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-spacing: 20;">
+            <Label text="BUPT国际学校TA招聘系统" styleClass="navbar-title" />
+            <HBox spacing="15.0" style="-fx-spacing: 15;">
+                <Button text="首页" styleClass="navbar-menu" />
+                <Button text="职位管理" styleClass="navbar-menu" />
+                <Button text="申请管理" styleClass="navbar-menu" />
+                <Button text="统计分析" styleClass="navbar-menu" />
+            </HBox>
+        </HBox>
+    </VBox>
+    <!-- 主内容区 -->
+    <VBox layoutY="60.0" style="-fx-padding: 20px; -fx-spacing: 20px;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
+        <Label text="MO Dashboard" styleClass="section-title" textFill="#6c757d" />
+        <!-- 统计卡片 -->
+        <HBox spacing="20.0" style="-fx-spacing: 20;">
+            <VBox styleClass="stat-card" style="-fx-pref-width: 30%; -fx-min-width: 180px;">
+                <Label text="📋" />
+                <Label fx:id="publishedJobsLabel" text="5" styleClass="stat-value" />
+                <Label text="Published Jobs" styleClass="stat-label" />
+            </VBox>
+            <VBox styleClass="stat-card" style="-fx-pref-width: 30%; -fx-min-width: 180px;">
+                <Label text="👥" />
+                <Label fx:id="totalApplicationsLabel" text="15" styleClass="stat-value" />
+                <Label text="Total Applications" styleClass="stat-label" />
+            </VBox>
+            <VBox styleClass="stat-card" style="-fx-pref-width: 30%; -fx-min-width: 180px;">
+                <Label text="✅" />
+                <Label fx:id="acceptedApplicationsLabel" text="8" styleClass="stat-value" />
+                <Label text="Accepted Applications" styleClass="stat-label" />
+            </VBox>
+        </HBox>
+        <!-- 最近发布的职位 -->
+        <VBox styleClass="card" style="-fx-pref-height: 300px;">
+            <Label text="Recently Published Jobs" />
+            <TableView fx:id="jobsTable" style="-fx-pref-height: 250px; -fx-fill-width: true;">
+                <columns>
+                    <TableColumn text="Job Title" style="-fx-pref-width: 40%;">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="title" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Department" style="-fx-pref-width: 25%;">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="department" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Deadline" style="-fx-pref-width: 25%;">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="deadline" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Applications" style="-fx-pref-width: 10%;">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="applicationCount" />
+                        </cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+        </VBox>
+        <!-- 快速操作按钮 -->
+        <HBox spacing="10.0" alignment="CENTER_LEFT" style="-fx-spacing: 10; -fx-wrap-text: true;">
+            <Button text="发布职位" styleClass="btn btn-primary" onAction="#handleCreateJob" />
+            <Button text="查看申请" styleClass="btn btn-primary" onAction="#handleViewApplications" />
+            <Button text="导出数据" styleClass="btn btn-secondary" onAction="#handleExportData" />
+            <Button text="查看统计" styleClass="btn btn-secondary" onAction="#handleViewStatistics" />
+        </HBox>
+    </VBox>
+</AnchorPane>
