@@ -178,8 +178,9 @@ public class TAProfileEditController {
         autoSaveTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                // Auto save draft
-                saveProfile(ProfileStatus.DRAFT);
+                if (user != null && user.getProfileStatus() == ProfileStatus.DRAFT) {
+                    saveProfile(ProfileStatus.DRAFT);
+                }
             }
         }, AUTO_SAVE_INTERVAL, AUTO_SAVE_INTERVAL);
     }
@@ -347,9 +348,10 @@ public class TAProfileEditController {
         user.setAwards(awards);
         user.setLanguageSkills(languageSkills);
         user.setOtherSkills(otherSkills);
-        user.setProfileStatus(status);
         if (status == ProfileStatus.PENDING) {
-            user.setProfileReviewComment("");
+            user.setProfileStatus(ProfileStatus.PENDING);
+        } else if (user.getProfileStatus() == null) {
+            user.setProfileStatus(ProfileStatus.DRAFT);
         }
         
         // Save to database
@@ -394,6 +396,46 @@ public class TAProfileEditController {
     @FXML
     private void handleHome(ActionEvent event) {
         handleBack(event);
+    }
+
+    @FXML
+    private void handleJobRequirements(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/JobList.fxml"));
+            Parent root = loader.load();
+            JobListController controller = loader.getController();
+            controller.setUser(user, model.UserRole.TA);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Job Requirements");
+            stage.centerOnScreen();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to load page");
+        }
+    }
+
+    @FXML
+    private void handleApplicationManagement(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
+            Parent root = loader.load();
+            TAApplicationHistoryController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Application History");
+            stage.centerOnScreen();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to load page");
+        }
     }
     
     @FXML

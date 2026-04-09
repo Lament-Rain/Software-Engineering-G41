@@ -70,12 +70,12 @@ public class RegisterController {
         successMessage.setText("");
         
         // 获取输入
-        String username = usernameField.getText().trim();
+        String username = usernameField.getText();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
-        String email = emailField.getText().trim();
-        String phone = phoneField.getText().trim();
-        String department = departmentField.getText().trim();
+        String email = emailField.getText();
+        String phone = phoneField.getText();
+        String department = departmentField.getText();
         
         // 验证输入
         if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || email.isEmpty() || phone.isEmpty()) {
@@ -87,15 +87,14 @@ public class RegisterController {
             errorMessage.setText("两次输入的密码不一致");
             return;
         }
-
-        String validationMessage = UserService.validateRegistration(username, password, email, phone);
-        if (validationMessage != null) {
-            errorMessage.setText(validationMessage);
+        
+        if (password.length() < 8) {
+            errorMessage.setText("密码长度至少为8位");
             return;
         }
         
-        // 对于MO和Admin，需要填写院系
-        if ((selectedRole == UserRole.MO || selectedRole == UserRole.ADMIN) && department.isEmpty()) {
+        // 对于MO，需要填写院系
+        if (selectedRole == UserRole.MO && department.isEmpty()) {
             errorMessage.setText("请填写院系");
             return;
         }
@@ -108,7 +107,7 @@ public class RegisterController {
             // 清空表单
             clearForm();
         } else {
-            errorMessage.setText("注册失败，请检查邮箱、手机号和密码格式");
+            errorMessage.setText("注册失败，用户名可能已存在");
         }
     }
     

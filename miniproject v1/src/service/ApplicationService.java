@@ -19,10 +19,15 @@ public class ApplicationService {
             return null;
         }
 
-        // 检查是否已经申请过该职位
+        // 检查是否已经存在不可重复提交的申请
         List<Application> applications = DataStorage.getApplications();
         for (Application app : applications) {
-            if (app.getTaId().equals(taId) && app.getJobId().equals(jobId)) {
+            if (!app.getTaId().equals(taId) || !app.getJobId().equals(jobId)) {
+                continue;
+            }
+            if (app.getStatus() == model.ApplicationStatus.PENDING ||
+                    app.getStatus() == model.ApplicationStatus.SCREENED ||
+                    app.getStatus() == model.ApplicationStatus.ACCEPTED) {
                 return null;
             }
         }
@@ -81,52 +86,6 @@ public class ApplicationService {
             }
         }
         return false;
-    }
-
-    public static boolean withdrawApplication(String applicationId, String taId) {
-        List<Application> applications = DataStorage.getApplications();
-        for (int i = 0; i < applications.size(); i++) {
-            Application app = applications.get(i);
-            if (!app.getId().equals(applicationId) || !app.getTaId().equals(taId)) {
-                continue;
-            }
-
-            if (app.getStatus() != model.ApplicationStatus.PENDING) {
-                return false;
-            }
-
-            Job job = JobService.getJobById(app.getJobId());
-            String now = java.time.LocalDateTime.now().toString();
-            if (job == null || !isDeadlineAfterNow(job.getDeadline())) {
-                return false;
-            }
-
-            app.setStatus(model.ApplicationStatus.WITHDRAWN);
-            app.setUpdatedAt(now);
-            app.setReviewComment("Withdrawn by TA before deadline");
-            applications.set(i, app);
-            DataStorage.saveApplications(applications);
-            DataStorage.addLog("WITHDRAW_APPLICATION", taId, "Application withdrawn: " + applicationId);
-            return true;
-        }
-        return false;
-    }
-
-    private static boolean isDeadlineAfterNow(String deadline) {
-        if (deadline == null || deadline.trim().isEmpty() || "null".equalsIgnoreCase(deadline.trim())) {
-            return false;
-        }
-        try {
-            java.time.LocalDate deadlineDate = java.time.LocalDate.parse(deadline.trim(), java.time.format.DateTimeFormatter.ofPattern("yyyy-M-d"));
-            return !deadlineDate.isBefore(java.time.LocalDate.now());
-        } catch (Exception ignore) {
-            try {
-                java.time.LocalDate deadlineDate = java.time.LocalDate.parse(deadline.trim());
-                return !deadlineDate.isBefore(java.time.LocalDate.now());
-            } catch (Exception innerIgnore) {
-                return deadline.compareTo(java.time.LocalDateTime.now().toString()) > 0;
-            }
-        }
     }
 
     // 接受申请
@@ -225,6 +184,65 @@ public class ApplicationService {
         return DataStorage.getApplications();
     }
 
+    // 撤回申请
+    public static boolean withdrawApplication(String applicationId, String taId) {
+        List<Application> applications = DataStorage.getApplications();
+        for (int i = 0; i < applications.size(); i++) {
+            Application app = applications.get(i);
+            if (!app.getId().equals(applicationId) || !app.getTaId().equals(taId)) {
+                continue;
+            }
+
+            if (app.getStatus() != model.ApplicationStatus.PENDING) {
+                return false;
+            }
+
+            Job job = JobService.getJobById(app.getJobId());
+            if (job == null || isDeadlinePassed(job.getDeadline())) {
+                return false;
+            }
+
+            app.setStatus(model.ApplicationStatus.WITHDRAWN);
+            app.setUpdatedAt(java.time.LocalDateTime.now().toString());
+            applications.set(i, app);
+            DataStorage.saveApplications(applications);
+            DataStorage.addLog("WITHDRAW_APPLICATION", taId, "Application withdrawn: " + applicationId);
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isDeadlinePassed(String deadline) {
+        if (deadline == null || deadline.trim().isEmpty() || "null".equalsIgnoreCase(deadline.trim())) {
+            return true;
+        }
+
+        java.time.LocalDate today = java.time.LocalDate.now();
+        String value = deadline.trim();
+        java.util.List<java.time.format.DateTimeFormatter> formatters = java.util.Arrays.asList(
+                java.time.format.DateTimeFormatter.ISO_LOCAL_DATE,
+                java.time.format.DateTimeFormatter.ofPattern("yyyy-M-d"),
+                java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-d"),
+                java.time.format.DateTimeFormatter.ofPattern("yyyy-M-dd")
+        );
+
+        for (java.time.format.DateTimeFormatter formatter : formatters) {
+            try {
+                java.time.LocalDate date = java.time.LocalDate.parse(value, formatter);
+                return !date.isAfter(today);
+            } catch (java.time.format.DateTimeParseException ignored) {
+            }
+        }
+
+        try {
+            java.time.LocalDateTime dateTime = java.time.LocalDateTime.parse(value);
+            return !dateTime.toLocalDate().isAfter(today);
+        } catch (java.time.format.DateTimeParseException ignored) {
+        }
+
+        return true;
+    }
+
     // 计算匹配度
     private static double calculateMatchScore(TA ta, Job job) {
         double score = 0.0;
@@ -240,18 +258,18 @@ public class ApplicationService {
                         matchedSkills++;
                     }
                 }
-                score += (double) matchedSkills / totalSkills * 60;
+                score += (double) matchedSkills / totalSkills * 60; // 技能匹配占60%
             }
         }
 
         // 经验匹配（简单模拟）
         if (ta.getExperience() != null && !ta.getExperience().isEmpty()) {
-            score += 20;
+            score += 20; // 有经验加20分
         }
 
         // 部门匹配
         if (ta.getDepartment() != null && job.getDepartment() != null && ta.getDepartment().equals(job.getDepartment())) {
-            score += 20;
+            score += 20; // 同部门加20分
         }
 
         return Math.min(score, 100.0);
