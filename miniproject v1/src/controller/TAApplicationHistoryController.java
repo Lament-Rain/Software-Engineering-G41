@@ -198,13 +198,13 @@ public class TAApplicationHistoryController {
     }
 
     private boolean isWithdrawable(Application app, Job job) {
-        if (app == null || job == null || job.getDeadline() == null) {
+        if (app == null || job == null) {
             return false;
         }
         if (app.getStatus() != ApplicationStatus.PENDING) {
             return false;
         }
-        return job.getDeadline().compareTo(java.time.LocalDateTime.now().toString()) > 0;
+        return !ApplicationService.isDeadlinePassed(job.getDeadline());
     }
 
     private String formatDateTime(String value) {
@@ -265,6 +265,23 @@ public class TAApplicationHistoryController {
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "错误", "返回失败: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            Parent root = loader.load();
+            LoginController controller = loader.getController();
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, 800, 600);
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "错误", "退出失败: " + e.getMessage());
         }
     }
 

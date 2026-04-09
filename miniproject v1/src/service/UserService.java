@@ -6,53 +6,29 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class UserService {
-    public static String validateRegistration(String username, String password, String email, String phone) {
-        String normalizedUsername = username == null ? "" : username.trim();
-        String normalizedEmail = email == null ? "" : email.trim();
-        String normalizedPhone = phone == null ? "" : phone.trim();
-
-        if (normalizedUsername.isEmpty()) {
-            return "用户名不能为空";
-        }
-        if (usernameExists(normalizedUsername)) {
-            return "注册失败，用户名已存在";
-        }
-        if (!isValidPassword(password)) {
-            return "密码需至少8位，且同时包含字母和数字";
-        }
-        if (!isValidEmail(normalizedEmail)) {
-            return "邮箱格式不正确";
-        }
-        if (!isValidPhone(normalizedPhone)) {
-            return "手机号格式不正确，应为11位且以1开头";
-        }
-        return null;
-    }
-
-    public static boolean usernameExists(String username) {
-        if (username == null) {
-            return false;
-        }
-
-        String normalizedUsername = username.trim();
-        List<User> users = DataStorage.getUsers();
-        for (User user : users) {
-            if (user.getUsername() != null && user.getUsername().trim().equalsIgnoreCase(normalizedUsername)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     // 注册新用户
     public static User register(String username, String password, String email, String phone, model.UserRole role, String department) {
-        String normalizedUsername = username == null ? "" : username.trim();
-        String normalizedEmail = email == null ? "" : email.trim();
-        String normalizedPhone = phone == null ? "" : phone.trim();
-        String normalizedDepartment = department == null ? "" : department.trim();
-
-        if (validateRegistration(normalizedUsername, password, normalizedEmail, normalizedPhone) != null) {
+        // 验证密码复杂度
+        if (!isValidPassword(password)) {
             return null;
+        }
+
+        // 验证邮箱格式
+        if (!isValidEmail(email)) {
+            return null;
+        }
+
+        // 验证手机号格式
+        if (!isValidPhone(phone)) {
+            return null;
+        }
+
+        // 检查用户名是否已存在
+        List<User> users = DataStorage.getUsers();
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                return null;
+            }
         }
 
         // 创建新用户
@@ -61,21 +37,21 @@ public class UserService {
 
         switch (role) {
             case TA:
-                user = new TA(id, normalizedUsername, password, normalizedEmail, normalizedPhone);
+                user = new TA(id, username, password, email, phone);
                 break;
             case MO:
-                user = new MO(id, normalizedUsername, password, normalizedEmail, normalizedPhone, normalizedDepartment);
+                user = new MO(id, username, password, email, phone, department);
                 break;
             case ADMIN:
-                user = new Admin(id, normalizedUsername, password, normalizedEmail, normalizedPhone, model.AdminLevel.NORMAL);
+                user = new Admin(id, username, password, email, phone, model.AdminLevel.NORMAL);
                 break;
         }
 
+        // 保存用户
         if (user != null) {
-            List<User> users = DataStorage.getUsers();
             users.add(user);
             DataStorage.saveUsers(users);
-            DataStorage.addLog("REGISTER", normalizedUsername, "User registered: " + user.getUsername());
+            DataStorage.addLog("REGISTER", username, "User registered: " + user.getUsername());
         }
 
         return user;
@@ -87,7 +63,7 @@ public class UserService {
         for (User user : users) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
                 if (user.getStatus() == model.UserStatus.LOCKED) {
-                    return null;
+                    return null; // 账号被锁定
                 }
                 user.setLastLoginAt(java.time.LocalDateTime.now().toString());
                 DataStorage.saveUsers(users);
@@ -95,9 +71,10 @@ public class UserService {
                 return user;
             }
         }
-        return null;
+        return null; // 用户名或密码错误
     }
 
+    // 更新用户信息
     public static boolean updateUser(User user) {
         List<User> users = DataStorage.getUsers();
         for (int i = 0; i < users.size(); i++) {
@@ -111,6 +88,7 @@ public class UserService {
         return false;
     }
 
+    // 获取TA档案
     public static TA getTAProfile(String taId) {
         List<User> users = DataStorage.getUsers();
         for (User user : users) {
@@ -121,6 +99,7 @@ public class UserService {
         return null;
     }
 
+    // 更新TA档案
     public static boolean updateTAProfile(TA ta) {
         List<User> users = DataStorage.getUsers();
         for (int i = 0; i < users.size(); i++) {
@@ -135,14 +114,15 @@ public class UserService {
         return false;
     }
 
+    // 审核TA档案
     public static boolean reviewTAProfile(String taId, model.ProfileStatus status, String comment) {
         List<User> users = DataStorage.getUsers();
         for (int i = 0; i < users.size(); i++) {
             if (users.get(i) instanceof TA && users.get(i).getId().equals(taId)) {
                 TA ta = (TA) users.get(i);
                 ta.setProfileStatus(status);
-                ta.setProfileReviewComment(comment);
                 ta.setProfileUpdatedAt(java.time.LocalDateTime.now().toString());
+                ta.setProfileReviewComment(comment);
                 users.set(i, ta);
                 DataStorage.saveUsers(users);
                 DataStorage.addLog("REVIEW_TA_PROFILE", "admin", "TA profile reviewed: " + ta.getName() + " - " + status);
@@ -152,6 +132,7 @@ public class UserService {
         return false;
     }
 
+    // 禁用/启用用户
     public static boolean toggleUserStatus(String userId, model.UserStatus status) {
         List<User> users = DataStorage.getUsers();
         for (int i = 0; i < users.size(); i++) {
@@ -165,10 +146,12 @@ public class UserService {
         return false;
     }
 
+    // 获取所有用户
     public static List<User> getAllUsers() {
         return DataStorage.getUsers();
     }
 
+    // 获取特定角色的用户
     public static List<User> getUsersByRole(model.UserRole role) {
         List<User> users = DataStorage.getUsers();
         List<User> result = new java.util.ArrayList<>();
@@ -180,23 +163,29 @@ public class UserService {
         return result;
     }
 
+    // 辅助方法：验证密码复杂度
     private static boolean isValidPassword(String password) {
-        return password != null && password.length() >= 8 && Pattern.matches(".*[a-zA-Z].*", password) && Pattern.matches(".*[0-9].*", password);
+        return password.length() >= 8 && Pattern.matches(".*[a-zA-Z].*", password) && Pattern.matches(".*[0-9].*", password);
     }
 
+    // 辅助方法：验证邮箱格式
     private static boolean isValidEmail(String email) {
-        return email != null && Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email);
+        return Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email);
     }
 
+    // 辅助方法：验证手机号格式
     private static boolean isValidPhone(String phone) {
-        return phone != null && Pattern.matches("^1\\d{10}$", phone);
+        return Pattern.matches("^1\\d{10}$", phone);
     }
 
+    // 密码重置功能
     public static boolean resetPassword(String email, String newPassword) {
+        // 验证新密码复杂度
         if (!isValidPassword(newPassword)) {
             return false;
         }
 
+        // 查找用户
         List<User> users = DataStorage.getUsers();
         for (User user : users) {
             if (user.getEmail().equals(email)) {
@@ -208,4 +197,4 @@ public class UserService {
         }
         return false;
     }
-}
+} 

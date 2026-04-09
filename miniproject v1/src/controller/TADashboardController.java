@@ -92,12 +92,8 @@ public class TADashboardController {
         myApplicationsLabel.setText(String.valueOf(myApplicationsCount));
         
         // 获取待处理任务数量
-        int pendingTasksCount = 0;
-        for (Application app : ApplicationService.getApplicationsByTA(user.getId())) {
-            if (app.getStatus() == ApplicationStatus.PENDING || app.getStatus() == ApplicationStatus.SCREENED) {
-                pendingTasksCount++;
-            }
-        }
+        // 这里简化处理，实际应该根据用户的待处理任务计算
+        int pendingTasksCount = 2; // 模拟数据
         pendingActionsLabel.setText(String.valueOf(pendingTasksCount));
     }
     
@@ -116,17 +112,8 @@ public class TADashboardController {
             tasks.add(new model.Task("Upload Resume", "2026-03-25", "Pending"));
         }
         
-        // 更贴近当前迭代的任务提示
-        if (ApplicationService.getApplicationsByTA(user.getId()).isEmpty()) {
-            tasks.add(new model.Task("Apply for Position", "2026-04-19", "Pending"));
-        }
-
-        for (Application app : ApplicationService.getApplicationsByTA(user.getId())) {
-            if (app.getStatus() == ApplicationStatus.PENDING || app.getStatus() == ApplicationStatus.SCREENED) {
-                tasks.add(new model.Task("Track Application Status", "2026-04-19", app.getStatus().name()));
-                break;
-            }
-        }
+        // Mock other tasks
+        tasks.add(new model.Task("Apply for Position", "2026-03-28", "Approved"));
         
         // Set table data
         tasksTable.setItems(tasks);
@@ -358,7 +345,7 @@ public class TADashboardController {
         if (!jobs.isEmpty()) {
             Job job = jobs.get(0);
             String coverLetter = "I am very interested in this position and hope to have the opportunity to join.";
-
+            
             Application application = ApplicationService.submitApplication(user.getId(), job.getId(), coverLetter);
             if (application != null) {
                 Alert successAlert = new Alert(AlertType.INFORMATION);
@@ -367,7 +354,6 @@ public class TADashboardController {
                 successAlert.setContentText("Application submitted successfully! Match Score: " + application.getMatchScore());
                 successAlert.initModality(Modality.APPLICATION_MODAL);
                 successAlert.showAndWait();
-                initializeDashboard();
             } else {
                 Alert errorAlert = new Alert(AlertType.INFORMATION);
                 errorAlert.setTitle("Application Failed");
@@ -509,7 +495,29 @@ public class TADashboardController {
     // Handle my applications card click
     @FXML
     public void handleMyApplicationsClick(MouseEvent event) {
-        openApplicationHistoryPage();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
+            Parent root = loader.load();
+            TAApplicationHistoryController controller = loader.getController();
+            controller.setUser(user);
+
+            Stage stage = (Stage) tasksTable.getScene().getWindow();
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Application History");
+            stage.centerOnScreen();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Page Loading Failed");
+            alert.setContentText("Failed to load application history page, please try again later.");
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        }
     }
     
     // Handle pending tasks card click
@@ -530,9 +538,7 @@ public class TADashboardController {
             } else if (selectedTask.getName().equals("Upload Resume")) {
                 handleUploadResume(new ActionEvent());
             } else if (selectedTask.getName().equals("Apply for Position")) {
-                handleJobRequirements(new ActionEvent());
-            } else if (selectedTask.getName().equals("Track Application Status")) {
-                openApplicationHistoryPage();
+                handleApplyForJob(new ActionEvent());
             }
         }
     }
@@ -547,37 +553,8 @@ public class TADashboardController {
     // Handle application management button click
     @FXML
     private void handleApplicationManagement(ActionEvent event) {
-        openApplicationHistoryPage();
-    }
-
-    private void openApplicationHistoryPage() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
-            Parent root = loader.load();
-            TAApplicationHistoryController controller = loader.getController();
-            controller.setUser(user);
-
-            Stage stage = tasksTable != null && tasksTable.getScene() != null
-                    ? (Stage) tasksTable.getScene().getWindow()
-                    : null;
-            if (stage == null) {
-                return;
-            }
-            controller.setStage(stage);
-
-            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Application History");
-        } catch (Exception e) {
-            e.printStackTrace();
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Page Loading Failed");
-            alert.setContentText("Failed to load application history page, please try again later.");
-            alert.initModality(Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        }
+        // Show my applications
+        handleMyApplicationsClick(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false, false, false, false, false, false, false, false, false, null));
     }
 
     // Handle job requirements button click - 查看职位需求

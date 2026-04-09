@@ -27,8 +27,8 @@ public class JobService {
         job.setPublisherId(publisherId);
         job.setPublisherType(publisherType);
         job.setPublisherName(publisherName);
-        // 设置职位状态为已发布
-        job.setStatus(model.JobStatus.PUBLISHED);
+        // 新发布职位先进入待审核状态
+        job.setStatus(model.JobStatus.PENDING);
 
         // 保存职位
         List<Job> jobs = DataStorage.getJobs();
@@ -152,41 +152,61 @@ public class JobService {
     public static List<Job> getAvailableJobs() {
         List<Job> jobs = DataStorage.getJobs();
         List<Job> result = new java.util.ArrayList<>();
-        java.time.LocalDate now = java.time.LocalDate.now();
+        java.time.LocalDate today = java.time.LocalDate.now();
         for (Job job : jobs) {
             if (job.getStatus() != model.JobStatus.PUBLISHED) {
                 continue;
             }
-            if (isDeadlineAfterToday(job.getDeadline(), now)) {
-                result.add(job);
+            if (!isJobStillAvailable(job, today)) {
+                continue;
             }
+            result.add(job);
         }
         return result;
     }
 
-    private static boolean isDeadlineAfterToday(String deadline, java.time.LocalDate now) {
-        if (deadline == null || deadline.trim().isEmpty() || "null".equalsIgnoreCase(deadline.trim())) {
+    private static boolean isJobStillAvailable(Job job, java.time.LocalDate today) {
+        if (job == null || job.getDeadline() == null || job.getDeadline().trim().isEmpty() || "null".equalsIgnoreCase(job.getDeadline().trim())) {
             return false;
         }
+
+        String deadline = job.getDeadline().trim();
         try {
-            return java.time.LocalDate.parse(deadline.trim(), java.time.format.DateTimeFormatter.ofPattern("yyyy-M-d")).isAfter(now);
-        } catch (Exception ignore) {
+            java.time.LocalDate deadlineDate = java.time.LocalDate.parse(deadline);
+            return !deadlineDate.isBefore(today);
+        } catch (java.time.format.DateTimeParseException ignored) {
+        }
+
+        try {
+            java.time.LocalDateTime deadlineDateTime = java.time.LocalDateTime.parse(deadline);
+            return !deadlineDateTime.toLocalDate().isBefore(today);
+        } catch (java.time.format.DateTimeParseException ignored) {
+        }
+
+        String[] parts = deadline.split("-");
+        if (parts.length == 3) {
             try {
-                return java.time.LocalDate.parse(deadline.trim()).isAfter(now);
-            } catch (Exception innerIgnore) {
-                return deadline.compareTo(java.time.LocalDateTime.now().toString()) > 0;
+                java.time.LocalDate deadlineDate = java.time.LocalDate.of(
+                        Integer.parseInt(parts[0]),
+                        Integer.parseInt(parts[1]),
+                        Integer.parseInt(parts[2])
+                );
+                return !deadlineDate.isBefore(today);
+            } catch (NumberFormatException | java.time.DateTimeException ignored) {
             }
         }
+
+        return false;
     }
 
     // 按条件筛选职位
     public static List<Job> filterJobs(model.JobType type, String department, String deadline) {
         List<Job> jobs = DataStorage.getJobs();
         List<Job> result = new java.util.ArrayList<>();
-        String now = java.time.LocalDateTime.now().toString();
+        java.time.LocalDate today = java.time.LocalDate.now();
         for (Job job : jobs) {
             // 只筛选已发布且未截止的职位
-            if (job.getStatus() != model.JobStatus.PUBLISHED || job.getDeadline().compareTo(now) <= 0) {
+            if (job.getStatus() != model.JobStatus.PUBLISHED || !isJobStillAvailable(job, today)) {
                 continue;
             }
             
@@ -197,7 +217,7 @@ public class JobService {
             if (department != null && !job.getDepartment().equals(department)) {
                 match = false;
             }
-            if (deadline != null && job.getDeadline().compareTo(deadline) < 0) {
+            if (deadline != null && !deadline.trim().isEmpty() && job.getDeadline().compareTo(deadline) < 0) {
                 match = false;
             }
             if (match) {
@@ -211,10 +231,10 @@ public class JobService {
     public static List<Job> searchJobs(String keyword) {
         List<Job> jobs = DataStorage.getJobs();
         List<Job> result = new java.util.ArrayList<>();
-        String now = java.time.LocalDateTime.now().toString();
+        java.time.LocalDate today = java.time.LocalDate.now();
         for (Job job : jobs) {
             // 只搜索已发布且未截止的职位
-            if (job.getStatus() == model.JobStatus.PUBLISHED && job.getDeadline().compareTo(now) > 0) {
+            if (job.getStatus() == model.JobStatus.PUBLISHED && isJobStillAvailable(job, today)) {
                 if (job.getTitle().toLowerCase().contains(keyword.toLowerCase()) || 
                     job.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
                     result.add(job);

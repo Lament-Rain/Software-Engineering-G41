@@ -9,11 +9,11 @@ import javafx.stage.Stage;
 import model.MO;
 import model.Admin;
 import model.Job;
-import model.JobStatus;
 import model.JobType;
 import model.UserRole;
 import service.JobService;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MOCreateJobController {
@@ -37,16 +37,11 @@ public class MOCreateJobController {
     private TextArea skillsArea;
     @FXML
     private Label errorMessage;
-    @FXML
-    private Label reviewStatusLabel;
-    @FXML
-    private Label reviewCommentLabel;
 
     private MO moUser;
     private Admin adminUser;
     private UserRole userRole;
     private Stage stage;
-    private Job editingJob;
 
     public void setUser(MO user) {
         this.moUser = user;
@@ -67,36 +62,19 @@ public class MOCreateJobController {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
-    public void setEditingJob(Job job) {
-        this.editingJob = job;
-        if (job == null) {
-            return;
-        }
-
-        titleField.setText(job.getTitle());
-        typeComboBox.setValue(job.getType() != null ? job.getType().name() : null);
-        departmentComboBox.setValue(job.getDepartment());
-        workTimeField.setText(job.getWorkTime());
-        recruitNumField.setText(String.valueOf(job.getRecruitNum()));
-        deadlineField.setText(job.getDeadline());
-        descriptionArea.setText(job.getDescription());
-        skillsArea.setText(job.getSkills() != null ? String.join(", ", job.getSkills()) : "");
-        reviewStatusLabel.setText(job.getStatus() != null ? job.getStatus().name() : "-");
-        String comment = job.getReviewComment();
-        reviewCommentLabel.setText(comment != null && !comment.isEmpty() ? comment : "No review feedback yet");
-    }
     
     @FXML
     private void initialize() {
+        // 初始化职位类型选项
         typeComboBox.getItems().addAll("MODULE_ASSISTANT", "INVIGILATION", "OTHER");
+        
+        // 初始化院系选项
         departmentComboBox.getItems().addAll("计算机学院", "理学院", "外语学院", "人文学院", "经济管理学院", "工学院");
-        reviewStatusLabel.setText("Draft / New Job");
-        reviewCommentLabel.setText("No review feedback yet");
     }
     
     @FXML
     private void handleSubmit() {
+        // 验证输入
         String title = titleField.getText();
         String type = typeComboBox.getValue();
         String department = departmentComboBox.getValue();
@@ -111,6 +89,7 @@ public class MOCreateJobController {
             return;
         }
         
+        // 验证招募人数
         int recruitNum;
         try {
             recruitNum = Integer.parseInt(recruitNumStr);
@@ -123,52 +102,38 @@ public class MOCreateJobController {
             return;
         }
         
+        // 准备参数并保存职位
         List<String> skillsList = java.util.Arrays.asList(skills.split(","));
-        String salary = "";
-        String location = "";
-        String extraRequirements = "";
+        String salary = ""; // 默认为空
+        String location = ""; // 默认为空
+        String extraRequirements = ""; // 默认为空
 
-        boolean success;
-        if (editingJob != null) {
-            editingJob.setTitle(title);
-            editingJob.setType(JobType.valueOf(type));
-            editingJob.setDepartment(department);
-            editingJob.setWorkTime(workTime);
-            editingJob.setRecruitNum(recruitNum);
-            editingJob.setDeadline(deadline);
-            editingJob.setDescription(description);
-            editingJob.setSkills(skillsList);
-            editingJob.setSalary(salary);
-            editingJob.setLocation(location);
-            editingJob.setExtraRequirements(extraRequirements);
-            editingJob.setStatus(JobStatus.PENDING);
-            editingJob.setReviewComment("");
-            success = JobService.updateJob(editingJob);
-        } else {
-            Job job = null;
-            if (userRole == UserRole.MO && moUser != null) {
-                job = JobService.createJob(title, JobType.valueOf(type), department, description, skillsList, workTime, recruitNum, deadline, salary, location, extraRequirements, moUser.getId(), "MO", moUser.getName());
-            } else if (userRole == UserRole.ADMIN && adminUser != null) {
-                job = JobService.createJob(title, JobType.valueOf(type), department, description, skillsList, workTime, recruitNum, deadline, salary, location, extraRequirements, adminUser.getId(), "ADMIN", adminUser.getUsername());
-            }
-            success = job != null;
+        Job job = null;
+        if (userRole == UserRole.MO && moUser != null) {
+            job = JobService.createJob(title, JobType.valueOf(type), department, description, skillsList, workTime, recruitNum, deadline, salary, location, extraRequirements, moUser.getId(), "MO", moUser.getName());
+        } else if (userRole == UserRole.ADMIN && adminUser != null) {
+            job = JobService.createJob(title, JobType.valueOf(type), department, description, skillsList, workTime, recruitNum, deadline, salary, location, extraRequirements, adminUser.getId(), "ADMIN", adminUser.getUsername());
         }
 
+        boolean success = job != null;
         if (success) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle(editingJob != null ? "重新提交成功" : "发布成功");
-            alert.setHeaderText(editingJob != null ? "职位已重新提交审核" : "职位发布成功");
-            alert.setContentText(editingJob != null ? "职位状态已更新为 PENDING。" : "职位已成功发布！");
+            alert.setTitle("发布成功");
+            alert.setHeaderText("职位发布成功");
+            alert.setContentText("职位已成功发布！");
             alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
             alert.showAndWait();
+
+            // 返回到仪表盘
             handleHome();
         } else {
-            errorMessage.setText(editingJob != null ? "职位重新提交失败，请稍后重试" : "职位发布失败，请稍后重试");
+            errorMessage.setText("职位发布失败，请稍后重试");
         }
     }
     
     @FXML
     private void handleCancel() {
+        // 返回到仪表盘
         handleHome();
     }
     
