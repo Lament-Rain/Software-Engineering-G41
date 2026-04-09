@@ -1,1 +1,0 @@
-Application{id='cee66399-d1a1-4400-99a9-8096420e975a', taId='94b907e4-bbc7-4472-86f1-babb88ff7769', jobId='754247a1-cc97-4570-8b68-7f87327d8520', coverLetter='111', status=WITHDRAWN, createdAt='2026-04-09T05:11:36.202244900', updatedAt='2026-04-09T05:12:36.001677600', reviewedBy='null', reviewTime='null', reviewComment='Withdrawn by TA before deadline', matchScore=20.0}
