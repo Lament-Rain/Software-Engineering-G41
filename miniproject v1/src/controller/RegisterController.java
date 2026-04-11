@@ -65,12 +65,12 @@ public class RegisterController {
         errorMessage.setText("");
         successMessage.setText("");
 
-        String username = usernameField.getText();
+        String username = usernameField.getText().trim();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
-        String email = emailField.getText();
-        String phone = phoneField.getText();
-        String department = departmentField.getText();
+        String email = emailField.getText().trim();
+        String phone = phoneField.getText().trim();
+        String department = departmentField.getText().trim();
 
         if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || email.isEmpty() || phone.isEmpty()) {
             errorMessage.setText("Please complete all required fields.");
@@ -84,6 +84,21 @@ public class RegisterController {
 
         if (password.length() < 8) {
             errorMessage.setText("Password must be at least 8 characters long.");
+            return;
+        }
+
+        if (!password.matches(".*[A-Za-z].*") || !password.matches(".*\\d.*")) {
+            errorMessage.setText("Password must contain both letters and numbers.");
+            return;
+        }
+
+        if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+            errorMessage.setText("Please enter a valid email address.");
+            return;
+        }
+
+        if (!phone.matches("^1\\d{10}$")) {
+            errorMessage.setText("Please enter a valid phone number.");
             return;
         }
 
