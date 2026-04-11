@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,6 +11,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class MOCreateJobController {
 
@@ -58,27 +64,28 @@ public class MOCreateJobController {
 
     @FXML
     public void initialize() {
-        welcomeLabel.setText("欢迎，模块组织者");
+        welcomeLabel.setText("Welcome, Module Organizer");
         typeComboBox.setItems(FXCollections.observableArrayList(
-                "课程助教", "实验助教", "科研助教", "行政助教"));
+                "Course TA", "Lab TA", "Research TA", "Admin TA"));
         departmentComboBox.setItems(FXCollections.observableArrayList(
-                "计算机学院", "语言学院", "理学院", "商学院", "人工智能学院", "人文学院"));
+                "School of Computer Science", "School of Languages", "School of Science", 
+                "Business School", "School of AI", "School of Humanities"));
     }
 
     @FXML
     private void handleHome() {
-        System.out.println("返回MO控制台首页");
+        System.out.println("Back to MO Dashboard");
         jumpToHome();
     }
 
     @FXML
     private void handleLogout() {
-        System.out.println("退出登录");
+        System.out.println("Logout");
     }
 
     @FXML
     private void handleCancel() {
-        System.out.println("取消发布，返回首页");
+        System.out.println("Cancel posting, back to dashboard");
         jumpToHome();
     }
 
@@ -90,66 +97,66 @@ public class MOCreateJobController {
         String deadline = deadlineField.getText();
 
         if (title == null || title.trim().isEmpty()) {
-            errorMessage.setText("请输入职位标题");
+            errorMessage.setText("Please enter job title");
             return;
         }
         if (department == null || department.trim().isEmpty()) {
-            errorMessage.setText("请选择所属院系");
+            errorMessage.setText("Please select department");
             return;
         }
         if (recruitNum == null || recruitNum.trim().isEmpty()) {
-            errorMessage.setText("请输入招募人数");
+            errorMessage.setText("Please enter number of openings");
             return;
         }
         if (deadline == null || deadline.trim().isEmpty()) {
-            errorMessage.setText("请输入截止时间");
+            errorMessage.setText("Please enter application deadline");
             return;
         }
 
         try {
-            // 创建新Job对象
+            // Create new Job object
             model.Job job = new model.Job();
             
-            // 生成唯一ID
-            java.util.UUID uuid = java.util.UUID.randomUUID();
+            // Generate unique ID
+            UUID uuid = UUID.randomUUID();
             job.setId(uuid.toString());
             
-            // 设置基本信息
+            // Set basic information
             job.setTitle(title);
             job.setDepartment(department);
             job.setWorkTime(workTimeField.getText() != null ? workTimeField.getText().trim() : "");
             job.setDescription(descriptionArea.getText() != null ? descriptionArea.getText().trim() : "");
             
-            // 解析技能要求
+            // Parse skills
             String skillsText = skillsArea.getText();
             if (skillsText != null && !skillsText.trim().isEmpty()) {
-                java.util.List<String> skills = java.util.Arrays.asList(skillsText.split("\\n"));
-                skills = skills.stream().filter(s -> !s.trim().isEmpty()).collect(java.util.stream.Collectors.toList());
+                List<String> skills = Arrays.asList(skillsText.split("\\n"));
+                skills = skills.stream().filter(s -> !s.trim().isEmpty()).collect(Collectors.toList());
                 job.setSkills(skills);
             }
             
-            // 解析招募人数
+            // Parse recruit number
             try {
                 int num = Integer.parseInt(recruitNum.trim());
                 job.setRecruitNum(num);
             } catch (NumberFormatException e) {
-                errorMessage.setText("招募人数必须是数字");
+                errorMessage.setText("Number of openings must be a number");
                 return;
             }
             
             job.setDeadline(deadline.trim());
             
-            // 设置职位类型
+            // Set job type
             String typeStr = typeComboBox.getValue();
             if (typeStr != null) {
-                // 根据现有枚举：MODULE_ASSISTANT, INVIGILATION, OTHER
+                // According to existing enum: MODULE_ASSISTANT, INVIGILATION, OTHER
                 switch (typeStr) {
-                    case "课程助教":
-                    case "实验助教":
-                    case "科研助教":
+                    case "Course TA":
+                    case "Lab TA":
+                    case "Research TA":
                         job.setType(model.JobType.MODULE_ASSISTANT);
                         break;
-                    case "行政助教":
+                    case "Admin TA":
                     default:
                         job.setType(model.JobType.OTHER);
                         break;
@@ -158,44 +165,44 @@ public class MOCreateJobController {
                 job.setType(model.JobType.OTHER);
             }
             
-            // 设置发布者MO ID
+            // Set publisher MO ID
             String moId = null;
             if (moUser != null) {
                 moId = moUser.getId();
             } else if (adminUser != null) {
-                moId = adminUser.getId(); // 管理员也可以替MO发布
+                moId = adminUser.getId(); // Admin can also post for MO
             }
             job.setMoId(moId);
             
-            // 设置状态为PENDING（等待管理员审核）
+            // Set status to PENDING (waiting for admin approval)
             job.setStatus(model.JobStatus.PENDING);
             
-            // 设置创建时间
+            // Set creation time
             java.time.LocalDate today = java.time.LocalDate.now();
             job.setCreatedAt(today.toString());
             job.setUpdatedAt(today.toString());
             
-            // 保存到数据存储
-            java.util.List<model.Job> allJobs = service.DataStorage.getJobs();
+            // Save to data storage
+            List<model.Job> allJobs = service.DataStorage.getJobs();
             allJobs.add(job);
             service.DataStorage.saveJobs(allJobs);
             
-            System.out.println("职位发布成功！");
-            System.out.println("职位标题：" + title);
-            System.out.println("所属院系：" + department);
-            System.out.println("招募人数：" + recruitNum);
-            System.out.println("截止时间：" + deadline);
+            System.out.println("Job posted successfully!");
+            System.out.println("Job title: " + title);
+            System.out.println("Department: " + department);
+            System.out.println("Openings: " + recruitNum);
+            System.out.println("Deadline: " + deadline);
             
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("提交成功");
+            alert.setTitle("Submission Success");
             alert.setHeaderText(null);
-            alert.setContentText("职位发布成功！等待管理员审核后即可发布，即将返回首页");
+            alert.setContentText("Job posted successfully! It will be published after admin approval. Back to dashboard...");
             alert.showAndWait();
             
             jumpToHome();
         } catch (Exception e) {
             e.printStackTrace();
-            errorMessage.setText("发布失败：" + e.getMessage());
+            errorMessage.setText("Failed to post: " + e.getMessage());
         }
     }
 
@@ -205,20 +212,18 @@ public class MOCreateJobController {
             Parent root = loader.load();
             MODashboardController controller = loader.getController();
             
-            // 传递当前用户，让它刷新数据
+            // Pass current user to refresh data
             if (moUser != null) {
                 controller.setUser(moUser);
-            } else if (adminUser != null) {
-                // admin用户不应该从这里返回dashboard
             }
             
             Stage stage = (Stage) createJobPane.getScene().getWindow();
             stage.setScene(new Scene(root, 1280, 800));
-            stage.setTitle("模块组织者控制台");
+            stage.setTitle("Module Organizer Dashboard");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("返回首页失败");
+            System.out.println("Failed to return to dashboard");
         }
     }
 }

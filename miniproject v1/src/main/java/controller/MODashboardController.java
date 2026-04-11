@@ -114,7 +114,7 @@ public class MODashboardController {
         
         // 如果没有数据，添加提示
         if (jobList.isEmpty()) {
-            jobList.add(FXCollections.observableArrayList("暂无发布职位", "", "", "0"));
+            jobList.add(FXCollections.observableArrayList("No Jobs Published", "", "", "0"));
         }
         
         jobsTable.setItems(jobList);
@@ -177,21 +177,21 @@ public class MODashboardController {
 
     @FXML
     private void handleJobManagement() {
-        jumpToJobList("职位列表");
+        jumpToJobList("Job List");
     }
 
     @FXML
     private void handleApplicationManagement() {
-        jumpToUserPage("/fxml/MOApplicationReview.fxml", "申请人审核");
+        jumpToUserPage("/fxml/MOApplicationReview.fxml", "Application Review");
     }
 
     @FXML
     private void handleStatisticsAnalysis() {
         // TODO: 统计分析页面待开发
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle("提示");
+        alert.setTitle("Info");
         alert.setHeaderText(null);
-        alert.setContentText("统计分析功能待开发");
+        alert.setContentText("Statistics Analysis is under development");
         alert.showAndWait();
     }
 
@@ -210,18 +210,18 @@ public class MODashboardController {
             currentStage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("登出失败");
+            System.out.println("Logout failed");
         }
     }
 
     @FXML
     private void handleCreateJob() {
-        jumpToUserPage("/fxml/MOCreateJob.fxml", "发布TA职位");
+        jumpToUserPage("/fxml/MOCreateJob.fxml", "Post TA Job");
     }
 
     @FXML
     private void handleViewAllJobs() {
-        jumpToJobList("全部职位");
+        jumpToJobList("All Jobs");
     }
     
     private void jumpToJobList(String title) {
@@ -242,25 +242,25 @@ public class MODashboardController {
         } catch (Exception e) {
             e.printStackTrace();
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            alert.setTitle("错误");
+            alert.setTitle("Error");
             alert.setHeaderText(null);
-            alert.setContentText("页面加载失败: " + e.getMessage());
+            alert.setContentText("Failed to load page: " + e.getMessage());
             alert.showAndWait();
         }
     }
 
     @FXML
     private void handleViewApplications() {
-        jumpToUserPage("/fxml/MOApplicationReview.fxml", "申请人审核");
+        jumpToUserPage("/fxml/MOApplicationReview.fxml", "Application Review");
     }
 
     @FXML
     private void handleExportData() {
         // TODO: 数据导出待开发
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle("提示");
+        alert.setTitle("Info");
         alert.setHeaderText(null);
-        alert.setContentText("数据导出功能待开发");
+        alert.setContentText("Data Export is under development");
         alert.showAndWait();
     }
 
@@ -268,9 +268,9 @@ public class MODashboardController {
     private void handleViewStatistics() {
         // TODO: 统计详情页面待开发
         javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle("提示");
+        alert.setTitle("Info");
         alert.setHeaderText(null);
-        alert.setContentText("统计详情功能待开发");
+        alert.setContentText("Statistics Detail is under development");
         alert.showAndWait();
     }
 

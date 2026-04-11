@@ -78,23 +78,23 @@ public class MOApplicationReviewController {
             if (currentUser != null) {
                 loadApplications();
             }
-            if (newVal != null && !newVal.equals("全部职位")) {
+            if (newVal != null && !newVal.equals("All Jobs")) {
                 selectedJobLabel.setText(newVal);
-                System.out.println("已选择职位：" + newVal);
+                System.out.println("Selected job: " + newVal);
             } else {
-                selectedJobLabel.setText("全部职位");
+                selectedJobLabel.setText("All Jobs");
             }
         });
 
         applicantsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                // 这里只显示基本信息，因为详细信息需要从原始数据获取
+                // Only show basic info here, details in original data
                 applicantNameLabel.setText(newVal.get(0));
                 applicantStatusLabel.setText(newVal.get(3));
                 applicantResumeLabel.setText(newVal.get(5));
-                experienceArea.setText("点击申请表查看详细信息");
-                coverLetterArea.setText("点击申请表查看详细信息");
-                System.out.println("已选择申请人：" + newVal.get(0));
+                experienceArea.setText("Click application to view details");
+                coverLetterArea.setText("Click application to view details");
+                System.out.println("Selected applicant: " + newVal.get(0));
             } else {
                 clearApplicantDetail();
             }
@@ -111,10 +111,10 @@ public class MOApplicationReviewController {
     
     private void initJobSelector() {
         ObservableList<String> jobList = FXCollections.observableArrayList();
-        jobList.add("全部职位");
+        jobList.add("All Jobs");
         
-        // 加载当前MO发布的所有职位
-        java.util.List<Job> allJobs = service.DataStorage.getJobs();
+        // Load all jobs published by current MO
+        List<Job> allJobs = service.DataStorage.getJobs();
         for (Job job : allJobs) {
             if (currentUser != null && currentUser.getId().equals(job.getMoId())) {
                 jobList.add(job.getTitle());
@@ -122,11 +122,11 @@ public class MOApplicationReviewController {
         }
         
         jobSelector.setItems(jobList);
-        jobSelector.setValue("全部职位");
-        selectedJobLabel.setText("全部职位");
+        jobSelector.setValue("All Jobs");
+        selectedJobLabel.setText("All Jobs");
     }
     
-    private void updateStatistics(java.util.List<Application> applications) {
+    private void updateStatistics(List<Application> applications) {
         int total = applications.size();
         int accepted = 0;
         int pending = 0;
@@ -146,20 +146,20 @@ public class MOApplicationReviewController {
     
     private void loadApplications() {
         String selectedJobTitle = jobSelector.getValue();
-        java.util.List<Job> allJobs = service.DataStorage.getJobs();
-        java.util.List<Application> allApplications = service.DataStorage.getApplications();
+        List<Job> allJobs = service.DataStorage.getJobs();
+        List<Application> allApplications = service.DataStorage.getApplications();
         
-        // 过滤出当前MO的申请
-        java.util.List<Application> myApplications = new java.util.ArrayList<>();
+        // Filter applications for current MO
+        List<Application> myApplications = new ArrayList<>();
         
         for (Application app : allApplications) {
-            // 找到申请对应的职位
+            // Find corresponding job
             for (Job job : allJobs) {
                 if (job.getId().equals(app.getJobId())) {
-                    // 检查这个职位是否属于当前MO
+                    // Check if this job belongs to current MO
                     if (currentUser != null && currentUser.getId().equals(job.getMoId())) {
-                        // 如果选择了特定职位，过滤
-                        if ("全部职位".equals(selectedJobTitle) || job.getTitle().equals(selectedJobTitle)) {
+                        // Filter by selected job
+                        if ("All Jobs".equals(selectedJobTitle) || job.getTitle().equals(selectedJobTitle)) {
                             myApplications.add(app);
                         }
                     }
@@ -168,30 +168,30 @@ public class MOApplicationReviewController {
             }
         }
         
-        // 更新统计
+        // Update statistics
         updateStatistics(myApplications);
         
-        // 加载表格数据
+        // Load table data
         ObservableList<ObservableList<String>> applicationList = FXCollections.observableArrayList();
         
         for (Application app : myApplications) {
-            // 找到TA信息
+            // Find TA info
             String taName = "Unknown";
             String taDepartment = "";
-            model.TA ta = null;
-            java.util.List<User> users = service.DataStorage.getUsers();
+            TA ta = null;
+            List<User> users = service.DataStorage.getUsers();
             for (User u : users) {
-                if (u.getId().equals(app.getTaId()) && u instanceof model.TA) {
-                    ta = (model.TA) u;
+                if (u.getId().equals(app.getTaId()) && u instanceof TA) {
+                    ta = (TA) u;
                     taName = ta.getName() != null ? ta.getName() : ta.getUsername();
                     taDepartment = ta.getDepartment() != null ? ta.getDepartment() : "";
                     break;
                 }
             }
             
-            String statusStr = getStatusChinese(app.getStatus());
+            String statusStr = getStatusName(app.getStatus());
             String resumeStr = (ta != null && ta.getResumePath() != null && !ta.getResumePath().isEmpty()) 
-                    ? "已上传" : "未上传";
+                    ? "Uploaded" : "Not Uploaded";
             String scoreStr = app.getMatchScore() > 0 ? String.format("%.0f", app.getMatchScore()) : "-";
             
             applicationList.add(FXCollections.observableArrayList(
@@ -205,20 +205,20 @@ public class MOApplicationReviewController {
         }
         
         if (applicationList.isEmpty()) {
-            applicationList.add(FXCollections.observableArrayList("暂无申请", "", "", "", "", ""));
+            applicationList.add(FXCollections.observableArrayList("No Applications", "", "", "", "", ""));
         }
         
         applicantsTable.setItems(applicationList);
     }
     
-    private String getStatusChinese(ApplicationStatus status) {
-        if (status == null) return "待审核";
+    private String getStatusName(ApplicationStatus status) {
+        if (status == null) return "Pending";
         switch (status) {
-            case PENDING: return "待审核";
-            case SCREENED: return "已筛选";
-            case ACCEPTED: return "已录用";
-            case REJECTED: return "已拒绝";
-            default: return "待审核";
+            case PENDING: return "Pending";
+            case SCREENED: return "Screened";
+            case ACCEPTED: return "Accepted";
+            case REJECTED: return "Rejected";
+            default: return "Pending";
         }
     }
 
@@ -289,24 +289,24 @@ public class MOApplicationReviewController {
 
     @FXML
     private void handleBack() {
-        System.out.println("返回MO控制台首页");
+        System.out.println("Back to MO Dashboard");
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
             Parent root = loader.load();
             MODashboardController controller = loader.getController();
             
-            // 传递当前MO用户，刷新数据
+            // Pass current MO user to refresh data
             if (currentUser != null) {
                 controller.setUser(currentUser);
             }
             
             Stage stage = (Stage) jobSelector.getScene().getWindow();
             stage.setScene(new Scene(root, 1280, 800));
-            stage.setTitle("模块组织者控制台");
+            stage.setTitle("Module Organizer Dashboard");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("返回首页失败");
+            System.out.println("Failed to return to dashboard");
         }
     }
 
@@ -314,99 +314,99 @@ public class MOApplicationReviewController {
     private void handleScreenApplicant() {
         int selectedIndex = applicantsTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex < 0) {
-            showAlert("提示", "请先选择一位申请人");
+            showAlert("Info", "Please select an applicant first");
             return;
         }
         
-        // 找到对应的Application对象
+        // Find corresponding Application object
         String selectedName = applicantsTable.getItems().get(selectedIndex).get(0);
         Application app = findApplicationByName(selectedName);
         if (app == null) {
-            showAlert("错误", "找不到申请信息");
+            showAlert("Error", "Application not found");
             return;
         }
         
-        // 更新状态
+        // Update status
         app.setStatus(ApplicationStatus.SCREENED);
         app.setReviewComment(feedbackArea.getText());
-        app.setUpdatedAt(java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        app.setUpdatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         
-        // 保存到数据存储
+        // Save to data storage
         saveApplications();
         loadApplications();
         
-        System.out.println("标记申请人【" + selectedName + "】为已筛选");
-        showAlert("操作成功", "已标记为已筛选");
+        System.out.println("Mark applicant [" + selectedName + "] as Screened");
+        showAlert("Success", "Marked as Screened");
     }
 
     @FXML
     private void handleAcceptApplicant() {
         int selectedIndex = applicantsTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex < 0) {
-            showAlert("提示", "请先选择一位申请人");
+            showAlert("Info", "Please select an applicant first");
             return;
         }
         
         String selectedName = applicantsTable.getItems().get(selectedIndex).get(0);
         Application app = findApplicationByName(selectedName);
         if (app == null) {
-            showAlert("错误", "找不到申请信息");
+            showAlert("Error", "Application not found");
             return;
         }
         
         String feedback = feedbackArea.getText();
         app.setStatus(ApplicationStatus.ACCEPTED);
         app.setReviewComment(feedback);
-        app.setUpdatedAt(java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        app.setUpdatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         
         saveApplications();
         loadApplications();
         
-        System.out.println("录用申请人【" + selectedName + "】，备注：" + feedback);
-        showAlert("操作成功", "申请人已录用");
+        System.out.println("Accept applicant [" + selectedName + "], note: " + feedback);
+        showAlert("Success", "Applicant Accepted");
     }
 
     @FXML
     private void handleRejectApplicant() {
         int selectedIndex = applicantsTable.getSelectionModel().getSelectedIndex();
         if (selectedIndex < 0) {
-            showAlert("提示", "请先选择一位申请人");
+            showAlert("Info", "Please select an applicant first");
             return;
         }
         
         String feedback = feedbackArea.getText();
         if (feedback == null || feedback.trim().isEmpty()) {
-            showAlert("提示", "请填写拒绝原因");
+            showAlert("Info", "Please provide a reason for rejection");
             return;
         }
         
         String selectedName = applicantsTable.getItems().get(selectedIndex).get(0);
         Application app = findApplicationByName(selectedName);
         if (app == null) {
-            showAlert("错误", "找不到申请信息");
+            showAlert("Error", "Application not found");
             return;
         }
         
         app.setStatus(ApplicationStatus.REJECTED);
         app.setReviewComment(feedback);
-        app.setUpdatedAt(java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
+        app.setUpdatedAt(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
         
         saveApplications();
         loadApplications();
         
-        System.out.println("拒绝申请人【" + selectedName + "】，原因：" + feedback);
-        showAlert("操作成功", "申请人已拒绝");
+        System.out.println("Reject applicant [" + selectedName + "], reason: " + feedback);
+        showAlert("Success", "Applicant Rejected");
     }
     
-    // 根据姓名查找对应的Application对象
+    // Find Application object by TA name
     private Application findApplicationByName(String taName) {
-        java.util.List<Application> allApps = service.DataStorage.getApplications();
-        java.util.List<User> allUsers = service.DataStorage.getUsers();
+        List<Application> allApps = service.DataStorage.getApplications();
+        List<User> allUsers = service.DataStorage.getUsers();
         
         for (Application app : allApps) {
             for (User u : allUsers) {
-                if (u.getId().equals(app.getTaId()) && u instanceof model.TA) {
-                    model.TA ta = (model.TA) u;
+                if (u.getId().equals(app.getTaId()) && u instanceof TA) {
+                    TA ta = (TA) u;
                     String name = ta.getName() != null ? ta.getName() : ta.getUsername();
                     if (name.equals(taName)) {
                         return app;
@@ -418,7 +418,7 @@ public class MOApplicationReviewController {
     }
     
     private void saveApplications() {
-        java.util.List<Application> applications = service.DataStorage.getApplications();
+        List<Application> applications = service.DataStorage.getApplications();
         service.DataStorage.saveApplications(applications);
     }
 

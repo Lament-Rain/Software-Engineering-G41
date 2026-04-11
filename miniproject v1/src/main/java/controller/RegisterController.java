@@ -48,10 +48,10 @@ public class RegisterController {
     
     @FXML
     private void initialize() {
-        // 设置默认选中TA角色
+        // Select TA by default
         taToggle.setSelected(true);
         
-        // 绑定角色选择
+        // Bind role selection
         taToggle.setOnAction(e -> selectRole(UserRole.TA));
         moToggle.setOnAction(e -> selectRole(UserRole.MO));
         adminToggle.setOnAction(e -> selectRole(UserRole.ADMIN));
@@ -66,11 +66,11 @@ public class RegisterController {
     
     @FXML
     private void handleRegister(ActionEvent event) {
-        // 清除之前的消息
+        // Clear previous messages
         errorMessage.setText("");
         successMessage.setText("");
         
-        // 获取输入
+        // Get input
         String username = usernameField.getText();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
@@ -78,45 +78,45 @@ public class RegisterController {
         String phone = phoneField.getText();
         String department = departmentField.getText();
         
-        // 验证输入
+        // Validate input
         if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || email.isEmpty() || phone.isEmpty()) {
-            errorMessage.setText("请填写所有必填字段");
+            errorMessage.setText("Please fill in all required fields");
             return;
         }
         
         if (!password.equals(confirmPassword)) {
-            errorMessage.setText("两次输入的密码不一致");
+            errorMessage.setText("Passwords do not match");
             return;
         }
         
         if (password.length() < 8) {
-            errorMessage.setText("密码长度至少为8位");
+            errorMessage.setText("Password must be at least 8 characters long");
             return;
         }
         
-        // 对于MO，需要填写院系
+        // For MO, department is required
         if (selectedRole == UserRole.MO && department.isEmpty()) {
-            errorMessage.setText("请填写院系");
+            errorMessage.setText("Please enter department");
             return;
         }
         
-        // 注册用户
+        // Register user
         User newUser = UserService.register(username, password, email, phone, selectedRole, department);
         
         if (newUser != null) {
-            successMessage.setText("注册成功！请返回登录页面登录");
-            // 清空表单
+            successMessage.setText("Registration successful! Please go back to login page");
+            // Clear form
             clearForm();
         } else {
-            // 检查具体是哪个验证失败
+            // Check which validation failed
             if (!password.matches(".*[a-zA-Z].*") || !password.matches(".*[0-9].*")) {
-                errorMessage.setText("密码必须包含字母和数字，且长度至少8位");
+                errorMessage.setText("Password must contain both letters and digits");
             } else if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-                errorMessage.setText("邮箱格式不正确");
+                errorMessage.setText("Invalid email format");
             } else if (!phone.matches("^1\\d{10}$")) {
-                errorMessage.setText("手机号格式不正确，必须是11位手机号");
+                errorMessage.setText("Invalid phone format, must be 11 digits");
             } else {
-                errorMessage.setText("注册失败，用户名已存在");
+                errorMessage.setText("Registration failed, username already exists");
             }
         }
     }
@@ -140,10 +140,10 @@ public class RegisterController {
             
             Scene scene = new Scene(root, 800, 600);
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 登录");
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
         } catch (Exception e) {
             e.printStackTrace();
-            errorMessage.setText("页面加载失败");
+            errorMessage.setText("Failed to load page");
         }
     }
 }

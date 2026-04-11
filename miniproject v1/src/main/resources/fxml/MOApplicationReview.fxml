@@ -7,27 +7,27 @@
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MOApplicationReviewController">
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
-            <Label text="BUPT国际学校TA招聘系统" styleClass="navbar-title" />
+            <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
             <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;" />
-            <Button text="返回 MO 控制台" styleClass="navbar-menu" onAction="#handleBack" />
+            <Button text="Back to MO Dashboard" styleClass="navbar-menu" onAction="#handleBack" />
         </HBox>
     </VBox>
 
     <ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
         <VBox style="-fx-padding: 32px; -fx-spacing: 24px; -fx-background-color: #f8f9fa; -fx-pref-width: 1240px;">
             <VBox style="-fx-spacing: 8;">
-                <Label text="申请人审核" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
-                <Label text="选择你发布的职位，查看申请人并执行筛选 / 录用 / 拒绝。" textFill="#6c757d" style="-fx-font-size: 14px;" />
+                <Label text="Application Review" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                <Label text="Select a job you published, review applicants and perform screening / accept / reject." textFill="#6c757d" style="-fx-font-size: 14px;" />
             </VBox>
 
             <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 16;">
-                <Label text="选择职位" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
-                <ComboBox fx:id="jobSelector" promptText="请选择一个职位" style="-fx-pref-width: 420px;" />
+                <Label text="Select Job" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
+                <ComboBox fx:id="jobSelector" promptText="Select a job" style="-fx-pref-width: 420px;" />
             </VBox>
 
             <HBox style="-fx-spacing: 18;">
                 <VBox styleClass="stat-card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 10; -fx-pref-width: 220px;">
-                    <Label text="Applicants" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
+                    <Label text="Total Applicants" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
                     <Label fx:id="applicantCountLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
                 </VBox>
                 <VBox styleClass="stat-card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 10; -fx-pref-width: 220px;">
