@@ -306,7 +306,7 @@ public class MOApplicationReviewController {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Failed to return to dashboard");
+            showAlert("Error", "Failed to return to dashboard: " + e.getMessage());
         }
     }
 

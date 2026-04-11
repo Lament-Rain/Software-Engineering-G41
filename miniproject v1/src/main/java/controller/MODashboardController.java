@@ -210,7 +210,11 @@ public class MODashboardController {
             currentStage.show();
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Logout failed");
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Failed to logout: " + e.getMessage());
+            alert.showAndWait();
         }
     }
 

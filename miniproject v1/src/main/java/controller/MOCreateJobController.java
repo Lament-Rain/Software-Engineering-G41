@@ -80,7 +80,21 @@ public class MOCreateJobController {
 
     @FXML
     private void handleLogout() {
-        System.out.println("Logout");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            Parent root = loader.load();
+            LoginController controller = loader.getController();
+            Stage currentStage = (Stage) createJobPane.getScene().getWindow();
+            controller.setStage(currentStage);
+            Scene scene = new Scene(root, 800, 600);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            currentStage.setScene(scene);
+            currentStage.setTitle("BUPT International School TA Recruitment System - Login");
+            currentStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorMessage.setText("Failed to logout");
+        }
     }
 
     @FXML
@@ -203,6 +217,13 @@ public class MOCreateJobController {
         } catch (Exception e) {
             e.printStackTrace();
             errorMessage.setText("Failed to post: " + e.getMessage());
+            
+            // Show alert dialog to user
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText(null);
+            alert.setContentText("Failed to post job: " + e.getMessage());
+            alert.showAndWait();
         }
     }
 
