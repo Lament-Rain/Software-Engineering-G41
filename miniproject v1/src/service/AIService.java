@@ -4,45 +4,45 @@ import model.*;
 import java.util.*;
 
 public class AIService {
-    // 技能匹配计算
+    // Skill match calculation
     public static double calculateSkillMatch(TA ta, Job job) {
         double score = 0.0;
         int totalSkills = job.getSkills().size();
         int matchedSkills = 0;
 
-        // 硬技能匹配
+        // Hard skill matching
         if (totalSkills > 0) {
             for (String skill : job.getSkills()) {
                 if (ta.getSkills() != null && ta.getSkills().contains(skill)) {
                     matchedSkills++;
                 }
             }
-            score += (double) matchedSkills / totalSkills * 60; // 硬技能占60%
+            score += (double) matchedSkills / totalSkills * 60; // Hard skills account for 60%
         }
 
-        // 软技能匹配（简单模拟）
+        // Soft skill matching (simple simulation)
         if (ta.getExperience() != null && !ta.getExperience().isEmpty()) {
-            score += 20; // 有经验加20分
+            score += 20; // Add 20 points for experience
         }
 
-        // 语言能力匹配
+        // Language skill matching
         if (ta.getLanguageSkills() != null && !ta.getLanguageSkills().isEmpty()) {
-            score += 10; // 有语言能力加10分
+            score += 10; // Add 10 points for language skills
         }
 
-        // 其他技能匹配
+        // Other skill matching
         if (ta.getOtherSkills() != null && !ta.getOtherSkills().isEmpty()) {
-            score += 10; // 有其他技能加10分
+            score += 10; // Add 10 points for other skills
         }
 
         return Math.min(score, 100.0);
     }
 
-    // 缺失技能识别
+    // Missing skill identification
     public static List<String> identifyMissingSkills(TA ta, Job job) {
         List<String> missingSkills = new ArrayList<>();
 
-        // 识别缺失的硬技能
+        // Identify missing hard skills
         if (job.getSkills() != null && !job.getSkills().isEmpty()) {
             for (String skill : job.getSkills()) {
                 if (ta.getSkills() == null || !ta.getSkills().contains(skill)) {
@@ -54,13 +54,13 @@ public class AIService {
         return missingSkills;
     }
 
-    // 生成技能提升建议
+    // Generate skill improvement suggestions
     public static String generateSkillSuggestions(List<String> missingSkills) {
         if (missingSkills.isEmpty()) {
-            return "您的技能已满足职位要求，无需额外提升。";
+            return "Your skills already meet the job requirements. No additional improvement is needed.";
         }
 
-        StringBuilder suggestions = new StringBuilder("建议提升以下技能：");
+        StringBuilder suggestions = new StringBuilder("Suggested skills to improve:");
         for (String skill : missingSkills) {
             suggestions.append("\n- ").append(skill);
         }
@@ -68,12 +68,12 @@ public class AIService {
         return suggestions.toString();
     }
 
-    // 工作量统计
+    // Workload statistics
     public static Map<String, Integer> calculateWorkload() {
         Map<String, Integer> workloadMap = new HashMap<>();
         List<Application> applications = ApplicationService.getAllApplications();
 
-        // 统计每个TA的录用次数
+        // Count how many times each TA has been accepted
         for (Application app : applications) {
             if (app.getStatus() == model.ApplicationStatus.ACCEPTED) {
                 String taId = app.getTaId();
@@ -84,12 +84,12 @@ public class AIService {
         return workloadMap;
     }
 
-    // 工作量平衡建议
+    // Workload balancing suggestions
     public static List<String> generateWorkloadSuggestions() {
         List<String> suggestions = new ArrayList<>();
         Map<String, Integer> workloadMap = calculateWorkload();
 
-        // 找出工作量最高和最低的TA
+        // Find the TAs with the highest and lowest workloads
         String highestTA = null;
         String lowestTA = null;
         int highestWorkload = 0;
@@ -106,36 +106,36 @@ public class AIService {
             }
         }
 
-        // 生成建议
+        // Generate suggestions
         if (highestTA != null && lowestTA != null && highestWorkload > lowestWorkload + 1) {
             TA highTA = UserService.getTAProfile(highestTA);
             TA lowTA = UserService.getTAProfile(lowestTA);
 
             if (highTA != null && lowTA != null) {
-                suggestions.add("TA " + highTA.getName() + " 已录用 " + highestWorkload + " 次，建议优先考虑录用 TA " + lowTA.getName() + "（仅 " + lowestWorkload + " 次）");
+                suggestions.add("TA " + highTA.getName() + " has been accepted " + highestWorkload + " times. Consider prioritizing TA " + lowTA.getName() + " (only " + lowestWorkload + " times).");
             }
         }
 
         return suggestions;
     }
 
-    // 推荐职位给TA
+    // Recommend jobs for TA
     public static List<Job> recommendJobsForTA(TA ta, int limit) {
         List<Job> availableJobs = JobService.getAvailableJobs();
         List<Job> recommendedJobs = new ArrayList<>();
 
-        // 计算每个职位的匹配度
+        // Calculate the match score for each job
         Map<Job, Double> jobMatchScores = new HashMap<>();
         for (Job job : availableJobs) {
             double matchScore = calculateSkillMatch(ta, job);
             jobMatchScores.put(job, matchScore);
         }
 
-        // 按匹配度排序
+        // Sort by match score
         List<Map.Entry<Job, Double>> sortedJobs = new ArrayList<>(jobMatchScores.entrySet());
         sortedJobs.sort((a, b) -> b.getValue().compareTo(a.getValue()));
 
-        // 取前limit个职位
+        // Take the top limit jobs
         for (int i = 0; i < Math.min(limit, sortedJobs.size()); i++) {
             recommendedJobs.add(sortedJobs.get(i).getKey());
         }
@@ -143,12 +143,12 @@ public class AIService {
         return recommendedJobs;
     }
 
-    // 推荐TA给职位
+    // Recommend TAs for job
     public static List<TA> recommendTAsForJob(Job job, int limit) {
         List<User> users = UserService.getUsersByRole(model.UserRole.TA);
         List<TA> availableTAs = new ArrayList<>();
 
-        // 筛选档案已通过的TA
+        // Filter TAs whose profiles have been approved
         for (User user : users) {
             TA ta = (TA) user;
             if (ta.getProfileStatus() == model.ProfileStatus.APPROVED) {
@@ -156,18 +156,18 @@ public class AIService {
             }
         }
 
-        // 计算每个TA的匹配度
+        // Calculate the match score for each TA
         Map<TA, Double> taMatchScores = new HashMap<>();
         for (TA ta : availableTAs) {
             double matchScore = calculateSkillMatch(ta, job);
             taMatchScores.put(ta, matchScore);
         }
 
-        // 按匹配度排序
+        // Sort by match score
         List<Map.Entry<TA, Double>> sortedTAs = new ArrayList<>(taMatchScores.entrySet());
         sortedTAs.sort((a, b) -> b.getValue().compareTo(a.getValue()));
 
-        // 取前limit个TA
+        // Take the top limit TAs
         List<TA> recommendedTAs = new ArrayList<>();
         for (int i = 0; i < Math.min(limit, sortedTAs.size()); i++) {
             recommendedTAs.add(sortedTAs.get(i).getKey());

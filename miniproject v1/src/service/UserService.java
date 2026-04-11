@@ -6,24 +6,24 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class UserService {
-    // 注册新用户
+    // Register a new user
     public static User register(String username, String password, String email, String phone, model.UserRole role, String department) {
-        // 验证密码复杂度
+        // Verify password complexity
         if (!isValidPassword(password)) {
             return null;
         }
 
-        // 验证邮箱格式
+        // Verify email format
         if (!isValidEmail(email)) {
             return null;
         }
 
-        // 验证手机号格式
+        // Verify phone number format
         if (!isValidPhone(phone)) {
             return null;
         }
 
-        // 检查用户名是否已存在
+        // Check whether the username already exists
         List<User> users = DataStorage.getUsers();
         for (User user : users) {
             if (user.getUsername().equals(username)) {
@@ -31,7 +31,7 @@ public class UserService {
             }
         }
 
-        // 创建新用户
+        // Create a new user
         String id = UUID.randomUUID().toString();
         User user = null;
 
@@ -47,7 +47,7 @@ public class UserService {
                 break;
         }
 
-        // 保存用户
+        // Save user
         if (user != null) {
             users.add(user);
             DataStorage.saveUsers(users);
@@ -57,13 +57,13 @@ public class UserService {
         return user;
     }
 
-    // 用户登录
+    // User login
     public static User login(String username, String password) {
         List<User> users = DataStorage.getUsers();
         for (User user : users) {
             if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
                 if (user.getStatus() == model.UserStatus.LOCKED) {
-                    return null; // 账号被锁定
+                    return null; // Account is locked
                 }
                 user.setLastLoginAt(java.time.LocalDateTime.now().toString());
                 DataStorage.saveUsers(users);
@@ -71,10 +71,10 @@ public class UserService {
                 return user;
             }
         }
-        return null; // 用户名或密码错误
+        return null; // Incorrect username or password
     }
 
-    // 更新用户信息
+    // Update user information
     public static boolean updateUser(User user) {
         List<User> users = DataStorage.getUsers();
         for (int i = 0; i < users.size(); i++) {
@@ -88,7 +88,7 @@ public class UserService {
         return false;
     }
 
-    // 获取TA档案
+    // Get TA profile
     public static TA getTAProfile(String taId) {
         List<User> users = DataStorage.getUsers();
         for (User user : users) {
@@ -99,7 +99,7 @@ public class UserService {
         return null;
     }
 
-    // 更新TA档案
+    // Update TA profile
     public static boolean updateTAProfile(TA ta) {
         List<User> users = DataStorage.getUsers();
         for (int i = 0; i < users.size(); i++) {
@@ -114,7 +114,7 @@ public class UserService {
         return false;
     }
 
-    // 审核TA档案
+    // Review TA profile
     public static boolean reviewTAProfile(String taId, model.ProfileStatus status, String comment) {
         List<User> users = DataStorage.getUsers();
         for (int i = 0; i < users.size(); i++) {
@@ -132,7 +132,7 @@ public class UserService {
         return false;
     }
 
-    // 禁用/启用用户
+    // Disable/enable user
     public static boolean toggleUserStatus(String userId, model.UserStatus status) {
         List<User> users = DataStorage.getUsers();
         for (int i = 0; i < users.size(); i++) {
@@ -146,12 +146,12 @@ public class UserService {
         return false;
     }
 
-    // 获取所有用户
+    // Get all users
     public static List<User> getAllUsers() {
         return DataStorage.getUsers();
     }
 
-    // 获取特定角色的用户
+    // Get users by specific role
     public static List<User> getUsersByRole(model.UserRole role) {
         List<User> users = DataStorage.getUsers();
         List<User> result = new java.util.ArrayList<>();
@@ -163,29 +163,29 @@ public class UserService {
         return result;
     }
 
-    // 辅助方法：验证密码复杂度
+    // Helper method: verify password complexity
     private static boolean isValidPassword(String password) {
         return password.length() >= 8 && Pattern.matches(".*[a-zA-Z].*", password) && Pattern.matches(".*[0-9].*", password);
     }
 
-    // 辅助方法：验证邮箱格式
+    // Helper method: verify email format
     private static boolean isValidEmail(String email) {
         return Pattern.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", email);
     }
 
-    // 辅助方法：验证手机号格式
+    // Helper method: verify phone number format
     private static boolean isValidPhone(String phone) {
         return Pattern.matches("^1\\d{10}$", phone);
     }
 
-    // 密码重置功能
+    // Password reset feature
     public static boolean resetPassword(String email, String newPassword) {
-        // 验证新密码复杂度
+        // Verify new password complexity
         if (!isValidPassword(newPassword)) {
             return false;
         }
 
-        // 查找用户
+        // Find user
         List<User> users = DataStorage.getUsers();
         for (User user : users) {
             if (user.getEmail().equals(email)) {

@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.List;
 
 public class JsonUtils {
-    // 写入对象列表到文件（简单文本格式）
+    // Write object list to file (simple text format)
     public static void writeToFile(List<?> list, String filePath) throws IOException {
         try (FileWriter writer = new FileWriter(filePath)) {
             for (Object obj : list) {
@@ -14,7 +14,7 @@ public class JsonUtils {
         }
     }
 
-    // 读取文件到字符串
+    // Read file into string
     public static String readFromFile(String filePath) throws IOException {
         StringBuilder content = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {

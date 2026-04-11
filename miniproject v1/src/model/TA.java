@@ -3,14 +3,14 @@ package model;
 import java.util.List;
 
 public class TA extends User {
-    // 通知类型枚举
+    // Notification type enum
     public enum NotificationType {
-        APPLICATION_STATUS, // 申请状态变更
-        JOB_DEADLINE, // 职位截止提醒
-        SYSTEM_ANNOUNCEMENT // 系统公告
+        APPLICATION_STATUS, // Application status updates
+        JOB_DEADLINE, // Job deadline reminders
+        SYSTEM_ANNOUNCEMENT // System announcements
     }
     
-    // 通知设置类
+    // Notification settings class
     public static class NotificationSetting {
         private NotificationType type;
         private boolean enabled;
@@ -43,8 +43,8 @@ public class TA extends User {
     private ProfileStatus profileStatus;
     private String profileUpdatedAt;
     private String profileReviewComment;
-    private List<String> savedJobs; // 收藏的职位ID列表
-    private List<NotificationSetting> notificationSettings; // 通知设置
+    private List<String> savedJobs; // List of saved job IDs
+    private List<NotificationSetting> notificationSettings; // Notification settings
 
     public TA() {}
 
@@ -55,7 +55,7 @@ public class TA extends User {
         this.notificationSettings = new java.util.ArrayList<>();
     }
     
-    // 初始化默认通知设置
+    // Initialize default notification settings
     public void initializeNotificationSettings() {
         this.notificationSettings.add(new NotificationSetting(NotificationType.APPLICATION_STATUS, true));
         this.notificationSettings.add(new NotificationSetting(NotificationType.JOB_DEADLINE, true));
@@ -117,24 +117,24 @@ public class TA extends User {
     public List<NotificationSetting> getNotificationSettings() { return notificationSettings; }
     public void setNotificationSettings(List<NotificationSetting> notificationSettings) { this.notificationSettings = notificationSettings; }
 
-    // 收藏职位
+    // Save job
     public void saveJob(String jobId) {
         if (!savedJobs.contains(jobId)) {
             savedJobs.add(jobId);
         }
     }
     
-    // 取消收藏
+    // Unsave job
     public void unsaveJob(String jobId) {
         savedJobs.remove(jobId);
     }
     
-    // 检查是否已收藏
+    // Check whether a job is already saved
     public boolean isJobSaved(String jobId) {
         return savedJobs.contains(jobId);
     }
     
-    // 更新通知设置
+    // Update notification settings
     public void updateNotificationSetting(NotificationType type, boolean enabled) {
         for (NotificationSetting setting : notificationSettings) {
             if (setting.getType() == type) {
@@ -142,7 +142,7 @@ public class TA extends User {
                 return;
             }
         }
-        // 如果设置不存在，添加新设置
+        // If the setting does not exist, add a new setting
         notificationSettings.add(new NotificationSetting(type, enabled));
     }
 

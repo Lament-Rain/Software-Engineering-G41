@@ -264,6 +264,7 @@
     -fx-border-width: 0 0 1px 0;
     -fx-border-color: #f1f3f5;
     -fx-font-size: 12px;
+}
 
 .table-view .row:hover {
     -fx-background-color: #f8f9fa;

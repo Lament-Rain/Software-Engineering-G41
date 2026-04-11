@@ -5,21 +5,21 @@ import java.util.List;
 import java.util.UUID;
 
 public class ApplicationService {
-    // 提交申请
+    // Submit application
     public static Application submitApplication(String taId, String jobId, String coverLetter) {
-        // 检查TA是否存在且档案已通过
+        // Check whether the TA exists and the profile is approved
         TA ta = UserService.getTAProfile(taId);
         if (ta == null || ta.getProfileStatus() != model.ProfileStatus.APPROVED) {
             return null;
         }
 
-        // 检查职位是否存在且可申请
+        // Check whether the job exists and can be applied for
         Job job = JobService.getJobById(jobId);
         if (job == null || job.getStatus() != model.JobStatus.PUBLISHED) {
             return null;
         }
 
-        // 检查是否已经存在不可重复提交的申请
+        // Check whether a non-repeatable application already exists
         List<Application> applications = DataStorage.getApplications();
         for (Application app : applications) {
             if (!app.getTaId().equals(taId) || !app.getJobId().equals(jobId)) {
@@ -32,15 +32,15 @@ public class ApplicationService {
             }
         }
 
-        // 创建申请
+        // Create application
         String id = UUID.randomUUID().toString();
         Application application = new Application(id, taId, jobId, coverLetter);
 
-        // 计算匹配度
+        // Calculate match score
         double matchScore = calculateMatchScore(ta, job);
         application.setMatchScore(matchScore);
 
-        // 保存申请
+        // Save application
         applications.add(application);
         DataStorage.saveApplications(applications);
         DataStorage.addLog("SUBMIT_APPLICATION", taId, "Application submitted for job: " + job.getTitle());
@@ -48,7 +48,7 @@ public class ApplicationService {
         return application;
     }
 
-    // 筛选申请人
+    // Screen applicants
     public static boolean screenApplication(String applicationId, model.ApplicationStatus status, String comment, String moId) {
         List<Application> applications = DataStorage.getApplications();
         for (int i = 0; i < applications.size(); i++) {
@@ -68,7 +68,7 @@ public class ApplicationService {
         return false;
     }
 
-    // 拒绝申请
+    // Reject application
     public static boolean rejectApplication(String applicationId, String reason, String moId) {
         List<Application> applications = DataStorage.getApplications();
         for (int i = 0; i < applications.size(); i++) {
@@ -88,12 +88,12 @@ public class ApplicationService {
         return false;
     }
 
-    // 接受申请
+    // Accept application
     public static boolean acceptApplication(String applicationId, String moId) {
         List<Application> applications = DataStorage.getApplications();
         Application targetApp = null;
         
-        // 找到目标申请
+        // Find target application
         for (Application app : applications) {
             if (app.getId().equals(applicationId)) {
                 targetApp = app;
@@ -105,13 +105,13 @@ public class ApplicationService {
             return false;
         }
 
-        // 检查职位是否存在
+        // Check whether the job exists
         Job job = JobService.getJobById(targetApp.getJobId());
         if (job == null) {
             return false;
         }
 
-        // 检查录用人数是否已达上限
+        // Check whether the number of accepted applicants has reached the limit
         int acceptedCount = 0;
         for (Application app : applications) {
             if (app.getJobId().equals(targetApp.getJobId()) && app.getStatus() == model.ApplicationStatus.ACCEPTED) {
@@ -123,13 +123,13 @@ public class ApplicationService {
             return false;
         }
 
-        // 更新申请状态
+        // Update application status
         targetApp.setStatus(model.ApplicationStatus.ACCEPTED);
         targetApp.setReviewedBy(moId);
         targetApp.setReviewTime(java.time.LocalDateTime.now().toString());
         targetApp.setUpdatedAt(java.time.LocalDateTime.now().toString());
 
-        // 保存更新
+        // Save updates
         for (int i = 0; i < applications.size(); i++) {
             if (applications.get(i).getId().equals(applicationId)) {
                 applications.set(i, targetApp);
@@ -143,7 +143,7 @@ public class ApplicationService {
         return true;
     }
     
-    // 按状态筛选申请
+    // Filter applications by status
     public static List<Application> getApplicationsByJobAndStatus(String jobId, model.ApplicationStatus status) {
         List<Application> applications = DataStorage.getApplications();
         List<Application> result = new java.util.ArrayList<>();
@@ -155,7 +155,7 @@ public class ApplicationService {
         return result;
     }
 
-    // 获取TA的申请
+    // Get TA applications
     public static List<Application> getApplicationsByTA(String taId) {
         List<Application> applications = DataStorage.getApplications();
         List<Application> result = new java.util.ArrayList<>();
@@ -167,7 +167,7 @@ public class ApplicationService {
         return result;
     }
 
-    // 获取职位的申请
+    // Get job applications
     public static List<Application> getApplicationsByJob(String jobId) {
         List<Application> applications = DataStorage.getApplications();
         List<Application> result = new java.util.ArrayList<>();
@@ -179,12 +179,12 @@ public class ApplicationService {
         return result;
     }
 
-    // 获取所有申请
+    // Get all applications
     public static List<Application> getAllApplications() {
         return DataStorage.getApplications();
     }
 
-    // 撤回申请
+    // Withdraw application
     public static boolean withdrawApplication(String applicationId, String taId) {
         List<Application> applications = DataStorage.getApplications();
         for (int i = 0; i < applications.size(); i++) {
@@ -243,13 +243,13 @@ public class ApplicationService {
         return true;
     }
 
-    // 计算匹配度
+    // Calculate match score
     private static double calculateMatchScore(TA ta, Job job) {
         double score = 0.0;
         int totalSkills = 0;
         int matchedSkills = 0;
 
-        // 技能匹配
+        // Skill matching
         if (job.getSkills() != null) {
             totalSkills = job.getSkills().size();
             if (totalSkills > 0) {
@@ -258,18 +258,18 @@ public class ApplicationService {
                         matchedSkills++;
                     }
                 }
-                score += (double) matchedSkills / totalSkills * 60; // 技能匹配占60%
+                score += (double) matchedSkills / totalSkills * 60; // Skill matching accounts for 60%
             }
         }
 
-        // 经验匹配（简单模拟）
+        // Experience matching (simple simulation)
         if (ta.getExperience() != null && !ta.getExperience().isEmpty()) {
-            score += 20; // 有经验加20分
+            score += 20; // Experience adds 20 points
         }
 
-        // 部门匹配
+        // Department matching
         if (ta.getDepartment() != null && job.getDepartment() != null && ta.getDepartment().equals(job.getDepartment())) {
-            score += 20; // 同部门加20分
+            score += 20; // Add 20 points for the same department
         }
 
         return Math.min(score, 100.0);

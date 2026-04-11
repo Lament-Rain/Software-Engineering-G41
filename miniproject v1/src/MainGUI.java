@@ -8,20 +8,20 @@ import service.DataStorage;
 public class MainGUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // 初始化数据存储
+        // Initialize data storage
         service.DataStorage.initialize();
         
-        // 加载登录页面
+        // Load login page
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
         Parent root = loader.load();
-        // 获取控制器并设置stage
+        // Get controller and set stage
         controller.LoginController loginController = loader.getController();
         loginController.setStage(primaryStage);
         
         Scene scene = new Scene(root, 800, 600);
-        // 添加样式表
+        // Add stylesheet
         scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-        primaryStage.setTitle("BUPT国际学校TA招聘系统");
+        primaryStage.setTitle("BUPT International School TA Recruitment System");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class JobService {
-    // 发布新职位（MO使用）
+    // Create and publish a new job (for MO)
     public static Job createJob(String title, model.JobType type, String department, String description,
                                List<String> skills, String workTime, int recruitNum, String deadline,
                                String salary, String location, String extraRequirements, String moId) {
@@ -13,12 +13,11 @@ public class JobService {
                         salary, location, extraRequirements, moId, "MO", null);
     }
 
-    // 发布新职位（通用方法，支持MO和Admin）
+    // Create and publish a new job (generic method, supports MO and Admin)
     public static Job createJob(String title, model.JobType type, String department, String description,
                                List<String> skills, String workTime, int recruitNum, String deadline,
                                String salary, String location, String extraRequirements,
                                String publisherId, String publisherType, String publisherName) {
-        // 创建职位
         String id = UUID.randomUUID().toString();
         Job job = new Job(id, title, type, department, description, skills, workTime, recruitNum, deadline, publisherId);
         job.setSalary(salary);
@@ -27,10 +26,8 @@ public class JobService {
         job.setPublisherId(publisherId);
         job.setPublisherType(publisherType);
         job.setPublisherName(publisherName);
-        // 新发布职位先进入待审核状态
         job.setStatus(model.JobStatus.PENDING);
 
-        // 保存职位
         List<Job> jobs = DataStorage.getJobs();
         jobs.add(job);
         DataStorage.saveJobs(jobs);
@@ -38,8 +35,7 @@ public class JobService {
 
         return job;
     }
-    
-    // 获取MO发布的所有职位（包括所有状态）
+
     public static List<Job> getAllJobsByMO(String moId) {
         List<Job> jobs = DataStorage.getJobs();
         List<Job> result = new java.util.ArrayList<>();
@@ -51,7 +47,6 @@ public class JobService {
         return result;
     }
 
-    // 更新职位
     public static boolean updateJob(Job job) {
         List<Job> jobs = DataStorage.getJobs();
         for (int i = 0; i < jobs.size(); i++) {
@@ -66,7 +61,13 @@ public class JobService {
         return false;
     }
 
-    // 提交职位审核
+    public static boolean updateJobByMO(Job job, String moId) {
+        if (job == null || moId == null || !moId.equals(job.getMoId())) {
+            return false;
+        }
+        return updateJob(job);
+    }
+
     public static boolean submitJobForReview(String jobId) {
         List<Job> jobs = DataStorage.getJobs();
         for (int i = 0; i < jobs.size(); i++) {
@@ -83,7 +84,6 @@ public class JobService {
         return false;
     }
 
-    // 审核职位
     public static boolean reviewJob(String jobId, model.JobStatus status, String comment, String adminId) {
         List<Job> jobs = DataStorage.getJobs();
         for (int i = 0; i < jobs.size(); i++) {
@@ -103,12 +103,14 @@ public class JobService {
         return false;
     }
 
-    // 终止职位
     public static boolean closeJob(String jobId, String moId) {
         List<Job> jobs = DataStorage.getJobs();
         for (int i = 0; i < jobs.size(); i++) {
             if (jobs.get(i).getId().equals(jobId)) {
                 Job job = jobs.get(i);
+                if (job.getMoId() == null || !job.getMoId().equals(moId)) {
+                    return false;
+                }
                 job.setStatus(model.JobStatus.CLOSED);
                 job.setUpdatedAt(java.time.LocalDateTime.now().toString());
                 jobs.set(i, job);
@@ -120,7 +122,6 @@ public class JobService {
         return false;
     }
 
-    // 获取职位详情
     public static Job getJobById(String jobId) {
         List<Job> jobs = DataStorage.getJobs();
         for (Job job : jobs) {
@@ -131,7 +132,6 @@ public class JobService {
         return null;
     }
 
-    // 获取MO发布的职位
     public static List<Job> getJobsByMO(String moId) {
         List<Job> jobs = DataStorage.getJobs();
         List<Job> result = new java.util.ArrayList<>();
@@ -143,12 +143,10 @@ public class JobService {
         return result;
     }
 
-    // 获取所有职位
     public static List<Job> getAllJobs() {
         return DataStorage.getJobs();
     }
 
-    // 获取可申请的职位（已发布且未截止）
     public static List<Job> getAvailableJobs() {
         List<Job> jobs = DataStorage.getJobs();
         List<Job> result = new java.util.ArrayList<>();
@@ -199,17 +197,15 @@ public class JobService {
         return false;
     }
 
-    // 按条件筛选职位
     public static List<Job> filterJobs(model.JobType type, String department, String deadline) {
         List<Job> jobs = DataStorage.getJobs();
         List<Job> result = new java.util.ArrayList<>();
         java.time.LocalDate today = java.time.LocalDate.now();
         for (Job job : jobs) {
-            // 只筛选已发布且未截止的职位
             if (job.getStatus() != model.JobStatus.PUBLISHED || !isJobStillAvailable(job, today)) {
                 continue;
             }
-            
+
             boolean match = true;
             if (type != null && job.getType() != type) {
                 match = false;
@@ -226,16 +222,14 @@ public class JobService {
         }
         return result;
     }
-    
-    // 搜索职位
+
     public static List<Job> searchJobs(String keyword) {
         List<Job> jobs = DataStorage.getJobs();
         List<Job> result = new java.util.ArrayList<>();
         java.time.LocalDate today = java.time.LocalDate.now();
         for (Job job : jobs) {
-            // 只搜索已发布且未截止的职位
             if (job.getStatus() == model.JobStatus.PUBLISHED && isJobStillAvailable(job, today)) {
-                if (job.getTitle().toLowerCase().contains(keyword.toLowerCase()) || 
+                if (job.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
                     job.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
                     result.add(job);
                 }
@@ -243,4 +237,4 @@ public class JobService {
         }
         return result;
     }
-} 
+}

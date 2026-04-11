@@ -173,17 +173,17 @@ public class AdminApprovalController {
 
             Scene scene = new Scene(root, 800, 600);
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 登录");
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
         } catch (Exception e) {
             e.printStackTrace();
-            showError("登录页面加载失败");
+            showError("Failed to load login page");
         }
     }
 
     private void reviewSelected(ProfileStatus targetStatus) {
         TA selectedTa = pendingTable.getSelectionModel().getSelectedItem();
         if (selectedTa == null) {
-            showWarning("请先选择要审核的TA资料");
+            showWarning("Please select a TA profile to review first");
             return;
         }
 
@@ -192,29 +192,29 @@ public class AdminApprovalController {
             reviewCommentArea.clear();
             refreshTables();
         } else {
-            showError("审核失败，请稍后重试");
+            showError("Review failed. Please try again later.");
         }
     }
 
     private void updateSelectionSummary(TA ta) {
         if (ta == null) {
-            selectedTaLabel.setText("当前未选择待审核TA");
-            selectedProfileSummaryLabel.setText("请选择左侧列表中的待审核资料，右侧可填写意见并完成审核。\n支持查看简历上传情况、学号和更新时间。\n已审核记录会显示在下方列表中。");
+            selectedTaLabel.setText("No TA selected for review");
+            selectedProfileSummaryLabel.setText("Select a pending profile on the left, then add comments and complete the review on the right.\nYou can check the resume upload status, student ID, and last update time.\nReviewed records will appear in the list below.");
             return;
         }
 
-        selectedTaLabel.setText("当前审核：" + safeText(ta.getName()) + "（" + safeText(ta.getUsername()) + "）");
+        selectedTaLabel.setText("Reviewing: " + safeText(ta.getName()) + " (" + safeText(ta.getUsername()) + ")");
         selectedProfileSummaryLabel.setText(
-                "学院：" + safeText(ta.getDepartment()) +
-                "\n学号：" + safeText(ta.getStudentId()) +
-                "\n简历：" + formatResumeStatus(ta) +
-                "\n状态：" + ta.getProfileStatus() +
-                "\n更新时间：" + safeText(ta.getProfileUpdatedAt())
+                "Department: " + safeText(ta.getDepartment()) +
+                "\nStudent ID: " + safeText(ta.getStudentId()) +
+                "\nResume: " + formatResumeStatus(ta) +
+                "\nStatus: " + ta.getProfileStatus() +
+                "\nUpdated At: " + safeText(ta.getProfileUpdatedAt())
         );
     }
 
     private String formatResumeStatus(TA ta) {
-        return ta.getResumePath() == null || ta.getResumePath().isBlank() ? "未上传" : "已上传";
+        return ta.getResumePath() == null || ta.getResumePath().isBlank() ? "Not Uploaded" : "Uploaded";
     }
 
     private String safeText(String value) {
@@ -231,25 +231,25 @@ public class AdminApprovalController {
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 管理员控制台");
+            stage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
         } catch (Exception e) {
             e.printStackTrace();
-            showError("无法加载管理员首页");
+            showError("Unable to load admin home page");
         }
     }
 
     private void showWarning(String message) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("提示");
-        alert.setHeaderText("操作提醒");
+        alert.setTitle("Warning");
+        alert.setHeaderText("Action Required");
         alert.setContentText(message);
         alert.showAndWait();
     }
 
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("错误");
-        alert.setHeaderText("操作失败");
+        alert.setTitle("Error");
+        alert.setHeaderText("Operation Failed");
         alert.setContentText(message);
         alert.showAndWait();
     }

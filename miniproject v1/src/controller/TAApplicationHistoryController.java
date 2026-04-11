@@ -225,14 +225,14 @@ public class TAApplicationHistoryController {
     private void handleWithdrawApplication() {
         ApplicationHistoryViewModel selected = applicationsTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert(Alert.AlertType.INFORMATION, "提示", "请先选择一条申请记录。");
+            showAlert(Alert.AlertType.INFORMATION, "Notice", "Please select an application record first.");
             return;
         }
 
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmAlert.setTitle("确认撤回申请");
-        confirmAlert.setHeaderText("确认撤回：" + selected.getJobTitle());
-        confirmAlert.setContentText("撤回后该申请将标记为 WITHDRAWN，且仅可在审核前 withdraw。确定继续吗？");
+        confirmAlert.setTitle("Confirm Withdrawal");
+        confirmAlert.setHeaderText("Withdraw: " + selected.getJobTitle());
+        confirmAlert.setContentText("This application will be marked as WITHDRAWN and can only be withdrawn before review. Continue?");
         confirmAlert.initModality(Modality.APPLICATION_MODAL);
 
         if (confirmAlert.showAndWait().orElse(ButtonType.CANCEL) != ButtonType.OK) {
@@ -241,12 +241,12 @@ public class TAApplicationHistoryController {
 
         boolean success = ApplicationService.withdrawApplication(selected.getApplicationId(), user.getId());
         if (!success) {
-            showAlert(Alert.AlertType.WARNING, "无法撤回", "只有截止前且尚未进入审核的申请才可以撤回。请确认当前状态仍为 PENDING。");
+            showAlert(Alert.AlertType.WARNING, "Cannot Withdraw", "Only applications that are still PENDING and before the deadline can be withdrawn.");
             refreshApplications();
             return;
         }
 
-        showAlert(Alert.AlertType.INFORMATION, "撤回成功", "该申请已撤回。状态已更新为 WITHDRAWN。");
+        showAlert(Alert.AlertType.INFORMATION, "Withdrawn", "This application has been withdrawn. The status is now WITHDRAWN.");
         refreshApplications();
     }
 
@@ -264,7 +264,7 @@ public class TAApplicationHistoryController {
             stage.setTitle("BUPT International School TA Recruitment System - Dashboard");
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "错误", "返回失败: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to go back: " + e.getMessage());
         }
     }
 
@@ -281,7 +281,7 @@ public class TAApplicationHistoryController {
             stage.setTitle("BUPT International School TA Recruitment System - Login");
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "错误", "退出失败: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Logout failed: " + e.getMessage());
         }
     }
 

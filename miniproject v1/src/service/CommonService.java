@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 
 public class CommonService {
-    // 导出数据为CSV格式
+    // Export data to CSV format
     public static boolean exportToCSV(String dataType, String filePath) {
         try {
             FileWriter writer = new FileWriter(filePath);
@@ -33,7 +33,7 @@ public class CommonService {
         }
     }
 
-    // 导出用户数据为CSV
+    // Export user data to CSV
     private static void exportUsersToCSV(FileWriter writer) throws IOException {
         writer.write("ID,Username,Email,Phone,Role,Status,Department\n");
         List<User> users = UserService.getAllUsers();
@@ -55,7 +55,7 @@ public class CommonService {
         }
     }
 
-    // 导出职位数据为CSV
+    // Export job data to CSV
     private static void exportJobsToCSV(FileWriter writer) throws IOException {
         writer.write("ID,Title,Type,Department,Description,Skills,WorkTime,RecruitNum,Deadline,Status\n");
         List<Job> jobs = JobService.getAllJobs();
@@ -75,7 +75,7 @@ public class CommonService {
         }
     }
 
-    // 导出申请数据为CSV
+    // Export application data to CSV
     private static void exportApplicationsToCSV(FileWriter writer) throws IOException {
         writer.write("ID,TA ID,Job ID,Cover Letter,Status,Match Score,Created At\n");
         List<Application> applications = ApplicationService.getAllApplications();
@@ -91,7 +91,7 @@ public class CommonService {
         }
     }
 
-    // 系统搜索
+    // System search
     public static Map<String, List<?>> search(String keyword, List<String> searchTypes) {
         Map<String, List<?>> results = new HashMap<>();
 
@@ -113,7 +113,7 @@ public class CommonService {
         return results;
     }
 
-    // 搜索用户
+    // Search users
     private static List<User> searchUsers(String keyword) {
         List<User> users = UserService.getAllUsers();
         List<User> results = new ArrayList<>();
@@ -127,7 +127,7 @@ public class CommonService {
         return results;
     }
 
-    // 搜索职位
+    // Search jobs
     private static List<Job> searchJobs(String keyword) {
         List<Job> jobs = JobService.getAllJobs();
         List<Job> results = new ArrayList<>();
@@ -141,7 +141,7 @@ public class CommonService {
         return results;
     }
 
-    // 搜索申请
+    // Search applications
     private static List<Application> searchApplications(String keyword) {
         List<Application> applications = ApplicationService.getAllApplications();
         List<Application> results = new ArrayList<>();
@@ -153,12 +153,12 @@ public class CommonService {
         return results;
     }
 
-    // 生成系统报告
+    // Generate system report
     public static String generateSystemReport() {
         StringBuilder report = new StringBuilder();
-        report.append("=== BUPT国际学校TA招聘系统报告 ===\n\n");
+        report.append("=== BUPT International School TA Recruitment System Report ===\n\n");
 
-        // 用户统计
+        // User statistics
         List<User> users = UserService.getAllUsers();
         int taCount = 0, moCount = 0, adminCount = 0;
         for (User user : users) {
@@ -174,12 +174,12 @@ public class CommonService {
                     break;
             }
         }
-        report.append("用户统计：\n");
-        report.append("- TA数量：").append(taCount).append("\n");
-        report.append("- MO数量：").append(moCount).append("\n");
-        report.append("- 管理员数量：").append(adminCount).append("\n\n");
+        report.append("User Statistics:\n");
+        report.append("- TA Count: ").append(taCount).append("\n");
+        report.append("- MO Count: ").append(moCount).append("\n");
+        report.append("- Admin Count: ").append(adminCount).append("\n\n");
 
-        // 职位统计
+        // Job statistics
         List<Job> jobs = JobService.getAllJobs();
         int draftJobs = 0, pendingJobs = 0, publishedJobs = 0, closedJobs = 0;
         for (Job job : jobs) {
@@ -198,13 +198,13 @@ public class CommonService {
                     break;
             }
         }
-        report.append("职位统计：\n");
-        report.append("- 草稿：").append(draftJobs).append("\n");
-        report.append("- 待审核：").append(pendingJobs).append("\n");
-        report.append("- 已发布：").append(publishedJobs).append("\n");
-        report.append("- 已关闭：").append(closedJobs).append("\n\n");
+        report.append("Job Statistics:\n");
+        report.append("- Draft: ").append(draftJobs).append("\n");
+        report.append("- Pending Review: ").append(pendingJobs).append("\n");
+        report.append("- Published: ").append(publishedJobs).append("\n");
+        report.append("- Closed: ").append(closedJobs).append("\n\n");
 
-        // 申请统计
+        // Application statistics
         List<Application> applications = ApplicationService.getAllApplications();
         int pendingApps = 0, screenedApps = 0, acceptedApps = 0, rejectedApps = 0;
         for (Application app : applications) {
@@ -223,13 +223,13 @@ public class CommonService {
                     break;
             }
         }
-        report.append("申请统计：\n");
-        report.append("- 待处理：").append(pendingApps).append("\n");
-        report.append("- 已筛选：").append(screenedApps).append("\n");
-        report.append("- 已录用：").append(acceptedApps).append("\n");
-        report.append("- 已拒绝：").append(rejectedApps).append("\n\n");
+        report.append("Application Statistics:\n");
+        report.append("- Pending: ").append(pendingApps).append("\n");
+        report.append("- Screened: ").append(screenedApps).append("\n");
+        report.append("- Accepted: ").append(acceptedApps).append("\n");
+        report.append("- Rejected: ").append(rejectedApps).append("\n\n");
 
-        report.append("报告生成时间：").append(java.time.LocalDateTime.now().toString());
+        report.append("Generated At: ").append(java.time.LocalDateTime.now().toString());
         return report.toString();
     }
 }

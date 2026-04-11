@@ -8,85 +8,76 @@
 
 <AnchorPane fx:id="registerPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
     <VBox alignment="CENTER" spacing="0" styleClass="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <!-- 顶部装饰条 -->
         <HBox prefHeight="8">
             <Region styleClass="bg-primary" style="-fx-pref-width: 25%;" />
             <Region styleClass="bg-secondary" style="-fx-pref-width: 25%;" />
             <Region styleClass="bg-accent" style="-fx-pref-width: 25%;" />
             <Region styleClass="bg-success" style="-fx-pref-width: 25%;" />
         </HBox>
-        
-        <!-- 注册容器 -->
+
         <ScrollPane style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="8.0">
             <VBox alignment="CENTER" spacing="64" style="-fx-padding: 48px; -fx-fill-width: true; -fx-background-color: #f8f9fa; -fx-alignment: center; -fx-pref-width: 1200px;">
-                <!-- 注册表单 -->
                 <VBox alignment="CENTER" styleClass="container shadow-lg" maxWidth="680" style="-fx-pref-width: 90%; -fx-background-color: #ffffff; -fx-background-radius: 12px;" spacing="32">
-                    <!-- 标题部分 -->
                     <VBox alignment="CENTER" spacing="16" style="-fx-fill-width: true; -fx-padding: 32px 32px 0 32px;">
-                        <Label text="BUPT国际学校TA招聘系统" styleClass="title" />
-                        <Label text="创建新账号" styleClass="subtitle" />
+                        <Label text="BUPT International School TA Recruitment System" styleClass="title" />
+                        <Label text="Create a new account" styleClass="subtitle" />
                     </VBox>
-                    
-                    <!-- 角色选择 -->
+
                     <VBox spacing="16" style="-fx-padding: 16px 32px 0 32px; -fx-pref-width: 100%;">
-                        <Label text="选择角色" styleClass="form-label" />
+                        <Label text="Select Role" styleClass="form-label" />
                         <HBox spacing="16" alignment="CENTER" style="-fx-pref-width: 100%;">
-                            <ToggleButton fx:id="taToggle" text="TA申请人" styleClass="btn btn-secondary" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
-                            <ToggleButton fx:id="moToggle" text="模块组织者" styleClass="btn btn-secondary" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
-                            <ToggleButton fx:id="adminToggle" text="系统管理员" styleClass="btn btn-secondary" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
+                            <ToggleButton fx:id="taToggle" text="TA Applicant" styleClass="btn btn-secondary" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
+                            <ToggleButton fx:id="moToggle" text="Module Organizer" styleClass="btn btn-secondary" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
+                            <ToggleButton fx:id="adminToggle" text="System Admin" styleClass="btn btn-secondary" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
                         </HBox>
                     </VBox>
-                    
-                    <!-- 表单字段 -->
+
                     <VBox spacing="20" style="-fx-pref-width: 100%; -fx-padding: 0 32px;">
                         <HBox spacing="24" style="-fx-pref-width: 100%;">
                             <VBox spacing="8" style="-fx-pref-width: 50%;">
-                                <Label text="邮箱" styleClass="form-label" />
-                                <TextField fx:id="emailField" promptText="请输入邮箱" styleClass="form-field" style="-fx-pref-width: 100%; -fx-min-height: 40px;" />
+                                <Label text="Email" styleClass="form-label" />
+                                <TextField fx:id="emailField" promptText="Enter your email" styleClass="form-field" style="-fx-pref-width: 100%; -fx-min-height: 40px;" />
                             </VBox>
                             <VBox spacing="8" style="-fx-pref-width: 50%;">
-                                <Label text="密码" styleClass="form-label" />
-                                <PasswordField fx:id="passwordField" promptText="请输入密码（至少8位）" styleClass="form-field" style="-fx-pref-width: 100%; -fx-min-height: 40px;" />
-                            </VBox>
-                        </HBox>
-                        <HBox spacing="24" style="-fx-pref-width: 100%;">
-                            <VBox spacing="8" style="-fx-pref-width: 50%;">
-                                <Label text="确认密码" styleClass="form-label" />
-                                <PasswordField fx:id="confirmPasswordField" promptText="请确认密码" styleClass="form-field" style="-fx-pref-width: 100%; -fx-min-height: 40px;" />
-                            </VBox>
-                            <VBox spacing="8" style="-fx-pref-width: 50%;">
-                                <Label text="用户名" styleClass="form-label" />
-                                <TextField fx:id="usernameField" promptText="请输入用户名" styleClass="form-field" style="-fx-pref-width: 100%; -fx-min-height: 40px;" />
+                                <Label text="Password" styleClass="form-label" />
+                                <PasswordField fx:id="passwordField" promptText="Enter password (at least 8 characters)" styleClass="form-field" style="-fx-pref-width: 100%; -fx-min-height: 40px;" />
                             </VBox>
                         </HBox>
                         <HBox spacing="24" style="-fx-pref-width: 100%;">
                             <VBox spacing="8" style="-fx-pref-width: 50%;">
-                                <Label text="手机号" styleClass="form-label" />
-                                <TextField fx:id="phoneField" promptText="请输入手机号" styleClass="form-field" style="-fx-pref-width: 100%; -fx-min-height: 40px;" />
+                                <Label text="Confirm Password" styleClass="form-label" />
+                                <PasswordField fx:id="confirmPasswordField" promptText="Confirm your password" styleClass="form-field" style="-fx-pref-width: 100%; -fx-min-height: 40px;" />
                             </VBox>
                             <VBox spacing="8" style="-fx-pref-width: 50%;">
-                                <Label text="院系" styleClass="form-label" />
-                                <TextField fx:id="departmentField" promptText="请输入院系（MO和Admin必填）" styleClass="form-field" style="-fx-pref-width: 100%; -fx-min-height: 40px;" />
+                                <Label text="Username" styleClass="form-label" />
+                                <TextField fx:id="usernameField" promptText="Enter a username" styleClass="form-field" style="-fx-pref-width: 100%; -fx-min-height: 40px;" />
+                            </VBox>
+                        </HBox>
+                        <HBox spacing="24" style="-fx-pref-width: 100%;">
+                            <VBox spacing="8" style="-fx-pref-width: 50%;">
+                                <Label text="Phone" styleClass="form-label" />
+                                <TextField fx:id="phoneField" promptText="Enter your phone number" styleClass="form-field" style="-fx-pref-width: 100%; -fx-min-height: 40px;" />
+                            </VBox>
+                            <VBox spacing="8" style="-fx-pref-width: 50%;">
+                                <Label text="Department" styleClass="form-label" />
+                                <TextField fx:id="departmentField" promptText="Required for Module Organizer" styleClass="form-field" style="-fx-pref-width: 100%; -fx-min-height: 40px;" />
                             </VBox>
                         </HBox>
                     </VBox>
-                    
-                    <!-- 消息提示 -->
+
                     <VBox spacing="16" style="-fx-padding: 0 32px;">
                         <Label fx:id="errorMessage" styleClass="error-message" />
                         <Label fx:id="successMessage" styleClass="success-message" />
                     </VBox>
-                    
-                    <!-- 按钮部分 -->
+
                     <HBox spacing="16" alignment="CENTER" style="-fx-pref-width: 100%; -fx-padding: 0 32px 32px 32px;">
-                        <Button fx:id="backButton" text="返回登录" styleClass="btn btn-secondary" onAction="#handleBack" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
-                        <Button fx:id="registerButton" text="完成注册" styleClass="btn btn-primary" onAction="#handleRegister" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
+                        <Button fx:id="backButton" text="Back to Login" styleClass="btn btn-secondary" onAction="#handleBack" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
+                        <Button fx:id="registerButton" text="Create Account" styleClass="btn btn-primary" onAction="#handleRegister" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
                     </HBox>
                 </VBox>
-                
-                <!-- 底部信息 -->
+
                 <VBox alignment="CENTER" style="-fx-padding: 16px 0;">
-                    <Label text="© 2026 BUPT国际学校. 保留所有权利." textFill="#6c757d" style="-fx-font-size: 12px;" />
+                    <Label text="© 2026 BUPT International School. All rights reserved." textFill="#6c757d" style="-fx-font-size: 12px;" />
                 </VBox>
             </VBox>
         </ScrollPane>

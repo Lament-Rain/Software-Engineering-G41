@@ -61,14 +61,14 @@ public class JobListController {
 
     @FXML
     private void initialize() {
-        // 初始化筛选器
-        departmentFilter.getItems().addAll("全部", "计算机学院", "理学院", "外语学院", "人文学院", "经济管理学院", "工学院");
-        departmentFilter.setValue("全部");
+        // Initialize filters
+        departmentFilter.getItems().addAll("All", "School of Computer Science", "School of Science", "School of Foreign Languages", "School of Humanities", "School of Economics and Management", "School of Engineering");
+        departmentFilter.setValue("All");
 
-        typeFilter.getItems().addAll("全部", "MODULE_ASSISTANT", "INVIGILATION", "OTHER");
-        typeFilter.setValue("全部");
+        typeFilter.getItems().addAll("All", "MODULE_ASSISTANT", "INVIGILATION", "OTHER");
+        typeFilter.setValue("All");
 
-        // 设置表格列
+        // Set up table columns
         setupTableColumns();
 
         searchField.setOnAction(event -> handleSearch());
@@ -80,7 +80,7 @@ public class JobListController {
             }
         });
 
-        // 添加表格双击事件
+        // Add table double-click event
         jobsTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -95,35 +95,35 @@ public class JobListController {
     }
 
     private void setupTableColumns() {
-        TableColumn<JobListViewModel, String> titleCol = new TableColumn<>("职位名称");
+        TableColumn<JobListViewModel, String> titleCol = new TableColumn<>("Job Title");
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
         titleCol.setPrefWidth(200);
 
-        TableColumn<JobListViewModel, String> departmentCol = new TableColumn<>("院系");
+        TableColumn<JobListViewModel, String> departmentCol = new TableColumn<>("Department");
         departmentCol.setCellValueFactory(new PropertyValueFactory<>("department"));
         departmentCol.setPrefWidth(120);
 
-        TableColumn<JobListViewModel, String> typeCol = new TableColumn<>("职位类型");
+        TableColumn<JobListViewModel, String> typeCol = new TableColumn<>("Job Type");
         typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
         typeCol.setPrefWidth(120);
 
-        TableColumn<JobListViewModel, String> requirementsCol = new TableColumn<>("职位需求");
+        TableColumn<JobListViewModel, String> requirementsCol = new TableColumn<>("Requirements");
         requirementsCol.setCellValueFactory(new PropertyValueFactory<>("requirements"));
         requirementsCol.setPrefWidth(250);
 
-        TableColumn<JobListViewModel, String> publishDateCol = new TableColumn<>("发布日期");
+        TableColumn<JobListViewModel, String> publishDateCol = new TableColumn<>("Published Date");
         publishDateCol.setCellValueFactory(new PropertyValueFactory<>("publishDate"));
         publishDateCol.setPrefWidth(120);
 
-        TableColumn<JobListViewModel, String> deadlineCol = new TableColumn<>("截止日期");
+        TableColumn<JobListViewModel, String> deadlineCol = new TableColumn<>("Deadline");
         deadlineCol.setCellValueFactory(new PropertyValueFactory<>("deadline"));
         deadlineCol.setPrefWidth(120);
 
-        TableColumn<JobListViewModel, String> publisherCol = new TableColumn<>("发布者");
+        TableColumn<JobListViewModel, String> publisherCol = new TableColumn<>("Publisher");
         publisherCol.setCellValueFactory(new PropertyValueFactory<>("publisher"));
         publisherCol.setPrefWidth(100);
 
-        TableColumn<JobListViewModel, String> statusCol = new TableColumn<>("状态");
+        TableColumn<JobListViewModel, String> statusCol = new TableColumn<>("Status");
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
         statusCol.setPrefWidth(80);
 
@@ -134,7 +134,7 @@ public class JobListController {
     private void initializeView() {
         if (currentUser == null) return;
 
-        // 根据用户角色设置页面标题和显示内容
+        // Set page title and visible content based on user role
         switch (userRole) {
             case TA:
                 pageTitleLabel.setText("Open Positions");
@@ -145,8 +145,8 @@ public class JobListController {
             case MO:
                 pageTitleLabel.setText("Job Board");
                 subtitleLabel.setText("View every posted position");
-                createJobButton.setVisible(true);
-                createJobButton.setText("Create Job");
+                createJobButton.setVisible(false);
+                createJobButton.setManaged(false);
                 backButton.setText("Back to MO Dashboard");
                 break;
             case ADMIN:
@@ -166,29 +166,29 @@ public class JobListController {
         ObservableList<JobListViewModel> jobList = FXCollections.observableArrayList();
 
         for (Job job : jobs) {
-            // 获取发布者名称
+            // Get publisher name
             String publisher = job.getPublisherName();
             if (publisher == null || publisher.isEmpty()) {
                 if ("ADMIN".equals(job.getPublisherType())) {
-                    publisher = "管理员";
+                    publisher = "Administrator";
                 } else {
-                    publisher = "模块组织者";
+                    publisher = "Module Organizer";
                 }
             }
 
-            // 格式化发布日期
+            // Format publish date
             String publishDate = formatDisplayDate(job.getCreatedAt());
 
-            // 格式化截止日期
+            // Format deadline
             String deadline = formatDisplayDate(job.getDeadline());
 
-            // 获取职位需求摘要
+            // Get job requirement summary
             String requirements = job.getDescription();
             if (requirements != null && requirements.length() > 50) {
                 requirements = requirements.substring(0, 50) + "...";
             }
 
-            // 获取状态
+            // Get status
             String status = job.getStatus() != null ? job.getStatus().toString() : "UNKNOWN";
 
             jobList.add(new JobListViewModel(
@@ -226,9 +226,9 @@ public class JobListController {
                     title.contains(keyword) ||
                     requirements.contains(keyword);
 
-            boolean matchesDept = deptFilter == null || "全部".equals(deptFilter) || deptFilter.equals(job.getDepartment());
+            boolean matchesDept = deptFilter == null || "All".equals(deptFilter) || deptFilter.equals(job.getDepartment());
 
-            boolean matchesType = typeFilterValue == null || "全部".equals(typeFilterValue) || typeFilterValue.equals(job.getType());
+            boolean matchesType = typeFilterValue == null || "All".equals(typeFilterValue) || typeFilterValue.equals(job.getType());
 
             if (matchesKeyword && matchesDept && matchesType) {
                 filteredList.add(job);
@@ -242,15 +242,15 @@ public class JobListController {
     @FXML
     private void handleReset() {
         searchField.clear();
-        departmentFilter.setValue("全部");
-        typeFilter.setValue("全部");
+        departmentFilter.setValue("All");
+        typeFilter.setValue("All");
         loadJobs();
     }
 
     @FXML
     private void handleCreateJob() {
         if (userRole == UserRole.TA) {
-            showAlert("权限不足", "TA没有权限发布职位", Alert.AlertType.WARNING);
+            showAlert("Permission Denied", "TAs are not allowed to create jobs", Alert.AlertType.WARNING);
             return;
         }
 
@@ -262,7 +262,7 @@ public class JobListController {
             if (currentUser instanceof MO) {
                 controller.setUser((MO) currentUser);
             } else if (currentUser instanceof Admin) {
-                // 为Admin创建临时MO对象或使用Admin发布
+                // Create temporary MO object for Admin or publish as Admin
                 controller.setAdminUser((Admin) currentUser);
             }
 
@@ -271,10 +271,10 @@ public class JobListController {
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 发布职位");
+            stage.setTitle("BUPT International School TA Recruitment System - Create Job");
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("错误", "页面加载失败: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Failed to load page: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -287,7 +287,7 @@ public class JobListController {
             switch (userRole) {
                 case TA:
                     fxmlPath = "/fxml/TADashboard.fxml";
-                    title = "BUPT国际学校TA招聘系统 - TA控制台";
+                    title = "BUPT International School TA Recruitment System - TA Dashboard";
                     FXMLLoader taLoader = new FXMLLoader(getClass().getResource(fxmlPath));
                     Parent taRoot = taLoader.load();
                     TADashboardController taController = taLoader.getController();
@@ -299,7 +299,7 @@ public class JobListController {
                     break;
                 case MO:
                     fxmlPath = "/fxml/MODashboard.fxml";
-                    title = "BUPT国际学校TA招聘系统 - 模块组织者控制台";
+                    title = "BUPT International School TA Recruitment System - MO Dashboard";
                     FXMLLoader moLoader = new FXMLLoader(getClass().getResource(fxmlPath));
                     Parent moRoot = moLoader.load();
                     MODashboardController moController = moLoader.getController();
@@ -311,7 +311,7 @@ public class JobListController {
                     break;
                 case ADMIN:
                     fxmlPath = "/fxml/AdminDashboard.fxml";
-                    title = "BUPT国际学校TA招聘系统 - 管理员控制台";
+                    title = "BUPT International School TA Recruitment System - Admin Dashboard";
                     FXMLLoader adminLoader = new FXMLLoader(getClass().getResource(fxmlPath));
                     Parent adminRoot = adminLoader.load();
                     AdminDashboardController adminController = adminLoader.getController();
@@ -324,7 +324,7 @@ public class JobListController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("错误", "返回失败: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Failed to go back: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -339,10 +339,10 @@ public class JobListController {
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 职位详情");
+            stage.setTitle("BUPT International School TA Recruitment System - Job Details");
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("错误", "加载职位详情失败: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Failed to load job details: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -401,7 +401,7 @@ public class JobListController {
         if (resultCountLabel == null) {
             return;
         }
-        resultCountLabel.setText("当前结果：" + count + " 个职位");
+        resultCountLabel.setText("Current results: " + count + " positions");
     }
 
     @FXML
@@ -414,14 +414,14 @@ public class JobListController {
 
             Scene scene = new Scene(root, 800, 600);
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 登录");
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("错误", "退出失败: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Logout failed: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
-    // 内部类用于表格显示
+    // Internal class for table display
     public static class JobListViewModel {
         private String jobId;
         private String title;

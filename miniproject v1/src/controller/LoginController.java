@@ -29,50 +29,42 @@ public class LoginController {
     private CheckBox rememberMeCheckBox;
     @FXML
     private Hyperlink forgotPasswordLink;
-    
+
     private Stage stage;
-    
+
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
     @FXML
     private void initialize() {
-        // 添加角色选项
         roleComboBox.getItems().addAll("TA Applicant", "Module Organizer", "System Admin");
-        // 设置默认角色
         roleComboBox.getSelectionModel().selectFirst();
-        // 设置选择变化监听器，确保选择后正确显示
         roleComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 roleComboBox.setValue(newValue);
             }
         });
-        
-        // 添加忘记密码链接的点击事件
         forgotPasswordLink.setOnAction(event -> handleForgotPassword());
     }
-    
+
     @FXML
     private void handleLogin(ActionEvent event) {
         String username = usernameField.getText();
         String password = passwordField.getText();
         String roleStr = roleComboBox.getValue();
-        
-        // 验证输入
+
         if (username.isEmpty() || password.isEmpty()) {
-            errorMessage.setText("请输入用户名和密码");
+            errorMessage.setText("Please enter both username and password.");
             return;
         }
-        
-        // 登录验证
+
         User user = UserService.login(username, password);
         if (user == null) {
-            errorMessage.setText("登录失败，用户名或密码错误");
+            errorMessage.setText("Login failed. Invalid username or password.");
             return;
         }
-        
-        // 验证角色
+
         UserRole role = null;
         switch (roleStr) {
             case "TA Applicant":
@@ -85,24 +77,22 @@ public class LoginController {
                 role = UserRole.ADMIN;
                 break;
         }
-        
+
         if (user.getRole() != role) {
-            errorMessage.setText("角色不匹配");
+            errorMessage.setText("The selected role does not match this account.");
             return;
         }
-        
-        // 登录成功，跳转到相应的主页
+
         try {
             FXMLLoader loader = new FXMLLoader();
             Parent root = null;
-            
+
             switch (role) {
                 case TA:
                     loader.setLocation(getClass().getResource("/fxml/TADashboard.fxml"));
                     root = loader.load();
                     TADashboardController controller = loader.getController();
                     if (controller != null && user instanceof TA) {
-                        // 登录时显示新手引导
                         controller.setUser((TA) user, true);
                     }
                     break;
@@ -123,30 +113,28 @@ public class LoginController {
                     }
                     break;
             }
-            
+
             if (root != null) {
                 Scene scene = new Scene(root, 1000, 600);
-                // 添加样式表
                 scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
                 stage.setScene(scene);
-                stage.setTitle("BUPT国际学校TA招聘系统 - " + roleStr);
+                stage.setTitle("BUPT International School TA Recruitment System - " + roleStr);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            errorMessage.setText("页面加载失败: " + e.getMessage());
+            errorMessage.setText("Failed to load the page: " + e.getMessage());
         }
     }
-    
+
     @FXML
     private void handleCancel(ActionEvent event) {
-        // 清空输入
         usernameField.clear();
         passwordField.clear();
         roleComboBox.getSelectionModel().selectFirst();
         rememberMeCheckBox.setSelected(false);
         errorMessage.setText("");
     }
-    
+
     @FXML
     private void handleRegister(ActionEvent event) {
         try {
@@ -154,23 +142,22 @@ public class LoginController {
             Parent root = loader.load();
             RegisterController controller = loader.getController();
             controller.setStage(stage);
-            
+
             Scene scene = new Scene(root, 800, 600);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 注册");
+            stage.setTitle("BUPT International School TA Recruitment System - Register");
         } catch (Exception e) {
             e.printStackTrace();
-            errorMessage.setText("页面加载失败: " + e.getMessage());
+            errorMessage.setText("Failed to load the page: " + e.getMessage());
         }
     }
-    
+
     private void handleForgotPassword() {
-        // 这里可以实现忘记密码的逻辑
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("忘记密码");
+        alert.setTitle("Forgot Password");
         alert.setHeaderText(null);
-        alert.setContentText("请联系系统管理员重置密码");
+        alert.setContentText("Please contact the system administrator to reset your password.");
         alert.showAndWait();
     }
 }

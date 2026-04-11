@@ -1,107 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.beans.binding.*?>
-<?import javafx.beans.property.*?>
-<?import javafx.collections.*?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
-<?import javafx.util.*?>
 
 <AnchorPane fx:id="moDashboardPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MODashboardController">
-    <!-- 导航栏 -->
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
-            <Label text="BUPT国际学校TA招聘系统" styleClass="navbar-title" />
+            <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
             <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;">
-                <Button text="首页" styleClass="navbar-menu active" onAction="#handleHome" />
-                <Button text="职位管理" styleClass="navbar-menu" onAction="#handleJobManagement" />
-                <Button text="申请管理" styleClass="navbar-menu" onAction="#handleApplicationManagement" />
-                <Button text="统计分析" styleClass="navbar-menu" onAction="#handleStatisticsAnalysis" />
+                <Button text="Home" styleClass="navbar-menu active" onAction="#handleHome" />
+                <Button text="Job Board" styleClass="navbar-menu" onAction="#handleJobManagement" />
+                <Button text="Application Review" styleClass="navbar-menu" onAction="#handleApplicationManagement" />
             </HBox>
             <HBox style="-fx-spacing: 24; -fx-alignment: center;">
-                <Label text="欢迎，模块组织者" textFill="rgba(255,255,255,0.85)" />
+                <Label text="Welcome, Module Organizer" textFill="rgba(255,255,255,0.85)" />
                 <Separator orientation="VERTICAL" styleClass="navbar-separator" />
-                <Button text="退出" styleClass="navbar-menu" onAction="#handleLogout" />
+                <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" />
             </HBox>
         </HBox>
     </VBox>
-    <!-- 主内容区 -->
-    <ScrollPane style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
-        <VBox style="-fx-padding: 32px; -fx-spacing: 32px; -fx-fill-width: true; -fx-background-color: #f8f9fa; -fx-alignment: center; -fx-pref-width: 1200px;">
-            <!-- 页面标题 -->
+
+    <ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+        <VBox style="-fx-padding: 32px; -fx-spacing: 32px; -fx-fill-width: true; -fx-background-color: #f8f9fa; -fx-alignment: center; -fx-pref-width: 1240px;">
             <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true;">
                 <VBox style="-fx-spacing: 8;">
-                    <Label text="模块组织者控制台" styleClass="section-title" />
-                    <Label text="管理职位发布和申请审核" textFill="#6c757d" style="-fx-font-size: 14px;" />
+                    <Label text="Module Organizer Dashboard" styleClass="section-title" />
+                    <Label text="Manage job postings and review applications" textFill="#6c757d" style="-fx-font-size: 14px;" />
                 </VBox>
             </HBox>
-            
-            <!-- 统计卡片 -->
+
             <HBox style="-fx-spacing: 24; -fx-fill-width: true; -fx-alignment: center;">
                 <VBox styleClass="stat-card shadow-md" style="-fx-pref-width: 32%; -fx-min-width: 200px; -fx-max-width: 300px; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px; -fx-spacing: 16;">
                     <Label text="📋" style="-fx-font-size: 32px;" />
-                    <Label fx:id="publishedJobsLabel" text="5" styleClass="stat-value" />
-                    <Label text="已发布职位" styleClass="stat-label" />
+                    <Label fx:id="publishedJobsLabel" text="0" styleClass="stat-value" />
+                    <Label text="My Jobs" styleClass="stat-label" />
                 </VBox>
                 <VBox styleClass="stat-card shadow-md" style="-fx-pref-width: 32%; -fx-min-width: 200px; -fx-max-width: 300px; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px; -fx-spacing: 16;">
                     <Label text="👥" style="-fx-font-size: 32px;" />
-                    <Label fx:id="totalApplicationsLabel" text="15" styleClass="stat-value" />
-                    <Label text="总申请数" styleClass="stat-label" />
+                    <Label fx:id="totalApplicationsLabel" text="0" styleClass="stat-value" />
+                    <Label text="Total Applications" styleClass="stat-label" />
                 </VBox>
                 <VBox styleClass="stat-card shadow-md" style="-fx-pref-width: 32%; -fx-min-width: 200px; -fx-max-width: 300px; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px; -fx-spacing: 16;">
                     <Label text="✅" style="-fx-font-size: 32px;" />
-                    <Label fx:id="acceptedApplicationsLabel" text="8" styleClass="stat-value" />
-                    <Label text="已录用人数" styleClass="stat-label" />
+                    <Label fx:id="acceptedApplicationsLabel" text="0" styleClass="stat-value" />
+                    <Label text="Accepted Applicants" styleClass="stat-label" />
                 </VBox>
             </HBox>
-            
-            <!-- 最近发布的职位 -->
-            <VBox styleClass="card shadow-md" style="-fx-pref-height: 320px; -fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px;">
+
+            <VBox styleClass="card shadow-md" style="-fx-pref-height: 340px; -fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px;">
                 <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true; -fx-padding: 0 0 20 0;">
-                    <VBox style="-fx-spacing: 8;">
-                        <Label text="最近发布的职位" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
-                        <Label text="查看和管理您发布的职位" textFill="#6c757d" style="-fx-font-size: 14px;" />
+                    <VBox style="-fx-spacing: 8;" HBox.hgrow="ALWAYS">
+                        <Label text="My Posted Jobs" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
+                        <Label text="Review every position you created. Double-click a row to open My Jobs." textFill="#6c757d" style="-fx-font-size: 14px;" />
                     </VBox>
                 </HBox>
-                <TableView fx:id="jobsTable" style="-fx-pref-height: 240px; -fx-background-radius: 8px; -fx-border-radius: 8px;">
+                <TableView fx:id="jobsTable" style="-fx-pref-height: 250px; -fx-fixed-cell-size: 36px; -fx-font-size: 12px;">
                     <columns>
-                        <TableColumn text="职位标题" style="-fx-pref-width: 40%;">
+                        <TableColumn text="Title" prefWidth="280">
                             <cellValueFactory>
                                 <PropertyValueFactory property="title" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn text="院系" style="-fx-pref-width: 25%;">
+                        <TableColumn text="Department" prefWidth="170">
                             <cellValueFactory>
                                 <PropertyValueFactory property="department" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn text="截止日期" style="-fx-pref-width: 25%;">
+                        <TableColumn text="Deadline" prefWidth="190">
                             <cellValueFactory>
                                 <PropertyValueFactory property="deadline" />
                             </cellValueFactory>
                         </TableColumn>
-                        <TableColumn text="申请数" style="-fx-pref-width: 10%;">
+                        <TableColumn text="Status" prefWidth="150">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="status" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn text="Applications" prefWidth="110">
                             <cellValueFactory>
                                 <PropertyValueFactory property="applicationCount" />
                             </cellValueFactory>
                         </TableColumn>
                     </columns>
+                    <placeholder>
+                        <VBox alignment="CENTER" style="-fx-spacing: 8; -fx-padding: 30px;">
+                            <Label text="No jobs created yet" style="-fx-font-size: 16px; -fx-font-weight: 700; -fx-text-fill: #5c6b7a;" />
+                            <Label text="Use Create Job below to publish your first opening" style="-fx-font-size: 12px; -fx-text-fill: #8b97a3;" />
+                        </VBox>
+                    </placeholder>
                 </TableView>
             </VBox>
-            
-            <!-- 快速操作按钮 -->
+
             <VBox styleClass="card shadow-md" style="-fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px;">
-                <Label text="快速操作" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057; -fx-padding: 0 0 20 0;" />
-                <HBox style="-fx-spacing: 16; -fx-wrap-text: true; -fx-alignment: center-left; -fx-fill-width: true;">
-                <Button text="发布职位" styleClass="btn btn-primary" onAction="#handleCreateJob" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
-                <Button text="职位需求" styleClass="btn btn-primary" onAction="#handleViewAllJobs" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
-                <Button text="查看申请" styleClass="btn btn-primary" onAction="#handleViewApplications" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
-                <Button text="导出数据" styleClass="btn btn-secondary" onAction="#handleExportData" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
-                <Button text="查看统计" styleClass="btn btn-secondary" onAction="#handleViewStatistics" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
-            </HBox>
+                <Label text="Quick Actions" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057; -fx-padding: 0 0 20 0;" />
+                <HBox style="-fx-spacing: 16; -fx-alignment: center-left; -fx-fill-width: true;">
+                    <Button text="Create Job" styleClass="btn btn-primary" onAction="#handleCreateJob" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
+                    <Button text="My Jobs" styleClass="btn btn-primary" onAction="#handleViewMyJobs" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
+                    <Button text="Application Review" styleClass="btn btn-primary" onAction="#handleViewApplications" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
+                    <Button text="Export Application Data" styleClass="btn btn-secondary" onAction="#handleExportData" style="-fx-pref-width: 200px; -fx-min-height: 40px;" />
+                </HBox>
             </VBox>
         </VBox>
     </ScrollPane>

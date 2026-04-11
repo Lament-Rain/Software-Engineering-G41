@@ -76,15 +76,15 @@ public class JobDetailController {
         workTimeLabel.setText(currentJob.getWorkTime());
         recruitNumLabel.setText(String.valueOf(currentJob.getRecruitNum()));
         deadlineLabel.setText(currentJob.getDeadline());
-        salaryLabel.setText(currentJob.getSalary() != null && !currentJob.getSalary().isEmpty() ? currentJob.getSalary() : "未指定");
-        locationLabel.setText(currentJob.getLocation() != null && !currentJob.getLocation().isEmpty() ? currentJob.getLocation() : "未指定");
+        salaryLabel.setText(currentJob.getSalary() != null && !currentJob.getSalary().isEmpty() ? currentJob.getSalary() : "Not specified");
+        locationLabel.setText(currentJob.getLocation() != null && !currentJob.getLocation().isEmpty() ? currentJob.getLocation() : "Not specified");
 
         String publisher = currentJob.getPublisherName();
         if (publisher == null || publisher.isEmpty()) {
             if ("ADMIN".equals(currentJob.getPublisherType())) {
-                publisher = "管理员";
+                publisher = "Administrator";
             } else {
-                publisher = "模块组织者";
+                publisher = "Module Organizer";
             }
         }
         publisherLabel.setText(publisher);
@@ -105,13 +105,13 @@ public class JobDetailController {
         if (skills != null && !skills.isEmpty()) {
             skillsArea.setText(String.join("\n", skills));
         } else {
-            skillsArea.setText("无特殊技能要求");
+            skillsArea.setText("No special skills required");
         }
         skillsArea.setEditable(false);
         skillsArea.setWrapText(true);
 
         String extraReq = currentJob.getExtraRequirements();
-        extraRequirementsArea.setText(extraReq != null && !extraReq.isEmpty() ? extraReq : "无额外要求");
+        extraRequirementsArea.setText(extraReq != null && !extraReq.isEmpty() ? extraReq : "No additional requirements");
         extraRequirementsArea.setEditable(false);
         extraRequirementsArea.setWrapText(true);
 
@@ -123,7 +123,7 @@ public class JobDetailController {
             case TA:
                 applyButton.setVisible(true);
                 applyButton.setDisable(false);
-                applyButton.setText("申请职位");
+                applyButton.setText("Apply");
                 if (currentUser instanceof TA) {
                     TA ta = (TA) currentUser;
                     List<Application> applications = ApplicationService.getApplicationsByTA(ta.getId());
@@ -134,18 +134,18 @@ public class JobDetailController {
                     if (latestApplication != null) {
                         if (latestApplication.getStatus() == model.ApplicationStatus.WITHDRAWN ||
                                 latestApplication.getStatus() == model.ApplicationStatus.REJECTED) {
-                            applyButton.setText("重新申请");
+                            applyButton.setText("Apply Again");
                         } else {
-                            applyButton.setText("已申请");
+                            applyButton.setText("Applied");
                             applyButton.setDisable(true);
                         }
                     }
                     if (ApplicationService.isDeadlinePassed(currentJob.getDeadline())) {
-                        applyButton.setText("已截止");
+                        applyButton.setText("Closed");
                         applyButton.setDisable(true);
                     }
                     if (ta.getProfileStatus() != ProfileStatus.APPROVED) {
-                        applyButton.setText("资料未审核");
+                        applyButton.setText("Profile Pending Approval");
                         applyButton.setDisable(true);
                     }
                 }
@@ -160,30 +160,30 @@ public class JobDetailController {
     @FXML
     private void handleApply() {
         if (userRole != UserRole.TA || !(currentUser instanceof TA)) {
-            showAlert("错误", "只有TA可以申请职位", Alert.AlertType.ERROR);
+            showAlert("Error", "Only TAs can apply for jobs", Alert.AlertType.ERROR);
             return;
         }
 
         TA ta = (TA) currentUser;
         if (ta.getProfileStatus() != ProfileStatus.APPROVED) {
-            showAlert("提示", "您的资料尚未审核通过，无法申请职位", Alert.AlertType.INFORMATION);
+            showAlert("Notice", "Your profile has not been approved yet, so you cannot apply for jobs", Alert.AlertType.INFORMATION);
             return;
         }
 
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmAlert.setTitle("确认申请");
-        confirmAlert.setHeaderText("申请职位: " + currentJob.getTitle());
-        confirmAlert.setContentText("确定要申请这个职位吗？");
+        confirmAlert.setTitle("Confirm Application");
+        confirmAlert.setHeaderText("Apply for: " + currentJob.getTitle());
+        confirmAlert.setContentText("Are you sure you want to apply for this position?");
 
         TextArea coverLetterArea = new TextArea();
-        coverLetterArea.setPromptText("请输入申请信（可选）...");
+        coverLetterArea.setPromptText("Enter your cover letter (optional)...");
         coverLetterArea.setPrefRowCount(5);
         coverLetterArea.setWrapText(true);
 
         VBox dialogPaneContent = new VBox();
         dialogPaneContent.setSpacing(10);
         dialogPaneContent.getChildren().addAll(
-            new Label("申请信:"),
+            new Label("Cover Letter:"),
             coverLetterArea
         );
 
@@ -194,16 +194,16 @@ public class JobDetailController {
             if (response == ButtonType.OK) {
                 String coverLetter = coverLetterArea.getText();
                 if (coverLetter == null || coverLetter.trim().isEmpty()) {
-                    coverLetter = "我对这个职位非常感兴趣，希望能有机会加入。";
+                    coverLetter = "I am very interested in this position and would appreciate the opportunity to join.";
                 }
 
                 Application application = ApplicationService.submitApplication(ta.getId(), currentJob.getId(), coverLetter);
                 if (application != null) {
-                    showAlert("申请成功", "您的申请已提交！匹配度得分: " + String.format("%.2f%%", application.getMatchScore()), Alert.AlertType.INFORMATION);
-                    applyButton.setText("已申请");
+                    showAlert("Application Submitted", "Your application has been submitted! Match score: " + String.format("%.2f%%", application.getMatchScore()), Alert.AlertType.INFORMATION);
+                    applyButton.setText("Applied");
                     applyButton.setDisable(true);
                 } else {
-                    showAlert("申请失败", "申请提交失败，当前职位可能仍有未撤回/未处理申请，或已过截止时间。", Alert.AlertType.ERROR);
+                    showAlert("Application Failed", "Submission failed. You may already have an active application for this job, or the deadline may have passed.", Alert.AlertType.ERROR);
                 }
             }
         });
@@ -222,10 +222,10 @@ public class JobDetailController {
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 职位需求");
+            stage.setTitle("BUPT International School TA Recruitment System - Job Directory");
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("错误", "返回失败: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Failed to go back: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 
@@ -239,10 +239,10 @@ public class JobDetailController {
 
             Scene scene = new Scene(root, 800, 600);
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 登录");
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert("错误", "退出失败: " + e.getMessage(), Alert.AlertType.ERROR);
+            showAlert("Error", "Logout failed: " + e.getMessage(), Alert.AlertType.ERROR);
         }
     }
 

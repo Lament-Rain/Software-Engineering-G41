@@ -15,10 +15,10 @@ public class Job {
     private String salary;
     private String location;
     private String extraRequirements;
-    private String moId; // 保留以兼容旧数据
-    private String publisherId; // 发布者ID（可以是MO或Admin）
-    private String publisherType; // 发布者类型: "MO" 或 "ADMIN"
-    private String publisherName; // 发布者名称
+    private String moId; 
+    private String publisherId; 
+    private String publisherType; 
+    private String publisherName; 
     private JobStatus status;
     private String createdAt;
     private String updatedAt;

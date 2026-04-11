@@ -82,16 +82,16 @@ public class TAProfileEditController {
     private Stage stage;
     private TA user;
     private Timer autoSaveTimer;
-    private static final int AUTO_SAVE_INTERVAL = 60000; // 1分钟
+    private static final int AUTO_SAVE_INTERVAL = 60000; // 1 minute
     
     public void initialize() {
-        // 添加年龄输入过滤器
+        // Add age input filter
         setupAgeFieldFilter();
         
-        // 添加实时校验和进度更新
+        // Add real-time validation and progress updates
         setupRealTimeValidation();
         
-        // 启动自动保存定时器
+        // Start auto-save timer
         startAutoSaveTimer();
     }
     
@@ -499,12 +499,12 @@ public class TAProfileEditController {
     }
     
     private void updateButtonStyles(Button activeButton) {
-        // 重置所有按钮样式
+        // Reset all button styles
         personalInfoBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #6c757d; -fx-padding: 6 12; -fx-background-radius: 4px; -fx-font-weight: normal;");
         workAvailabilityBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #6c757d; -fx-padding: 6 12; -fx-background-radius: 4px; -fx-font-weight: normal;");
         professionalSkillsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #6c757d; -fx-padding: 6 12; -fx-background-radius: 4px; -fx-font-weight: normal;");
         
-        // 设置激活按钮样式
+        // Set active button style
         if (activeButton != null) {
             activeButton.setStyle("-fx-background-color: #e3f2fd; -fx-text-fill: #0d6efd; -fx-padding: 6 12; -fx-background-radius: 4px; -fx-font-weight: bold;");
         }

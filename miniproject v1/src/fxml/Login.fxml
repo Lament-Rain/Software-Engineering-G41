@@ -23,7 +23,7 @@
             <VBox alignment="CENTER" styleClass="container shadow-lg" maxWidth="480" style="-fx-pref-width: 90%; -fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px;" spacing="24">
                 <!-- Title Section -->
                 <VBox alignment="CENTER" spacing="16" style="-fx-fill-width: true; -fx-padding: 32px 32px 0 32px;">
-                    <Label text="BUPT International School TA Recruitment System" styleClass="title" />
+                    <Label text="BUPT International School&#10;TA Recruitment System" styleClass="title" wrapText="true" textAlignment="CENTER" maxWidth="360.0" alignment="CENTER" />
                     <Label text="Please log in to access the system" styleClass="subtitle" />
                 </VBox>
                 

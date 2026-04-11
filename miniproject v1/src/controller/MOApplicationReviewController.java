@@ -209,7 +209,7 @@ public class MOApplicationReviewController {
     private void handleScreenApplicant() {
         ApplicantReviewViewModel selected = applicantsTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert(Alert.AlertType.INFORMATION, "提示", "请先选择申请人。");
+            showAlert(Alert.AlertType.INFORMATION, "Notice", "Please select an applicant first.");
             return;
         }
 
@@ -220,11 +220,11 @@ public class MOApplicationReviewController {
 
         boolean success = ApplicationService.screenApplication(selected.getApplicationId(), ApplicationStatus.SCREENED, feedback, user.getId());
         if (!success) {
-            showAlert(Alert.AlertType.ERROR, "操作失败", "无法将该申请标记为已筛选。");
+            showAlert(Alert.AlertType.ERROR, "Action Failed", "Unable to mark this application as SCREENED.");
             return;
         }
 
-        showAlert(Alert.AlertType.INFORMATION, "已筛选", "该申请已标记为 SCREENED。");
+        showAlert(Alert.AlertType.INFORMATION, "Screened", "This application has been marked as SCREENED.");
         loadApplicants();
     }
 
@@ -232,17 +232,17 @@ public class MOApplicationReviewController {
     private void handleAcceptApplicant() {
         ApplicantReviewViewModel selected = applicantsTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert(Alert.AlertType.INFORMATION, "提示", "请先选择申请人。");
+            showAlert(Alert.AlertType.INFORMATION, "Notice", "Please select an applicant first.");
             return;
         }
 
         boolean success = ApplicationService.acceptApplication(selected.getApplicationId(), user.getId());
         if (!success) {
-            showAlert(Alert.AlertType.WARNING, "录用失败", "可能已达到该职位录用人数上限，或申请状态不允许录用。");
+            showAlert(Alert.AlertType.WARNING, "Acceptance Failed", "The position may have reached its acceptance limit, or the application status does not allow acceptance.");
             return;
         }
 
-        showAlert(Alert.AlertType.INFORMATION, "录用成功", "该申请已更新为 ACCEPTED。");
+        showAlert(Alert.AlertType.INFORMATION, "Accepted", "This application has been updated to ACCEPTED.");
         loadApplicants();
     }
 
@@ -250,7 +250,7 @@ public class MOApplicationReviewController {
     private void handleRejectApplicant() {
         ApplicantReviewViewModel selected = applicantsTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert(Alert.AlertType.INFORMATION, "提示", "请先选择申请人。");
+            showAlert(Alert.AlertType.INFORMATION, "Notice", "Please select an applicant first.");
             return;
         }
 
@@ -262,7 +262,7 @@ public class MOApplicationReviewController {
             dialog.setContentText("Reason:");
             Optional<String> input = dialog.showAndWait();
             if (!input.isPresent() || input.get().trim().isEmpty()) {
-                showAlert(Alert.AlertType.INFORMATION, "已取消", "请输入拒绝原因后再操作。");
+                showAlert(Alert.AlertType.INFORMATION, "Cancelled", "Please enter a rejection reason before continuing.");
                 return;
             }
             feedback = input.get().trim();
@@ -270,11 +270,11 @@ public class MOApplicationReviewController {
 
         boolean success = ApplicationService.rejectApplication(selected.getApplicationId(), feedback, user.getId());
         if (!success) {
-            showAlert(Alert.AlertType.ERROR, "拒绝失败", "该申请无法拒绝。");
+            showAlert(Alert.AlertType.ERROR, "Rejection Failed", "This application cannot be rejected.");
             return;
         }
 
-        showAlert(Alert.AlertType.INFORMATION, "已拒绝", "该申请已更新为 REJECTED。");
+        showAlert(Alert.AlertType.INFORMATION, "Rejected", "This application has been updated to REJECTED.");
         loadApplicants();
     }
 
@@ -289,10 +289,10 @@ public class MOApplicationReviewController {
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 模块组织者控制台");
+            stage.setTitle("BUPT International School TA Recruitment System - MO Dashboard");
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "错误", "返回失败: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to go back: " + e.getMessage());
         }
     }
 

@@ -8,7 +8,7 @@ import java.util.UUID;
 public class FileUtils {
     private static final String RESUME_DIR = "src/data/resumes";
 
-    // 计算文件的MD5值
+    // Calculate file MD5
     public static String calculateMD5(File file) throws IOException, NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
         try (FileInputStream fis = new FileInputStream(file)) {
@@ -26,21 +26,21 @@ public class FileUtils {
         return sb.toString();
     }
 
-    // 上传简历文件
+    // Upload resume file
     public static String uploadResume(File file, String taId) throws IOException, NoSuchAlgorithmException {
-        // 确保简历目录存在
+        // Ensure the resume directory exists
         File resumeDir = new File(RESUME_DIR);
         if (!resumeDir.exists()) {
             resumeDir.mkdirs();
         }
 
-        // 生成唯一文件名
+        // Generate unique file name
         String originalName = file.getName();
         String extension = originalName.substring(originalName.lastIndexOf("."));
         String uniqueName = taId + "_" + UUID.randomUUID().toString() + extension;
         String filePath = RESUME_DIR + "/" + uniqueName;
 
-        // 复制文件
+        // Copy file
         try (FileInputStream fis = new FileInputStream(file);
              FileOutputStream fos = new FileOutputStream(filePath)) {
             byte[] buffer = new byte[8192];
@@ -53,18 +53,18 @@ public class FileUtils {
         return filePath;
     }
 
-    // 删除简历文件
+    // Delete resume file
     public static boolean deleteResume(String filePath) {
         File file = new File(filePath);
         return file.exists() && file.delete();
     }
 
-    // 检查文件大小是否符合要求（≤10MB）
+    // Check whether the file size meets the requirement (≤10MB)
     public static boolean checkFileSize(File file) {
         return file.length() <= 10 * 1024 * 1024; // 10MB
     }
 
-    // 检查文件格式是否支持
+    // Check whether the file format is supported
     public static boolean checkFileFormat(String fileName) {
         String extension = fileName.toLowerCase();
         return extension.endsWith(".pdf");

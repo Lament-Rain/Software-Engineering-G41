@@ -4,16 +4,19 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import model.MO;
 import model.Admin;
 import model.Job;
 import model.JobType;
+import model.MO;
 import model.UserRole;
 import service.JobService;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class MOCreateJobController {
@@ -47,7 +50,7 @@ public class MOCreateJobController {
         this.moUser = user;
         this.userRole = UserRole.MO;
         if (user != null) {
-            welcomeLabel.setText("欢迎，" + user.getName());
+            welcomeLabel.setText("Welcome, " + user.getName());
         }
     }
 
@@ -55,26 +58,29 @@ public class MOCreateJobController {
         this.adminUser = admin;
         this.userRole = UserRole.ADMIN;
         if (admin != null) {
-            welcomeLabel.setText("欢迎，管理员 " + admin.getUsername());
+            welcomeLabel.setText("Welcome, Admin " + admin.getUsername());
         }
     }
 
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    
+
     @FXML
     private void initialize() {
-        // 初始化职位类型选项
         typeComboBox.getItems().addAll("MODULE_ASSISTANT", "INVIGILATION", "OTHER");
-        
-        // 初始化院系选项
-        departmentComboBox.getItems().addAll("计算机学院", "理学院", "外语学院", "人文学院", "经济管理学院", "工学院");
+        departmentComboBox.getItems().addAll(
+                "Computer Science School",
+                "Science School",
+                "School of Foreign Languages",
+                "School of Humanities",
+                "School of Economics and Management",
+                "School of Engineering"
+        );
     }
-    
+
     @FXML
     private void handleSubmit() {
-        // 验证输入
         String title = titleField.getText();
         String type = typeComboBox.getValue();
         String department = departmentComboBox.getValue();
@@ -83,30 +89,28 @@ public class MOCreateJobController {
         String deadline = deadlineField.getText();
         String description = descriptionArea.getText();
         String skills = skillsArea.getText();
-        
+
         if (title.isEmpty() || type == null || department == null || workTime.isEmpty() || recruitNumStr.isEmpty() || deadline.isEmpty() || description.isEmpty() || skills.isEmpty()) {
-            errorMessage.setText("请填写所有必填字段");
+            errorMessage.setText("Please fill in all required fields.");
             return;
         }
-        
-        // 验证招募人数
+
         int recruitNum;
         try {
             recruitNum = Integer.parseInt(recruitNumStr);
             if (recruitNum <= 0) {
-                errorMessage.setText("招募人数必须大于0");
+                errorMessage.setText("The number of openings must be greater than 0.");
                 return;
             }
         } catch (NumberFormatException e) {
-            errorMessage.setText("招募人数必须是数字");
+            errorMessage.setText("The number of openings must be numeric.");
             return;
         }
-        
-        // 准备参数并保存职位
+
         List<String> skillsList = java.util.Arrays.asList(skills.split(","));
-        String salary = ""; // 默认为空
-        String location = ""; // 默认为空
-        String extraRequirements = ""; // 默认为空
+        String salary = "";
+        String location = "";
+        String extraRequirements = "";
 
         Job job = null;
         if (userRole == UserRole.MO && moUser != null) {
@@ -115,28 +119,24 @@ public class MOCreateJobController {
             job = JobService.createJob(title, JobType.valueOf(type), department, description, skillsList, workTime, recruitNum, deadline, salary, location, extraRequirements, adminUser.getId(), "ADMIN", adminUser.getUsername());
         }
 
-        boolean success = job != null;
-        if (success) {
+        if (job != null) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("发布成功");
-            alert.setHeaderText("职位发布成功");
-            alert.setContentText("职位已成功发布！");
+            alert.setTitle("Published Successfully");
+            alert.setHeaderText("Job published successfully");
+            alert.setContentText("The position has been published.");
             alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
             alert.showAndWait();
-
-            // 返回到仪表盘
             handleHome();
         } else {
-            errorMessage.setText("职位发布失败，请稍后重试");
+            errorMessage.setText("Failed to publish the job. Please try again later.");
         }
     }
-    
+
     @FXML
     private void handleCancel() {
-        // 返回到仪表盘
         handleHome();
     }
-    
+
     @FXML
     private void handleHome() {
         try {
@@ -149,7 +149,7 @@ public class MOCreateJobController {
                 Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
                 scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
                 stage.setScene(scene);
-                stage.setTitle("BUPT国际学校TA招聘系统 - 模块组织者控制台");
+                stage.setTitle("BUPT International School TA Recruitment System - Module Organizer Dashboard");
             } else if (userRole == UserRole.ADMIN && adminUser != null) {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
                 Parent root = loader.load();
@@ -159,19 +159,19 @@ public class MOCreateJobController {
                 Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
                 scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
                 stage.setScene(scene);
-                stage.setTitle("BUPT国际学校TA招聘系统 - 管理员控制台");
+                stage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
             }
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("错误");
-            alert.setHeaderText("页面加载失败");
-            alert.setContentText("页面加载失败，请稍后重试。");
+            alert.setTitle("Error");
+            alert.setHeaderText("Failed to load page");
+            alert.setContentText("Failed to load the page. Please try again later.");
             alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
             alert.showAndWait();
         }
     }
-    
+
     @FXML
     private void handleLogout() {
         try {
@@ -179,16 +179,16 @@ public class MOCreateJobController {
             Parent root = loader.load();
             LoginController controller = loader.getController();
             controller.setStage(stage);
-            
+
             Scene scene = new Scene(root, 800, 600);
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 登录");
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("错误");
-            alert.setHeaderText("页面加载失败");
-            alert.setContentText("登录页面加载失败，请稍后重试。");
+            alert.setTitle("Error");
+            alert.setHeaderText("Failed to load page");
+            alert.setContentText("Failed to load the login page. Please try again later.");
             alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
             alert.showAndWait();
         }

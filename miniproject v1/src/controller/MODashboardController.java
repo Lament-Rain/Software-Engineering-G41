@@ -1,27 +1,28 @@
 package controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.event.ActionEvent;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
-import model.MO;
-import model.JobViewModel;
-import model.Job;
 import model.Application;
 import model.ApplicationStatus;
-import model.TA;
+import model.Job;
+import model.JobStatus;
+import model.JobViewModel;
+import model.MO;
 import service.ApplicationService;
 import service.JobService;
-import service.UserService;
+
 import java.util.List;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 public class MODashboardController {
     @FXML
@@ -32,98 +33,79 @@ public class MODashboardController {
     private Label acceptedApplicationsLabel;
     @FXML
     private TableView<JobViewModel> jobsTable;
-    
+
     private MO user;
-    
+
     public void setUser(MO user) {
         this.user = user;
         initializeDashboard();
     }
-    
+
     private void initializeDashboard() {
-        if (user == null) return;
-        
+        if (user == null) {
+            return;
+        }
+
         try {
-            // 加载统计数据
             loadStatistics();
-            
-            // 加载最近发布的职位
             loadRecentJobs();
         } catch (Exception e) {
             e.printStackTrace();
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            alert.setTitle("错误");
-            alert.setHeaderText("初始化仪表板失败");
-            alert.setContentText("初始化仪表板失败: " + e.getMessage());
-            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to initialize dashboard: " + e.getMessage());
         }
     }
-    
+
     private void loadStatistics() {
-        // 调试信息
-        System.out.println("loadStatistics - User ID: " + user.getId());
-        
-        // 获取发布的职位数量
         List<Job> jobsForStats = JobService.getAllJobsByMO(user.getId());
-        System.out.println("loadStatistics - Job count: " + jobsForStats.size());
-        
+
         int publishedJobsCount = jobsForStats.size();
-        publishedJobsLabel.setText(String.valueOf(publishedJobsCount));
-        
-        // 获取总申请数量
         int totalApplicationsCount = 0;
         int acceptedApplicationsCount = 0;
-        
+
         for (Job job : jobsForStats) {
-            System.out.println("loadStatistics - Job: " + job.getTitle() + ", MO ID: " + job.getMoId());
-            int appCount = ApplicationService.getApplicationsByJob(job.getId()).size();
-            totalApplicationsCount += appCount;
-            
-            // 计算已接受的申请数量
-            for (Application app : ApplicationService.getApplicationsByJob(job.getId())) {
+            List<Application> applications = ApplicationService.getApplicationsByJob(job.getId());
+            totalApplicationsCount += applications.size();
+            for (Application app : applications) {
                 if (app.getStatus() == ApplicationStatus.ACCEPTED) {
                     acceptedApplicationsCount++;
                 }
             }
         }
-        
+
+        publishedJobsLabel.setText(String.valueOf(publishedJobsCount));
         totalApplicationsLabel.setText(String.valueOf(totalApplicationsCount));
         acceptedApplicationsLabel.setText(String.valueOf(acceptedApplicationsCount));
     }
-    
+
     private void loadRecentJobs() {
-        // 从服务中获取实际的职位数据
         ObservableList<JobViewModel> jobs = FXCollections.observableArrayList();
-        
-        // 获取MO发布的所有职位
         List<Job> jobList = JobService.getAllJobsByMO(user.getId());
-        
-        // 调试信息
-        System.out.println("loadRecentJobs - Job count: " + jobList.size());
-        
-        // 转换为JobViewModel
+
         for (Job job : jobList) {
-            // 调试信息
-            System.out.println("Job: " + job.getTitle() + ", MO ID: " + job.getMoId() + ", Status: " + job.getStatus());
-            
-            // 计算申请数量
             int applicationCount = ApplicationService.getApplicationsByJob(job.getId()).size();
-            
-            // 创建JobViewModel并添加到列表
-            jobs.add(new JobViewModel(job.getTitle(), job.getDepartment(), job.getDeadline(), applicationCount));
+            jobs.add(new JobViewModel(
+                    job.getId(),
+                    safeText(job.getTitle()),
+                    safeText(job.getDepartment()),
+                    formatDeadline(job.getDeadline()),
+                    formatStatus(job.getStatus()),
+                    applicationCount
+            ));
         }
-        
-        // 调试信息
-        System.out.println("JobViewModel count: " + jobs.size());
-        
-        // 设置表格数据
+
         jobsTable.setItems(jobs);
-        // 刷新表格
+        jobsTable.setRowFactory(table -> {
+            TableRow<JobViewModel> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    openMyJobsPage(row.getItem().getJobId());
+                }
+            });
+            return row;
+        });
         jobsTable.refresh();
     }
-    
-    // 发布职位
+
     @FXML
     private void handleCreateJob(ActionEvent event) {
         try {
@@ -131,355 +113,226 @@ public class MODashboardController {
             Parent root = loader.load();
             MOCreateJobController controller = loader.getController();
             controller.setUser(user);
-            
-            // 获取当前舞台
-            Stage stage = null;
-            if (event.getSource() instanceof Button) {
-                stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            } else {
-                stage = (Stage) jobsTable.getScene().getWindow();
-            }
-            
+
+            Stage stage = getStage(event);
             controller.setStage(stage);
-            
+
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 发布TA职位");
+            stage.setTitle("BUPT International School TA Recruitment System - Create TA Position");
         } catch (Exception e) {
             e.printStackTrace();
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            alert.setTitle("错误");
-            alert.setHeaderText("页面加载失败");
-            alert.setContentText("发布职位页面加载失败，请稍后重试。");
-            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load create job page. Please try again later.");
         }
     }
-    
-    // 查看申请
+
     @FXML
     private void handleViewApplications(ActionEvent event) {
-        if (user == null) return;
-        
-        List<Job> jobs = JobService.getAllJobsByMO(user.getId());
-        if (jobs.isEmpty()) {
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-            alert.setTitle("提示");
-            alert.setHeaderText("查看职位申请");
-            alert.setContentText("暂无发布的职位！");
-            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-            return;
-        }
-        
-        // 构建职位列表
-        StringBuilder jobList = new StringBuilder("=== 查看职位申请 ===\n\n");
-        for (int i = 0; i < jobs.size(); i++) {
-            Job job = jobs.get(i);
-            jobList.append((i + 1)).append(". " + job.getTitle() + "\n");
-        }
-        
-        javafx.scene.control.Alert jobAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        jobAlert.setTitle("查看职位申请");
-        jobAlert.setHeaderText("选择职位");
-        jobAlert.setContentText(jobList.toString());
-        jobAlert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-        jobAlert.showAndWait();
-        
-        // 这里简化处理，实际应该弹出一个对话框让用户选择职位
-        // 为了演示，我们选择第一个职位
-        if (!jobs.isEmpty()) {
-            Job job = jobs.get(0);
-            List<Application> applications = ApplicationService.getApplicationsByJob(job.getId());
-            if (applications.isEmpty()) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                alert.setTitle("提示");
-                alert.setHeaderText(job.getTitle() + " 的申请列表");
-                alert.setContentText("暂无申请记录！");
-                alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-                alert.showAndWait();
-                return;
-            }
-            
-            // 构建申请列表
-            StringBuilder applicationList = new StringBuilder("=== " + job.getTitle() + " 的申请列表 ===\n\n");
-            for (Application app : applications) {
-                TA ta = UserService.getTAProfile(app.getTaId());
-                if (ta != null) {
-                    applicationList.append("申请人：" + ta.getName() + "\n");
-                    applicationList.append("所属院系：" + ta.getDepartment() + "\n");
-                    applicationList.append("申请时间：" + app.getCreatedAt() + "\n");
-                    applicationList.append("状态：" + app.getStatus() + "\n");
-                    applicationList.append("匹配度：" + app.getMatchScore() + "\n");
-                    if (ta.getResumePath() != null) {
-                        applicationList.append("简历：已上传\n");
-                    } else {
-                        applicationList.append("简历：未上传\n");
-                    }
-                    applicationList.append("\n");
-                }
-            }
-            
-            javafx.scene.control.Alert applicationAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-            applicationAlert.setTitle("查看申请");
-            applicationAlert.setHeaderText(job.getTitle() + " 的申请列表");
-            applicationAlert.setContentText(applicationList.toString());
-            applicationAlert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            applicationAlert.showAndWait();
-        }
+        openApplicationReview(event);
     }
-    
-    // 导出数据
+
     @FXML
     private void handleExportData(ActionEvent event) {
-        if (user == null) return;
-        
-        List<Job> jobs = JobService.getAllJobsByMO(user.getId());
-        if (jobs.isEmpty()) {
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-            alert.setTitle("提示");
-            alert.setHeaderText("导出申请数据");
-            alert.setContentText("暂无发布的职位！");
-            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            alert.showAndWait();
+        if (user == null) {
             return;
         }
-        
-        // 构建职位列表
-        StringBuilder jobList = new StringBuilder("=== 导出申请数据 ===\n\n");
-        for (int i = 0; i < jobs.size(); i++) {
-            Job job = jobs.get(i);
-            jobList.append((i + 1)).append(". " + job.getTitle() + "\n");
-        }
-        
-        javafx.scene.control.Alert jobAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        jobAlert.setTitle("导出申请数据");
-        jobAlert.setHeaderText("选择职位");
-        jobAlert.setContentText(jobList.toString());
-        jobAlert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-        jobAlert.showAndWait();
-        
-        // 这里简化处理，实际应该弹出一个对话框让用户选择职位
-        // 为了演示，我们选择第一个职位
-        if (!jobs.isEmpty()) {
-            Job job = jobs.get(0);
-            List<Application> applications = ApplicationService.getApplicationsByJob(job.getId());
-            
-            if (applications.isEmpty()) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                alert.setTitle("提示");
-                alert.setHeaderText("导出申请数据");
-                alert.setContentText("该职位暂无申请记录！");
-                alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-                alert.showAndWait();
-                return;
-            }
-            
-            // 导出为CSV
-            String filePath = "src/data/application_data_" + job.getTitle().replace(" ", "_") + "_" + java.time.LocalDateTime.now().toString().replace(":", "-") + ".csv";
-            try (java.io.FileWriter writer = new java.io.FileWriter(filePath)) {
-                writer.write("申请人,所属院系,申请时间,状态,匹配度,审核意见\n");
-                for (Application app : applications) {
-                    TA ta = UserService.getTAProfile(app.getTaId());
-                    if (ta != null) {
-                        writer.write(ta.getName() + "," + ta.getDepartment() + "," + app.getCreatedAt() + "," + app.getStatus() + "," + app.getMatchScore() + "," + (app.getReviewComment() != null ? app.getReviewComment() : "") + "\n");
-                    }
-                }
-                javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                successAlert.setTitle("导出成功");
-                successAlert.setHeaderText("数据导出成功");
-                successAlert.setContentText("数据已导出至：" + filePath);
-                successAlert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-                successAlert.showAndWait();
-            } catch (java.io.IOException e) {
-                javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                errorAlert.setTitle("导出失败");
-                errorAlert.setHeaderText("数据导出失败");
-                errorAlert.setContentText("导出失败：" + e.getMessage());
-                errorAlert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-                errorAlert.showAndWait();
-            }
-        }
-    }
-    
-    // 查看统计
-    @FXML
-    private void handleViewStatistics(ActionEvent event) {
-        if (user == null) return;
-        
+
         List<Job> jobs = JobService.getAllJobsByMO(user.getId());
         if (jobs.isEmpty()) {
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-            alert.setTitle("提示");
-            alert.setHeaderText("招聘统计");
-            alert.setContentText("暂无发布的职位！");
-            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            alert.showAndWait();
+            showAlert(Alert.AlertType.INFORMATION, "Notice", "No published jobs yet.");
             return;
         }
-        
-        // 这里简化处理，实际应该弹出一个对话框让用户选择时间范围
-        String startTime = "2026-03-01T00:00:00";
-        String endTime = "2026-03-31T23:59:59";
-        
-        int totalApplications = 0;
-        int totalAccepted = 0;
-        
-        // 构建统计信息
-        StringBuilder statistics = new StringBuilder("=== 招聘统计 ===\n\n");
-        
+
+        StringBuilder content = new StringBuilder();
+        content.append("Job Title,Job Status,Applicant,Department,Applied At,Status,Match Score,Review Comment\n");
+
+        int exportedRows = 0;
         for (Job job : jobs) {
-            if (job.getCreatedAt().compareTo(startTime) >= 0 && job.getCreatedAt().compareTo(endTime) <= 0) {
-                List<Application> apps = ApplicationService.getApplicationsByJob(job.getId());
-                totalApplications += apps.size();
-                for (Application app : apps) {
-                    if (app.getStatus() == ApplicationStatus.ACCEPTED) {
-                        totalAccepted++;
-                    }
+            List<Application> applications = ApplicationService.getApplicationsByJob(job.getId());
+            if (applications.isEmpty()) {
+                content.append(job.getTitle()).append(",")
+                        .append(formatStatus(job.getStatus())).append(",No Applications,-,-,-,-,-\n");
+                continue;
+            }
+
+            for (Application app : applications) {
+                String applicantName = "Unknown Applicant";
+                String applicantDepartment = "-";
+                model.TA ta = service.UserService.getTAProfile(app.getTaId());
+                if (ta != null) {
+                    applicantName = ta.getName() != null && !ta.getName().isBlank() ? ta.getName() : ta.getUsername();
+                    applicantDepartment = safeText(ta.getDepartment());
                 }
-                
-                // 显示每个职位的统计
-                int jobApps = apps.size();
-                int jobAccepted = 0;
-                for (Application app : apps) {
-                    if (app.getStatus() == ApplicationStatus.ACCEPTED) {
-                        jobAccepted++;
-                    }
-                }
-                double jobAcceptanceRate = jobApps > 0 ? (double) jobAccepted / jobApps * 100 : 0;
-                statistics.append("职位：" + job.getTitle() + "\n");
-                statistics.append("申请数：" + jobApps + "\n");
-                statistics.append("录用数：" + jobAccepted + "\n");
-                statistics.append("通过率：" + String.format("%.2f%%", jobAcceptanceRate) + "\n\n");
+
+                content.append(safeCsv(job.getTitle())).append(",")
+                        .append(safeCsv(formatStatus(job.getStatus()))).append(",")
+                        .append(safeCsv(applicantName)).append(",")
+                        .append(safeCsv(applicantDepartment)).append(",")
+                        .append(safeCsv(safeText(app.getCreatedAt()))).append(",")
+                        .append(safeCsv(app.getStatus() == null ? "-" : app.getStatus().name())).append(",")
+                        .append(app.getMatchScore()).append(",")
+                        .append(safeCsv(safeText(app.getReviewComment())))
+                        .append("\n");
+                exportedRows++;
             }
         }
-        
-        // 显示总体统计
-        double overallAcceptanceRate = totalApplications > 0 ? (double) totalAccepted / totalApplications * 100 : 0;
-        statistics.append("=== 总体统计 ===\n");
-        statistics.append("总申请数：" + totalApplications + "\n");
-        statistics.append("总录用数：" + totalAccepted + "\n");
-        statistics.append("总通过率：" + String.format("%.2f%%", overallAcceptanceRate));
-        
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle("招聘统计");
-        alert.setHeaderText("统计结果");
-        alert.setContentText(statistics.toString());
-        alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-        alert.showAndWait();
+
+        String filePath = "src/data/mo_export_" + user.getUsername() + "_" + java.time.LocalDateTime.now().toString().replace(":", "-") + ".csv";
+        try (java.io.FileWriter writer = new java.io.FileWriter(filePath)) {
+            writer.write(content.toString());
+            showAlert(Alert.AlertType.INFORMATION, "Export Successful", "Exported " + exportedRows + " application records to:\n" + filePath);
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Export Failed", "Export failed: " + e.getMessage());
+        }
     }
-    
-    // 退出登录
+
     @FXML
     private void handleLogout(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
             LoginController controller = loader.getController();
-            controller.setStage((Stage) ((Button) event.getSource()).getScene().getWindow());
-            
+            controller.setStage(getStage(event));
+
             Scene scene = new Scene(root, 800, 600);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            Stage stage = getStage(event);
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 登录");
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
         } catch (Exception e) {
             e.printStackTrace();
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            alert.setTitle("错误");
-            alert.setHeaderText("页面加载失败");
-            alert.setContentText("登录页面加载失败，请稍后重试。");
-            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login page. Please try again later.");
         }
     }
-    
-    // 处理首页按钮点击
+
     @FXML
     private void handleHome(ActionEvent event) {
-        // 刷新当前页面
         initializeDashboard();
     }
-    
-    // 处理职位管理按钮点击
+
     @FXML
     private void handleJobManagement(ActionEvent event) {
-        // 显示职位管理相关功能
-        handleCreateJob(event);
+        handleViewAllJobs(event);
     }
 
-    // 处理申请管理按钮点击
     @FXML
     private void handleApplicationManagement(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOApplicationReview.fxml"));
-            Parent root = loader.load();
-            MOApplicationReviewController controller = loader.getController();
-            controller.setUser(user);
-
-            Stage stage = null;
-            if (event.getSource() instanceof Button) {
-                stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            } else {
-                stage = (Stage) jobsTable.getScene().getWindow();
-            }
-
-            controller.setStage(stage);
-
-            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 申请人审核");
-        } catch (Exception e) {
-            e.printStackTrace();
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            alert.setTitle("错误");
-            alert.setHeaderText("页面加载失败");
-            alert.setContentText("申请审核页面加载失败，请稍后重试。");
-            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        }
+        openApplicationReview(event);
     }
 
-    // 处理统计分析按钮点击
     @FXML
-    private void handleStatisticsAnalysis(ActionEvent event) {
-        // 显示统计分析相关功能
-        handleViewStatistics(event);
+    private void handleViewMyJobs(ActionEvent event) {
+        openMyJobsPage(null);
     }
 
-    // 查看所有职位需求
     @FXML
     private void handleViewAllJobs(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/JobList.fxml"));
             Parent root = loader.load();
             JobListController controller = loader.getController();
-
             controller.setUser(user, model.UserRole.MO);
 
-            // 获取当前舞台
-            Stage stage = null;
-            if (event.getSource() instanceof Button) {
-                stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            } else {
-                stage = (Stage) jobsTable.getScene().getWindow();
-            }
-
+            Stage stage = getStage(event);
             controller.setStage(stage);
 
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 职位需求");
+            stage.setTitle("BUPT International School TA Recruitment System - Job Board");
         } catch (Exception e) {
             e.printStackTrace();
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            alert.setTitle("错误");
-            alert.setHeaderText("页面加载失败");
-            alert.setContentText("职位列表页面加载失败，请稍后重试。");
-            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            alert.showAndWait();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load job list page. Please try again later.");
         }
+    }
+
+    private void openApplicationReview(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOApplicationReview.fxml"));
+            Parent root = loader.load();
+            MOApplicationReviewController controller = loader.getController();
+            controller.setUser(user);
+
+            Stage stage = getStage(event);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Application Review");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load application review page. Please try again later.");
+        }
+    }
+
+    private void openMyJobsPage(String jobId) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOMyJobs.fxml"));
+            Parent root = loader.load();
+            MOMyJobsController controller = loader.getController();
+            controller.setUser(user);
+            Stage stage = (Stage) jobsTable.getScene().getWindow();
+            controller.setStage(stage);
+            controller.openJob(jobId);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - My Jobs");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load My Jobs page. Please try again later.");
+        }
+    }
+
+    private Stage getStage(ActionEvent event) {
+        if (event != null && event.getSource() instanceof Button) {
+            return (Stage) ((Button) event.getSource()).getScene().getWindow();
+        }
+        return (Stage) jobsTable.getScene().getWindow();
+    }
+
+    private String formatDeadline(String deadline) {
+        return safeText(deadline);
+    }
+
+    private String formatStatus(JobStatus status) {
+        if (status == null) {
+            return "Unknown";
+        }
+        switch (status) {
+            case DRAFT:
+                return "Draft";
+            case PENDING:
+                return "Pending Review";
+            case PUBLISHED:
+                return "Published";
+            case REJECTED:
+                return "Rejected";
+            case CLOSED:
+                return "Closed";
+            default:
+                return status.name();
+        }
+    }
+
+    private String safeText(String value) {
+        return value == null || value.isBlank() || "null".equalsIgnoreCase(value) ? "-" : value;
+    }
+
+    private String safeCsv(String value) {
+        String cleaned = safeText(value).replace("\"", "\"\"");
+        return "\"" + cleaned + "\"";
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+        alert.showAndWait();
     }
 }

@@ -60,16 +60,16 @@ public class TADashboardController {
         if (user == null) return;
         
         try {
-            // 只在首次登录时显示新手引导
+            // Show welcome guide only on first login
             if (showWelcomeGuideOnInit) {
                 showWelcomeGuide();
-                showWelcomeGuideOnInit = false; // 显示后重置标志
+                showWelcomeGuideOnInit = false; // Reset flag after showing
             }
             
-            // 加载统计数据
+            // Load statistics
             loadStatistics();
             
-            // 加载待处理任务
+            // Load pending tasks
             loadPendingTasks();
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,17 +83,17 @@ public class TADashboardController {
     }
     
     private void loadStatistics() {
-        // 获取开放职位数量
+        // Get number of open positions
         int openJobsCount = JobService.getAvailableJobs().size();
         openPositionsLabel.setText(String.valueOf(openJobsCount));
         
-        // 获取我的申请数量
+        // Get number of my applications
         int myApplicationsCount = ApplicationService.getApplicationsByTA(user.getId()).size();
         myApplicationsLabel.setText(String.valueOf(myApplicationsCount));
         
-        // 获取待处理任务数量
-        // 这里简化处理，实际应该根据用户的待处理任务计算
-        int pendingTasksCount = 2; // 模拟数据
+        // Get number of pending tasks
+        // Simplified handling here; actual implementation should calculate based on the user's pending tasks
+        int pendingTasksCount = 2; // Mock data
         pendingActionsLabel.setText(String.valueOf(pendingTasksCount));
     }
     
@@ -485,10 +485,10 @@ public class TADashboardController {
         }
     }
     
-    // 处理可用职位卡片点击
+    // Handle open positions card click
     @FXML
     private void handleOpenPositionsClick(MouseEvent event) {
-        // 显示职位列表
+        // Show job list
         handleViewJobs(new ActionEvent());
     }
     
@@ -557,7 +557,7 @@ public class TADashboardController {
         handleMyApplicationsClick(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false, false, false, false, false, false, false, false, false, null));
     }
 
-    // Handle job requirements button click - 查看职位需求
+    // Handle job requirements button click
     @FXML
     private void handleJobRequirements(ActionEvent event) {
         try {
