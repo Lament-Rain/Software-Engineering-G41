@@ -14,7 +14,6 @@ import model.JobViewModel;
 import model.Job;
 import model.Application;
 import model.ApplicationStatus;
-import model.JobStatus;
 import model.TA;
 import service.ApplicationService;
 import service.JobService;
@@ -161,7 +160,74 @@ public class MODashboardController {
     // 查看申请
     @FXML
     private void handleViewApplications(ActionEvent event) {
-        openApplicationReviewPage(event);
+        if (user == null) return;
+        
+        List<Job> jobs = JobService.getAllJobsByMO(user.getId());
+        if (jobs.isEmpty()) {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+            alert.setTitle("提示");
+            alert.setHeaderText("查看职位申请");
+            alert.setContentText("暂无发布的职位！");
+            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+            return;
+        }
+        
+        // 构建职位列表
+        StringBuilder jobList = new StringBuilder("=== 查看职位申请 ===\n\n");
+        for (int i = 0; i < jobs.size(); i++) {
+            Job job = jobs.get(i);
+            jobList.append((i + 1)).append(". " + job.getTitle() + "\n");
+        }
+        
+        javafx.scene.control.Alert jobAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+        jobAlert.setTitle("查看职位申请");
+        jobAlert.setHeaderText("选择职位");
+        jobAlert.setContentText(jobList.toString());
+        jobAlert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+        jobAlert.showAndWait();
+        
+        // 这里简化处理，实际应该弹出一个对话框让用户选择职位
+        // 为了演示，我们选择第一个职位
+        if (!jobs.isEmpty()) {
+            Job job = jobs.get(0);
+            List<Application> applications = ApplicationService.getApplicationsByJob(job.getId());
+            if (applications.isEmpty()) {
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+                alert.setTitle("提示");
+                alert.setHeaderText(job.getTitle() + " 的申请列表");
+                alert.setContentText("暂无申请记录！");
+                alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+                alert.showAndWait();
+                return;
+            }
+            
+            // 构建申请列表
+            StringBuilder applicationList = new StringBuilder("=== " + job.getTitle() + " 的申请列表 ===\n\n");
+            for (Application app : applications) {
+                TA ta = UserService.getTAProfile(app.getTaId());
+                if (ta != null) {
+                    applicationList.append("申请人：" + ta.getName() + "\n");
+                    applicationList.append("所属院系：" + ta.getDepartment() + "\n");
+                    applicationList.append("申请时间：" + app.getCreatedAt() + "\n");
+                    applicationList.append("状态：" + app.getStatus() + "\n");
+                    applicationList.append("匹配度：" + app.getMatchScore() + "\n");
+                    if (ta.getResumePath() != null) {
+                        applicationList.append("简历：已上传\n");
+                    } else {
+                        applicationList.append("简历：未上传\n");
+                    }
+                    applicationList.append("\n");
+                }
+            }
+            
+            javafx.scene.control.Alert applicationAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+            applicationAlert.setTitle("查看申请");
+            applicationAlert.setHeaderText(job.getTitle() + " 的申请列表");
+            applicationAlert.setContentText(applicationList.toString());
+            applicationAlert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            applicationAlert.showAndWait();
+        }
     }
     
     // 导出数据
@@ -338,49 +404,13 @@ public class MODashboardController {
     // 处理职位管理按钮点击
     @FXML
     private void handleJobManagement(ActionEvent event) {
-        if (user == null) return;
-
-        for (Job job : JobService.getAllJobsByMO(user.getId())) {
-            if (job.getStatus() == JobStatus.REJECTED) {
-                openRejectedJobEditor(event, job);
-                return;
-            }
-        }
+        // 显示职位管理相关功能
         handleCreateJob(event);
-    }
-
-    private void openRejectedJobEditor(ActionEvent event, Job job) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOCreateJob.fxml"));
-            Parent root = loader.load();
-            MOCreateJobController controller = loader.getController();
-            controller.setUser(user);
-            controller.setStage((Stage) ((Button) event.getSource()).getScene().getWindow());
-            controller.setEditingJob(job);
-
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 重新编辑职位");
-        } catch (Exception e) {
-            e.printStackTrace();
-            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-            alert.setTitle("错误");
-            alert.setHeaderText("页面加载失败");
-            alert.setContentText("被驳回职位编辑页面加载失败，请稍后重试。");
-            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-        }
     }
 
     // 处理申请管理按钮点击
     @FXML
     private void handleApplicationManagement(ActionEvent event) {
-        openApplicationReviewPage(event);
-    }
-
-    private void openApplicationReviewPage(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOApplicationReview.fxml"));
             Parent root = loader.load();
@@ -388,17 +418,18 @@ public class MODashboardController {
             controller.setUser(user);
 
             Stage stage = null;
-            if (event != null && event.getSource() instanceof Button) {
+            if (event.getSource() instanceof Button) {
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             } else {
                 stage = (Stage) jobsTable.getScene().getWindow();
             }
 
             controller.setStage(stage);
+
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT国际学校TA招聘系统 - 申请审核");
+            stage.setTitle("BUPT国际学校TA招聘系统 - 申请人审核");
         } catch (Exception e) {
             e.printStackTrace();
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);

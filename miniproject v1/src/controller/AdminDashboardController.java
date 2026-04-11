@@ -84,16 +84,6 @@ public class AdminDashboardController {
         // 设置表格数据
         systemStatusTable.setItems(statusItems);
     }
-
-    private java.util.List<model.TA> getTaUsers() {
-        java.util.List<model.TA> taUsers = new java.util.ArrayList<>();
-        for (model.User userItem : service.UserService.getAllUsers()) {
-            if (userItem instanceof model.TA) {
-                taUsers.add((model.TA) userItem);
-            }
-        }
-        return taUsers;
-    }
     
     // 管理员配置
     @FXML
@@ -642,92 +632,6 @@ public class AdminDashboardController {
             toggleUserDialog.showAndWait();
         });
         
-        javafx.scene.control.Button reviewTAProfileBtn = new javafx.scene.control.Button("审核TA档案");
-        reviewTAProfileBtn.setPrefWidth(200);
-        reviewTAProfileBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
-        reviewTAProfileBtn.setOnMouseEntered(mouseEvent -> reviewTAProfileBtn.setStyle("-fx-background-color: #bdbdbd; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"));
-        reviewTAProfileBtn.setOnMouseExited(mouseEvent -> reviewTAProfileBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);"));
-        reviewTAProfileBtn.setOnAction(e -> {
-            javafx.scene.control.Dialog<Void> reviewDialog = new javafx.scene.control.Dialog<>();
-            reviewDialog.setTitle("审核TA档案");
-            reviewDialog.setHeaderText("选择TA并审核档案状态");
-            reviewDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-
-            javafx.scene.control.TableView<model.TA> taTable = new javafx.scene.control.TableView<>();
-            taTable.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4px; -fx-selection-bar: #e3f2fd; -fx-selection-bar-text: #000000;");
-
-            javafx.scene.control.TableColumn<model.TA, String> usernameCol = new javafx.scene.control.TableColumn<>("用户名");
-            usernameCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("username"));
-            javafx.scene.control.TableColumn<model.TA, String> departmentCol = new javafx.scene.control.TableColumn<>("院系");
-            departmentCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("department"));
-            javafx.scene.control.TableColumn<model.TA, model.ProfileStatus> profileStatusCol = new javafx.scene.control.TableColumn<>("档案状态");
-            profileStatusCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("profileStatus"));
-            javafx.scene.control.TableColumn<model.TA, String> reviewCommentCol = new javafx.scene.control.TableColumn<>("审核意见");
-            reviewCommentCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("profileReviewComment"));
-            taTable.getColumns().addAll(usernameCol, departmentCol, profileStatusCol, reviewCommentCol);
-            taTable.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
-
-            java.util.List<model.TA> taUsers = new java.util.ArrayList<>();
-            for (model.User userItem : service.UserService.getAllUsers()) {
-                if (userItem instanceof model.TA) {
-                    taUsers.add((model.TA) userItem);
-                }
-            }
-            taTable.setItems(javafx.collections.FXCollections.observableArrayList(taUsers));
-
-            javafx.scene.control.TextArea commentArea = new javafx.scene.control.TextArea();
-            commentArea.setPromptText("输入审核意见；批准时可留空，拒绝时建议填写原因");
-            commentArea.setPrefRowCount(4);
-            commentArea.setWrapText(true);
-
-            javafx.scene.control.Button approveBtn = new javafx.scene.control.Button("通过选中TA");
-            approveBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            approveBtn.setOnAction(actionEvent -> {
-                model.TA selectedTa = taTable.getSelectionModel().getSelectedItem();
-                if (selectedTa == null) {
-                    new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING, "请先选择一个TA。", javafx.scene.control.ButtonType.OK).showAndWait();
-                    return;
-                }
-                String comment = commentArea.getText() == null || commentArea.getText().trim().isEmpty() ? "Approved by admin" : commentArea.getText().trim();
-                boolean success = service.UserService.reviewTAProfile(selectedTa.getId(), model.ProfileStatus.APPROVED, comment);
-                if (success) {
-                    taTable.setItems(javafx.collections.FXCollections.observableArrayList(getTaUsers()));
-                    taTable.refresh();
-                    commentArea.clear();
-                    new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION, "已将 " + selectedTa.getUsername() + " 的档案设为 APPROVED。", javafx.scene.control.ButtonType.OK).showAndWait();
-                }
-            });
-
-            javafx.scene.control.Button rejectBtn = new javafx.scene.control.Button("驳回选中TA");
-            rejectBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            rejectBtn.setOnAction(actionEvent -> {
-                model.TA selectedTa = taTable.getSelectionModel().getSelectedItem();
-                if (selectedTa == null) {
-                    new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING, "请先选择一个TA。", javafx.scene.control.ButtonType.OK).showAndWait();
-                    return;
-                }
-                String comment = commentArea.getText() == null ? "" : commentArea.getText().trim();
-                if (comment.isEmpty()) {
-                    new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING, "驳回时请填写审核意见。", javafx.scene.control.ButtonType.OK).showAndWait();
-                    return;
-                }
-                boolean success = service.UserService.reviewTAProfile(selectedTa.getId(), model.ProfileStatus.REJECTED, comment);
-                if (success) {
-                    taTable.setItems(javafx.collections.FXCollections.observableArrayList(getTaUsers()));
-                    taTable.refresh();
-                    commentArea.clear();
-                    new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION, "已将 " + selectedTa.getUsername() + " 的档案设为 REJECTED。", javafx.scene.control.ButtonType.OK).showAndWait();
-                }
-            });
-
-            javafx.scene.layout.HBox actionBox = new javafx.scene.layout.HBox(12, approveBtn, rejectBtn);
-            javafx.scene.layout.VBox content = new javafx.scene.layout.VBox(12, taTable, new javafx.scene.control.Label("审核意见"), commentArea, actionBox);
-            content.setPadding(new javafx.geometry.Insets(10));
-            reviewDialog.getDialogPane().setContent(content);
-            reviewDialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
-            reviewDialog.showAndWait();
-        });
-
         javafx.scene.control.Button deleteUserBtn = new javafx.scene.control.Button("删除用户");
         deleteUserBtn.setPrefWidth(200);
         deleteUserBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
@@ -827,7 +731,7 @@ public class AdminDashboardController {
         });
         
         // 添加按钮到VBox
-        vbox.getChildren().addAll(viewUsersBtn, addUserBtn, editUserBtn, disableUserBtn, reviewTAProfileBtn, deleteUserBtn);
+        vbox.getChildren().addAll(viewUsersBtn, addUserBtn, editUserBtn, disableUserBtn, deleteUserBtn);
         
         // 设置对话框内容
         dialog.getDialogPane().setContent(vbox);
@@ -840,6 +744,32 @@ public class AdminDashboardController {
     }
     
     // 处理职位管理按钮点击
+    @FXML
+    private void handleApprovalCenter(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminApproval.fxml"));
+            Parent root = loader.load();
+            AdminApprovalController controller = loader.getController();
+
+            Stage currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            controller.setUser(user);
+            controller.setStage(currentStage);
+
+            Scene scene = new Scene(root, currentStage.getWidth(), currentStage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            currentStage.setScene(scene);
+            currentStage.setTitle("BUPT国际学校TA招聘系统 - 审核中心");
+        } catch (Exception e) {
+            e.printStackTrace();
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("错误");
+            alert.setHeaderText("页面加载失败");
+            alert.setContentText("审核中心加载失败，请稍后重试。");
+            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        }
+    }
+
     @FXML
     private void handleJobManagement(ActionEvent event) {
         // 创建职位管理对话框
