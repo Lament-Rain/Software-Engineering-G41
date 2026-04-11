@@ -6,7 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 public class FileUtils {
-    private static final String RESUME_DIR = "src/data/resumes";
+    private static final String RESUME_DIR = "src/main/resources/data/resumes";
 
     // 计算文件的MD5值
     public static String calculateMD5(File file) throws IOException, NoSuchAlgorithmException {

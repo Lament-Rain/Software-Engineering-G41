@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import model.User;
 import model.UserRole;
 import service.UserService;
 
@@ -100,14 +101,23 @@ public class RegisterController {
         }
         
         // 注册用户
-        boolean success = UserService.register(username, password, email, phone, selectedRole, department) != null;
+        User newUser = UserService.register(username, password, email, phone, selectedRole, department);
         
-        if (success) {
+        if (newUser != null) {
             successMessage.setText("注册成功！请返回登录页面登录");
             // 清空表单
             clearForm();
         } else {
-            errorMessage.setText("注册失败，用户名可能已存在");
+            // 检查具体是哪个验证失败
+            if (!password.matches(".*[a-zA-Z].*") || !password.matches(".*[0-9].*")) {
+                errorMessage.setText("密码必须包含字母和数字，且长度至少8位");
+            } else if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
+                errorMessage.setText("邮箱格式不正确");
+            } else if (!phone.matches("^1\\d{10}$")) {
+                errorMessage.setText("手机号格式不正确，必须是11位手机号");
+            } else {
+                errorMessage.setText("注册失败，用户名已存在");
+            }
         }
     }
     

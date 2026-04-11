@@ -11,16 +11,16 @@ public class DataStorage {
     private static List<Application> applications = new ArrayList<>();
     private static List<Log> logs = new ArrayList<>();
 
-    private static final String USERS_FILE = "src/data/users.txt";
-    private static final String JOBS_FILE = "src/data/jobs.txt";
-    private static final String APPLICATIONS_FILE = "src/data/applications.txt";
-    private static final String LOGS_FILE = "src/data/logs.txt";
+    private static final String USERS_FILE = "src/main/resources/data/users.txt";
+    private static final String JOBS_FILE = "src/main/resources/data/jobs.txt";
+    private static final String APPLICATIONS_FILE = "src/main/resources/data/applications.txt";
+    private static final String LOGS_FILE = "src/main/resources/data/logs.txt";
 
     // 初始化数据存储
     public static void initialize() {
         try {
             // 确保数据目录存在
-            File dataDir = new File("src/data");
+            File dataDir = new File("src/main/resources/data");
             if (!dataDir.exists()) {
                 dataDir.mkdirs();
             }
