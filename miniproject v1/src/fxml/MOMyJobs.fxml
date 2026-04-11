@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MOMyJobsController">
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;">
+                <Button text="Home" styleClass="navbar-menu" onAction="#handleBack" />
+                <Button text="Job Board" styleClass="navbar-menu" onAction="#handleOpenJobBoard" />
+                <Button text="My Jobs" styleClass="navbar-menu active" />
+            </HBox>
+            <HBox style="-fx-spacing: 24; -fx-alignment: center;">
+                <Label text="Welcome, Module Organizer" textFill="rgba(255,255,255,0.85)" />
+                <Separator orientation="VERTICAL" styleClass="navbar-separator" />
+                <Button text="Back to Dashboard" styleClass="navbar-menu" onAction="#handleBack" />
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+        <VBox style="-fx-padding: 32px; -fx-spacing: 24px; -fx-background-color: #f8f9fa; -fx-pref-width: 1260px;">
+            <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16;">
+                <VBox style="-fx-spacing: 8;" HBox.hgrow="ALWAYS">
+                    <Label fx:id="pageTitleLabel" text="My Jobs" styleClass="section-title" />
+                    <Label fx:id="subtitleLabel" text="Only jobs you created can be edited or withdrawn here" textFill="#6c757d" style="-fx-font-size: 14px;" />
+                </VBox>
+                <Label fx:id="resultCountLabel" text="Results: 0 jobs" styleClass="job-list-result-count" />
+            </HBox>
+
+            <HBox spacing="24" alignment="TOP_LEFT">
+                <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 16; -fx-pref-width: 760px;">
+                    <Label text="Jobs I Created" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
+                    <Label text="Double-click a row to focus it in the editor on the right." textFill="#7b8794" style="-fx-font-size: 12px;" />
+                    <TableView fx:id="jobsTable" style="-fx-pref-height: 520px; -fx-fixed-cell-size: 36px; -fx-font-size: 12px;">
+                        <placeholder>
+                            <VBox alignment="CENTER" style="-fx-spacing: 10; -fx-padding: 32px;">
+                                <Label text="No jobs found" style="-fx-font-size: 16px; -fx-font-weight: 700; -fx-text-fill: #5c6b7a;" />
+                                <Label text="Any job you publish will appear here" style="-fx-font-size: 12px; -fx-text-fill: #8b97a3;" />
+                            </VBox>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+
+                <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px; -fx-spacing: 16; -fx-pref-width: 440px;">
+                    <Label fx:id="selectedJobLabel" text="No job selected" style="-fx-font-size: 20px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" wrapText="true" />
+                    <Label fx:id="statusHintLabel" text="Select a job from the left first." wrapText="true" textFill="#6c757d" style="-fx-font-size: 13px;" />
+                    <Separator />
+
+                    <VBox style="-fx-spacing: 6;">
+                        <Label text="Job Title" styleClass="form-label" />
+                        <TextField fx:id="titleField" promptText="Enter the job title" styleClass="form-field" />
+                    </VBox>
+                    <HBox spacing="12">
+                        <VBox style="-fx-spacing: 6;" HBox.hgrow="ALWAYS">
+                            <Label text="Job Type" styleClass="form-label" />
+                            <ComboBox fx:id="typeComboBox" promptText="Select job type" />
+                        </VBox>
+                        <VBox style="-fx-spacing: 6;" HBox.hgrow="ALWAYS">
+                            <Label text="Department" styleClass="form-label" />
+                            <ComboBox fx:id="departmentComboBox" promptText="Select department" />
+                        </VBox>
+                    </HBox>
+                    <HBox spacing="12">
+                        <VBox style="-fx-spacing: 6;" HBox.hgrow="ALWAYS">
+                            <Label text="Work Time" styleClass="form-label" />
+                            <TextField fx:id="workTimeField" promptText="Example: 10 hours per week" styleClass="form-field" />
+                        </VBox>
+                        <VBox style="-fx-spacing: 6;" HBox.hgrow="ALWAYS">
+                            <Label text="Openings" styleClass="form-label" />
+                            <TextField fx:id="recruitNumField" promptText="Enter number of openings" styleClass="form-field" />
+                        </VBox>
+                    </HBox>
+                    <VBox style="-fx-spacing: 6;">
+                        <Label text="Deadline" styleClass="form-label" />
+                        <TextField fx:id="deadlineField" promptText="Example: 2026-04-30" styleClass="form-field" />
+                    </VBox>
+                    <VBox style="-fx-spacing: 6;">
+                        <Label text="Job Description" styleClass="form-label" />
+                        <TextArea fx:id="descriptionArea" promptText="Describe the role" wrapText="true" style="-fx-min-height: 100px;" />
+                    </VBox>
+                    <VBox style="-fx-spacing: 6;">
+                        <Label text="Skills" styleClass="form-label" />
+                        <TextArea fx:id="skillsArea" promptText="Separate multiple skills with commas" wrapText="true" style="-fx-min-height: 90px;" />
+                    </VBox>
+
+                    <HBox spacing="12">
+                        <Button fx:id="saveButton" text="Save Changes" styleClass="btn btn-primary" onAction="#handleSaveChanges" />
+                        <Button fx:id="withdrawButton" text="Withdraw Job" styleClass="btn btn-danger" onAction="#handleWithdrawJob" />
+                    </HBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>

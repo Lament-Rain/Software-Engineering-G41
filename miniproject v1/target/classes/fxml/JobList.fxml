@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.JobListController">
+    <!-- 导航栏 -->
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;" />
+            <HBox style="-fx-spacing: 24; -fx-alignment: center;">
+                <Label text="Position Directory" textFill="rgba(255,255,255,0.85)" />
+                <Separator orientation="VERTICAL" styleClass="navbar-separator" />
+                <Button text="Back to TA Dashboard" styleClass="navbar-menu" onAction="#handleBack" />
+                <Separator orientation="VERTICAL" styleClass="navbar-separator" />
+                <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" />
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <!-- 主内容区 -->
+    <ScrollPane fitToWidth="true" style="-fx-background-color: #f4f7fb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+        <VBox style="-fx-padding: 32px; -fx-spacing: 24px; -fx-fill-width: true; -fx-background-color: #f4f7fb; -fx-alignment: center; -fx-pref-width: 1240px;">
+
+            <!-- 页面标题 -->
+            <HBox alignment="CENTER_LEFT" styleClass="job-list-hero">
+                <VBox HBox.hgrow="ALWAYS" style="-fx-spacing: 8;">
+                    <Label fx:id="pageTitleLabel" text="Open Positions" styleClass="section-title" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #223449;" />
+                    <Label fx:id="subtitleLabel" text="Browse all published positions" textFill="#607080" style="-fx-font-size: 14px;" />
+                </VBox>
+                <VBox alignment="CENTER_RIGHT" style="-fx-spacing: 6;">
+                    <Label text="Position Explorer" style="-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #4a6fa5;" />
+                    <Label text="Double-click a row to open the full detail" style="-fx-font-size: 12px; -fx-text-fill: #7b8794;" />
+                </VBox>
+            </HBox>
+
+            <!-- 搜索和筛选区域 -->
+            <VBox styleClass="card shadow-md job-list-toolbar" style="-fx-fill-width: true; -fx-padding: 22px;">
+                <Label text="Search &amp; Filters" style="-fx-font-size: 16px; -fx-font-weight: 700; -fx-text-fill: #31465c;" />
+                <HBox style="-fx-spacing: 16; -fx-alignment: center-left; -fx-padding: 8 0 0 0;">
+                    <VBox style="-fx-spacing: 6;">
+                        <Label text="Keyword" styleClass="form-label" />
+                        <TextField fx:id="searchField" promptText="Search by title or requirement..." styleClass="form-field" style="-fx-pref-width: 340px; -fx-min-width: 340px;" />
+                    </VBox>
+                    <VBox style="-fx-spacing: 6;">
+                        <Label text="Department" styleClass="form-label" />
+                        <ComboBox fx:id="departmentFilter" promptText="Select department" style="-fx-pref-width: 170px; -fx-min-width: 170px;" />
+                    </VBox>
+                    <VBox style="-fx-spacing: 6;">
+                        <Label text="Type" styleClass="form-label" />
+                        <ComboBox fx:id="typeFilter" promptText="Select type" style="-fx-pref-width: 170px; -fx-min-width: 170px;" />
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <VBox alignment="BOTTOM_RIGHT" style="-fx-spacing: 10;">
+                        <Label text="Combine filters and search as many times as you need" style="-fx-font-size: 12px; -fx-text-fill: #7b8794;" />
+                        <HBox style="-fx-spacing: 10; -fx-alignment: center-right;">
+                            <Button text="Search" styleClass="btn btn-primary" onAction="#handleSearch" style="-fx-pref-width: 92px;" />
+                            <Button text="Reset" styleClass="btn btn-secondary" onAction="#handleReset" style="-fx-pref-width: 92px;" />
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+
+            <!-- 职位列表表格 -->
+            <VBox styleClass="card shadow-md" style="-fx-fill-width: true; -fx-background-radius: 14px; -fx-padding: 24px;">
+                <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true; -fx-padding: 0 0 16 0;">
+                    <VBox style="-fx-spacing: 6;" HBox.hgrow="ALWAYS">
+                        <Label text="Job List" styleClass="job-list-table-title" />
+                        <Label text="Narrow results by keyword, department, and job type" textFill="#7b8794" style="-fx-font-size: 12px;" />
+                    </VBox>
+                    <Label fx:id="resultCountLabel" text="Results: 0 positions" styleClass="job-list-result-count" />
+                    <Label text="Double-click for details" styleClass="job-list-hint-chip" />
+                </HBox>
+                <TableView fx:id="jobsTable" styleClass="job-list-table" style="-fx-pref-height: 500px;">
+                    <placeholder>
+                        <VBox alignment="CENTER" style="-fx-spacing: 10; -fx-padding: 32px;">
+                            <Label text="No positions available" style="-fx-font-size: 16px; -fx-font-weight: 700; -fx-text-fill: #5c6b7a;" />
+                            <Label text="Try adjusting the filters or check again later" style="-fx-font-size: 12px; -fx-text-fill: #8b97a3;" />
+                        </VBox>
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+            <!-- 操作按钮 -->
+            <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true;">
+                <Label text="Tip: review positions with the nearest deadlines first" style="-fx-font-size: 12px; -fx-text-fill: #7b8794;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="backButton" text="Back to TA Dashboard" styleClass="btn btn-secondary" onAction="#handleBack" style="-fx-pref-width: 150px; -fx-min-height: 40px;" />
+                <Button fx:id="createJobButton" text="Create Job" styleClass="btn btn-primary" onAction="#handleCreateJob" style="-fx-pref-width: 150px; -fx-min-height: 40px;" />
+            </HBox>
+
+        </VBox>
+    </ScrollPane>
+</AnchorPane>
