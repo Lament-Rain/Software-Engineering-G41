@@ -8,7 +8,8 @@ v1.1  Admin function realization, TA function realization
 
 v1.0  Base Structure buildup, Register & Login, TA function realization
 
-Distribution of Iteration 2
+
+# Distribution of Iteration 2
 
 Base Structure-Chuyang Huang & Yongxin He
 
@@ -20,7 +21,8 @@ MO-Tianda Wang & Hao Lu
 
 Admin-Yongxin He & Zirui Guan
 
-Matching:
+
+# Matching:
 
 Lament-Rain-Yongxin He
 
