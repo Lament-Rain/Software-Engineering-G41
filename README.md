@@ -15,7 +15,7 @@ Base Structure-Chuyang Huang & Yongxin He
 
 Project Managment-Yongxin He
 
-TA-Yiheng Qiao & Chuyang Huan
+TA-Yiheng Qiao & Chuyang Huang
 
 MO-Tianda Wang & Hao Lu
 
