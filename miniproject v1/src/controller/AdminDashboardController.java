@@ -14,6 +14,7 @@ import model.SystemStatus;
 import service.ApplicationService;
 import service.JobService;
 import service.UserService;
+import service.AIService;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -127,6 +128,169 @@ public class AdminDashboardController {
         alert.setContentText("AI workload balancing feature is not implemented yet");
         alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
         alert.showAndWait();
+    }
+    
+    // 大模型API配置
+    @FXML
+    private void handleModelAPIConfig(ActionEvent event) {
+        // 创建API配置对话框
+        javafx.scene.control.Dialog<Void> dialog = new javafx.scene.control.Dialog<>();
+        dialog.setTitle("大模型API配置");
+        dialog.setHeaderText("豆包大模型深度思考能力API配置");
+        dialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
+        
+        // 创建表单
+        javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
+        grid.setHgap(15);
+        grid.setVgap(15);
+        grid.setPadding(new javafx.geometry.Insets(20, 20, 10, 20));
+        grid.setStyle("-fx-background-color: white; -fx-padding: 20px; -fx-border-radius: 8px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);");
+        
+        // API密钥输入
+        javafx.scene.control.Label apiKeyLabel = new javafx.scene.control.Label("API Key:");
+        apiKeyLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+        javafx.scene.control.TextField apiKeyField = new javafx.scene.control.TextField();
+        apiKeyField.setText(AIService.getApiKey());
+        apiKeyField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
+        
+        // 测试输入
+        javafx.scene.control.Label testInputLabel = new javafx.scene.control.Label("测试输入:");
+        testInputLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+        javafx.scene.control.TextArea testInputArea = new javafx.scene.control.TextArea();
+        testInputArea.setText("常见的十字花科植物有哪些？");
+        testInputArea.setPrefHeight(100);
+        testInputArea.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
+        
+        // 测试结果
+        javafx.scene.control.Label testResultLabel = new javafx.scene.control.Label("测试结果:");
+        testResultLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+        javafx.scene.control.TextArea testResultArea = new javafx.scene.control.TextArea();
+        testResultArea.setPrefHeight(150);
+        testResultArea.setEditable(false);
+        testResultArea.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px; -fx-background-color: #f9f9f9;");
+        
+        // 测试成功标志
+        boolean[] testSuccess = {false};
+        
+        // 测试按钮
+        javafx.scene.control.Button testButton = new javafx.scene.control.Button("测试API");
+        testButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
+        testButton.setOnMouseEntered(mouseEvent -> testButton.setStyle("-fx-background-color: #0b7dda; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
+        testButton.setOnMouseExited(mouseEvent -> testButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
+        testButton.setOnAction(testEvent -> {
+            String apiKey = apiKeyField.getText().trim();
+            String testInput = testInputArea.getText().trim();
+            
+            if (apiKey.isEmpty()) {
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
+                alert.setTitle("警告");
+                alert.setHeaderText("API Key未设置");
+                alert.setContentText("请先输入API Key");
+                alert.showAndWait();
+                return;
+            }
+            
+            if (testInput.isEmpty()) {
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
+                alert.setTitle("警告");
+                alert.setHeaderText("测试输入为空");
+                alert.setContentText("请输入测试问题");
+                alert.showAndWait();
+                return;
+            }
+            
+            try {
+                // 设置API密钥
+                AIService.setApiKey(apiKey);
+                
+                // 调用API
+                testResultArea.setText("正在调用API...");
+                String response = AIService.callDoubaoDeepThinking(testInput);
+                String parsedResponse = AIService.parseDoubaoResponse(response);
+                testResultArea.setText(parsedResponse);
+                
+                // 检查是否测试成功
+                if (!parsedResponse.contains("API Error") && !parsedResponse.contains("error")) {
+                    testSuccess[0] = true;
+                    // 显示成功消息
+                    javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+                    successAlert.setTitle("成功");
+                    successAlert.setHeaderText("API测试成功");
+                    successAlert.setContentText("大模型API接入正常");
+                    successAlert.showAndWait();
+                } else {
+                    testSuccess[0] = false;
+                    // 显示错误消息
+                    javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                    errorAlert.setTitle("错误");
+                    errorAlert.setHeaderText("API测试失败");
+                    errorAlert.setContentText("测试失败，请检查API密钥和网络连接");
+                    errorAlert.showAndWait();
+                }
+                
+            } catch (Exception e) {
+                testSuccess[0] = false;
+                testResultArea.setText("错误: " + e.getMessage());
+                javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                errorAlert.setTitle("错误");
+                errorAlert.setHeaderText("API测试失败");
+                errorAlert.setContentText("测试失败: " + e.getMessage());
+                errorAlert.showAndWait();
+            }
+        });
+        
+        // 添加到网格
+        grid.add(apiKeyLabel, 0, 0);
+        grid.add(apiKeyField, 1, 0);
+        grid.add(testInputLabel, 0, 1);
+        grid.add(testInputArea, 1, 1);
+        grid.add(testButton, 1, 2);
+        grid.add(testResultLabel, 0, 3);
+        grid.add(testResultArea, 1, 3);
+        
+        // 设置对话框内容
+        dialog.getDialogPane().setContent(grid);
+        
+        // 添加按钮
+        javafx.scene.control.ButtonType okButtonType = new javafx.scene.control.ButtonType("确定", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
+        javafx.scene.control.ButtonType cancelButtonType = new javafx.scene.control.ButtonType("取消", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
+        
+        // 样式按钮
+        javafx.scene.control.Button okButton = (javafx.scene.control.Button) dialog.getDialogPane().lookupButton(okButtonType);
+        okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
+        okButton.setOnMouseEntered(mouseEvent -> okButton.setStyle("-fx-background-color: #45a049; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
+        okButton.setOnMouseExited(mouseEvent -> okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
+        
+        javafx.scene.control.Button cancelButton = (javafx.scene.control.Button) dialog.getDialogPane().lookupButton(cancelButtonType);
+        cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
+        cancelButton.setOnMouseEntered(mouseEvent -> cancelButton.setStyle("-fx-background-color: #da190b; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
+        cancelButton.setOnMouseExited(mouseEvent -> cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
+        
+        // 显示对话框并处理结果
+        java.util.Optional<Void> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            // 只有在测试成功时才保存配置
+            if (testSuccess[0]) {
+                // 保存API密钥
+                String apiKey = apiKeyField.getText().trim();
+                AIService.setApiKey(apiKey);
+                
+                // 显示成功消息
+                javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+                successAlert.setTitle("成功");
+                successAlert.setHeaderText("API配置保存成功");
+                successAlert.setContentText("大模型API配置已保存");
+                successAlert.showAndWait();
+            } else {
+                // 测试失败，不保存配置
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
+                alert.setTitle("警告");
+                alert.setHeaderText("API配置未保存");
+                alert.setContentText("请先测试API确保配置正确");
+                alert.showAndWait();
+            }
+        }
     }
     
     // Log out

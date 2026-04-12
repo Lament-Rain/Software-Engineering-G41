@@ -96,6 +96,7 @@
                 <Button text="Scheduled Reports" styleClass="btn btn-primary" onAction="#handleScheduleReports" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
                 <Button text="Bulk Operations" styleClass="btn btn-primary" onAction="#handleBulkOperations" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
                 <Button text="AI Workload Balancing" styleClass="btn btn-secondary" onAction="#handleAIWorkloadBalancing" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
+                <Button text="Model API Config" styleClass="btn btn-info" onAction="#handleModelAPIConfig" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
             </HBox>
         </VBox>
     </VBox>

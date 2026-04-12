@@ -2,6 +2,15 @@ package service;
 
 import model.*;
 import java.util.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.IOException;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
 
 public class AIService {
     // Skill match calculation
@@ -175,4 +184,103 @@ public class AIService {
 
         return recommendedTAs;
     }
+
+    // 豆包大模型深度思考能力API接入
+    private static String apiKey = "";
+    private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/responses";
+    private static final String MODEL = "doubao-seed-2-0-pro-260215";
+
+    // 设置API密钥
+    public static void setApiKey(String key) {
+        apiKey = key;
+    }
+
+    // 获取API密钥
+    public static String getApiKey() {
+        return apiKey;
+    }
+
+    // 调用深度思考API
+    public static String callDoubaoDeepThinking(String input) throws IOException {
+        if (apiKey.isEmpty()) {
+            throw new IllegalArgumentException("API key is not set");
+        }
+
+        URL url = new URL(API_URL);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/json");
+        connection.setRequestProperty("Authorization", "Bearer " + apiKey);
+        connection.setDoOutput(true);
+        connection.setConnectTimeout(10000); // 10秒超时
+        connection.setReadTimeout(30000); // 30秒读取超时
+
+        // 构建请求体
+        JsonObject requestBody = new JsonObject();
+        requestBody.addProperty("model", MODEL);
+        requestBody.addProperty("input", input);
+        
+        JsonObject thinking = new JsonObject();
+        thinking.addProperty("type", "enabled");
+        requestBody.add("thinking", thinking);
+        
+        requestBody.addProperty("stream", true);
+
+        // 发送请求
+        try (OutputStream os = connection.getOutputStream()) {
+            byte[] inputBytes = requestBody.toString().getBytes("utf-8");
+            os.write(inputBytes, 0, inputBytes.length);
+        }
+
+        // 读取响应
+        StringBuilder response = new StringBuilder();
+        int responseCode = connection.getResponseCode();
+        
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(connection.getInputStream(), "utf-8"))) {
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine);
+                    response.append("\n");
+                }
+            }
+        } else {
+            // 读取错误响应
+            try (BufferedReader br = new BufferedReader(
+                    new InputStreamReader(connection.getErrorStream(), "utf-8"))) {
+                String responseLine;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine);
+                    response.append("\n");
+                }
+            }
+            throw new IOException("API request failed with code " + responseCode + ": " + response.toString());
+        }
+
+        return response.toString();
+    }
+
+    // 解析深度思考API响应
+    public static String parseDoubaoResponse(String response) {
+        // 检查是否是错误响应
+        if (response.contains("error")) {
+            try {
+                // 尝试解析错误信息
+                JsonObject errorJson = new Gson().fromJson(response, JsonObject.class);
+                if (errorJson.has("error")) {
+                    JsonObject errorObj = errorJson.getAsJsonObject("error");
+                    String errorMessage = errorObj.has("message") ? errorObj.get("message").getAsString() : "Unknown error";
+                    String errorCode = errorObj.has("code") ? errorObj.get("code").getAsString() : "Unknown code";
+                    return "API Error: " + errorCode + "\n" + errorMessage;
+                }
+            } catch (Exception e) {
+                // 解析失败，返回原始响应
+            }
+        }
+        
+        // 对于成功响应，返回原始内容
+        return response;
+    }
 }
+
