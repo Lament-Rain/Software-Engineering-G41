@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.beans.binding.*?>
+<?import javafx.beans.property.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.util.*?>
+
+<AnchorPane fx:id="adminDashboardPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminDashboardController">
+    <!-- 导航栏 -->
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;">
+                <Button text="Home" styleClass="navbar-menu active" onAction="#handleHome" />
+                <Button text="User Management" styleClass="navbar-menu" onAction="#handleUserManagement" />
+                <Button text="Job Management" styleClass="navbar-menu" onAction="#handleJobManagement" />
+                <Button text="System Settings" styleClass="navbar-menu" onAction="#handleSystemConfiguration" />
+                <Button text="Approval Center" styleClass="navbar-menu" onAction="#handleApprovalCenter" />
+                <Button text="Analytics" styleClass="navbar-menu" onAction="#handleStatisticsAnalysis" />
+            </HBox>
+            <HBox style="-fx-spacing: 24; -fx-alignment: center;">
+                <Label text="Welcome, Admin" textFill="rgba(255,255,255,0.85)" />
+                <Separator orientation="VERTICAL" styleClass="navbar-separator" />
+                <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" />
+            </HBox>
+        </HBox>
+    </VBox>
+    <!-- 主内容区 -->
+    <VBox style="-fx-padding: 32px; -fx-spacing: 32px; -fx-fill-width: true; -fx-background-color: #f8f9fa; -fx-alignment: center;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+        <!-- 页面标题 -->
+        <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true;">
+            <VBox style="-fx-spacing: 8;">
+                <Label text="Admin Dashboard" styleClass="section-title" />
+                <Label text="Manage users, jobs, and core system settings" textFill="#6c757d" style="-fx-font-size: 14px;" />
+            </VBox>
+        </HBox>
+        
+        <!-- 统计卡片 -->
+        <HBox style="-fx-spacing: 24; -fx-fill-width: true; -fx-alignment: center;">
+            <VBox styleClass="stat-card shadow-md" style="-fx-pref-width: 32%; -fx-min-width: 200px; -fx-max-width: 300px; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px; -fx-spacing: 16;">
+                <Label text="👥" style="-fx-font-size: 32px;" />
+                <Label fx:id="totalUsersLabel" text="50" styleClass="stat-value" />
+                <Label text="Total Users" styleClass="stat-label" />
+            </VBox>
+            <VBox styleClass="stat-card shadow-md" style="-fx-pref-width: 32%; -fx-min-width: 200px; -fx-max-width: 300px; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px; -fx-spacing: 16;">
+                <Label text="📋" style="-fx-font-size: 32px;" />
+                <Label fx:id="totalJobsLabel" text="25" styleClass="stat-value" />
+                <Label text="Total Jobs" styleClass="stat-label" />
+            </VBox>
+            <VBox styleClass="stat-card shadow-md" style="-fx-pref-width: 32%; -fx-min-width: 200px; -fx-max-width: 300px; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px; -fx-spacing: 16;">
+                <Label text="📄" style="-fx-font-size: 32px;" />
+                <Label fx:id="totalApplicationsLabel" text="120" styleClass="stat-value" />
+                <Label text="Total Applications" styleClass="stat-label" />
+            </VBox>
+        </HBox>
+        
+        <!-- System Status -->
+        <VBox styleClass="card shadow-md" style="-fx-pref-height: 320px; -fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px;">
+            <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true; -fx-padding: 0 0 20 0;">
+                <VBox style="-fx-spacing: 8;">
+                    <Label text="System Status" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
+                    <Label text="Monitor the runtime status of core system components" textFill="#6c757d" style="-fx-font-size: 14px;" />
+                </VBox>
+            </HBox>
+            <TableView fx:id="systemStatusTable" style="-fx-pref-height: 240px; -fx-background-radius: 8px; -fx-border-radius: 8px;">
+                <columns>
+                    <TableColumn text="Item" style="-fx-pref-width: 30%;">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="item" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Status" style="-fx-pref-width: 20%;">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="status" />
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Details" style="-fx-pref-width: 50%;">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="details" />
+                        </cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+        </VBox>
+        
+        <!-- Quick Actions -->
+        <VBox styleClass="card shadow-md" style="-fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px;">
+            <Label text="Quick Actions" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057; -fx-padding: 0 0 20 0;" />
+            <HBox style="-fx-spacing: 16; -fx-wrap-text: true; -fx-alignment: center-left; -fx-fill-width: true;">
+                <Button text="Admin Configuration" styleClass="btn btn-primary" onAction="#handleAdminConfiguration" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
+                <Button text="Scheduled Reports" styleClass="btn btn-primary" onAction="#handleScheduleReports" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
+                <Button text="Bulk Operations" styleClass="btn btn-primary" onAction="#handleBulkOperations" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
+                <Button text="AI Workload Balancing" styleClass="btn btn-secondary" onAction="#handleAIWorkloadBalancing" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
+                <Button text="Model API Config" styleClass="btn btn-info" onAction="#handleModelAPIConfig" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
+            </HBox>
+        </VBox>
+    </VBox>
+</AnchorPane>

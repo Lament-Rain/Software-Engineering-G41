@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TAApplicationHistoryController">
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;" />
+            <HBox style="-fx-spacing: 16; -fx-alignment: center;">
+                <Button text="Back to TA Dashboard" styleClass="navbar-menu" onAction="#handleBack" />
+                <Separator orientation="VERTICAL" styleClass="navbar-separator" />
+                <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" />
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+        <VBox style="-fx-padding: 32px; -fx-spacing: 24px; -fx-background-color: #f8f9fa; -fx-pref-width: 1220px;">
+            <VBox style="-fx-spacing: 8;">
+                <Label text="My Application History" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                <Label text="Track submitted applications, review results and withdraw an active application before the deadline." textFill="#6c757d" style="-fx-font-size: 14px;" />
+            </VBox>
+
+            <HBox spacing="18" alignment="CENTER_LEFT">
+                <VBox styleClass="stat-card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 10; -fx-pref-width: 220px;">
+                    <Label text="Total Applications" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
+                    <Label fx:id="totalApplicationsLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                </VBox>
+                <VBox styleClass="stat-card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 10; -fx-pref-width: 220px;">
+                    <Label text="Active Applications" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
+                    <Label fx:id="activeApplicationsLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                </VBox>
+                <VBox styleClass="stat-card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 10; -fx-pref-width: 320px;">
+                    <Label text="Result Summary" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
+                    <Label fx:id="resultSummaryLabel" text="Accepted: 0  |  Rejected: 0" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                </VBox>
+                <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 16px; -fx-spacing: 10; -fx-pref-width: 320px;">
+                    <Label text="Filters" style="-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #495057;" />
+                    <ComboBox fx:id="statusFilter" onAction="#handleFilterChange" promptText="Status" style="-fx-pref-width: 260px;" />
+                    <ComboBox fx:id="departmentFilter" onAction="#handleFilterChange" promptText="Department" style="-fx-pref-width: 260px;" />
+                </VBox>
+            </HBox>
+
+            <HBox spacing="24" alignment="TOP_LEFT">
+                <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 16; -fx-pref-width: 820px;">
+                    <Label text="Submitted Applications" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
+                    <TableView fx:id="applicationsTable" style="-fx-pref-height: 480px; -fx-fixed-cell-size: 36px; -fx-font-size: 12px;">
+                        <columns>
+                            <TableColumn fx:id="jobTitleColumn" text="Job Title" prefWidth="190" />
+                            <TableColumn fx:id="departmentColumn" text="Department" prefWidth="120" />
+                            <TableColumn fx:id="appliedAtColumn" text="Applied At" prefWidth="165" />
+                            <TableColumn fx:id="statusColumn" text="Status" prefWidth="110" />
+                            <TableColumn fx:id="reviewTimeColumn" text="Review Time" prefWidth="165" />
+                            <TableColumn fx:id="reviewCommentColumn" text="Feedback" prefWidth="250" />
+                            <TableColumn fx:id="matchScoreColumn" text="Match Score" prefWidth="110" />
+                        </columns>
+                    </TableView>
+                </VBox>
+
+                <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 16; -fx-pref-width: 340px;">
+                    <Label text="Application Detail" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
+                    <VBox style="-fx-spacing: 12;">
+                        <Label text="Job" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
+                        <Label fx:id="detailTitleLabel" text="No application selected" wrapText="true" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                        <Separator />
+                        <Label text="Status" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
+                        <Label fx:id="detailStatusLabel" text="-" />
+                        <Label text="Applied At" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
+                        <Label fx:id="detailAppliedAtLabel" text="-" />
+                        <Label text="Review Time" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
+                        <Label fx:id="detailReviewTimeLabel" text="-" />
+                        <Label text="Match Score" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
+                        <Label fx:id="detailMatchScoreLabel" text="-" />
+                        <Label text="Feedback" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
+                        <Label fx:id="detailCommentLabel" text="Select one application to view details." wrapText="true" style="-fx-min-height: 100px;" />
+                    </VBox>
+                    <Button fx:id="withdrawButton" text="Withdraw Selected Application" onAction="#handleWithdrawApplication" styleClass="btn btn-secondary" style="-fx-min-height: 42px; -fx-font-size: 13px;" />
+                </VBox>
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>
