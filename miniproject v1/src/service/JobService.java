@@ -3,9 +3,12 @@ package service;
 import model.*;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class JobService {
-    // Create and publish a new job (for MO)
+    private static final long CACHE_TTL_SHORT = 60 * 1000;
+    private static final long CACHE_TTL_MEDIUM = 5 * 60 * 1000;
+
     public static Job createJob(String title, model.JobType type, String department, String description,
                                List<String> skills, String workTime, int recruitNum, String deadline,
                                String salary, String location, String extraRequirements, String moId) {
@@ -13,7 +16,6 @@ public class JobService {
                         salary, location, extraRequirements, moId, "MO", null);
     }
 
-    // Create and publish a new job (generic method, supports MO and Admin)
     public static Job createJob(String title, model.JobType type, String department, String description,
                                List<String> skills, String workTime, int recruitNum, String deadline,
                                String salary, String location, String extraRequirements,
@@ -31,20 +33,18 @@ public class JobService {
         List<Job> jobs = DataStorage.getJobs();
         jobs.add(job);
         DataStorage.saveJobs(jobs);
+        IndexService.indexJobUpdate(job);
+        CacheService.invalidate(CacheService.availableJobsKey());
         DataStorage.addLog("CREATE_JOB", publisherId, "Job created by " + publisherType + ": " + title);
 
         return job;
     }
 
     public static List<Job> getAllJobsByMO(String moId) {
-        List<Job> jobs = DataStorage.getJobs();
-        List<Job> result = new java.util.ArrayList<>();
-        for (Job job : jobs) {
-            if (job.getMoId() != null && job.getMoId().equals(moId)) {
-                result.add(job);
-            }
-        }
-        return result;
+        String cacheKey = "jobs_by_mo_" + moId;
+        return CacheService.getOrCompute(cacheKey, () -> {
+            return IndexService.getJobsByMoId(moId);
+        }, CACHE_TTL_SHORT);
     }
 
     public static boolean updateJob(Job job) {
@@ -54,6 +54,9 @@ public class JobService {
                 job.setUpdatedAt(java.time.LocalDateTime.now().toString());
                 jobs.set(i, job);
                 DataStorage.saveJobs(jobs);
+                IndexService.indexJobUpdate(job);
+                CacheService.invalidate(CacheService.availableJobsKey());
+                CacheService.invalidateByPattern("jobs_by_mo_" + job.getMoId());
                 DataStorage.addLog("UPDATE_JOB", job.getMoId(), "Job updated: " + job.getTitle());
                 return true;
             }
@@ -77,6 +80,8 @@ public class JobService {
                 job.setUpdatedAt(java.time.LocalDateTime.now().toString());
                 jobs.set(i, job);
                 DataStorage.saveJobs(jobs);
+                IndexService.indexJobUpdate(job);
+                CacheService.invalidate(CacheService.availableJobsKey());
                 DataStorage.addLog("SUBMIT_JOB_REVIEW", job.getMoId(), "Job submitted for review: " + job.getTitle());
                 return true;
             }
@@ -96,6 +101,8 @@ public class JobService {
                 job.setUpdatedAt(java.time.LocalDateTime.now().toString());
                 jobs.set(i, job);
                 DataStorage.saveJobs(jobs);
+                IndexService.indexJobUpdate(job);
+                CacheService.invalidate(CacheService.availableJobsKey());
                 DataStorage.addLog("REVIEW_JOB", adminId, "Job reviewed: " + job.getTitle() + " - " + status);
                 return true;
             }
@@ -115,6 +122,8 @@ public class JobService {
                 job.setUpdatedAt(java.time.LocalDateTime.now().toString());
                 jobs.set(i, job);
                 DataStorage.saveJobs(jobs);
+                IndexService.indexJobUpdate(job);
+                CacheService.invalidate(CacheService.availableJobsKey());
                 DataStorage.addLog("CLOSE_JOB", moId, "Job closed: " + job.getTitle());
                 return true;
             }
@@ -123,44 +132,44 @@ public class JobService {
     }
 
     public static Job getJobById(String jobId) {
-        List<Job> jobs = DataStorage.getJobs();
-        for (Job job : jobs) {
-            if (job.getId().equals(jobId)) {
-                return job;
-            }
-        }
-        return null;
+        return DataStorage.getJobs().stream()
+                .filter(job -> job.getId().equals(jobId))
+                .findFirst()
+                .orElse(null);
     }
 
     public static List<Job> getJobsByMO(String moId) {
-        List<Job> jobs = DataStorage.getJobs();
-        List<Job> result = new java.util.ArrayList<>();
-        for (Job job : jobs) {
-            if (job.getMoId() != null && job.getMoId().equals(moId)) {
-                result.add(job);
-            }
-        }
-        return result;
+        String cacheKey = "jobs_by_mo_" + moId;
+        return CacheService.getOrCompute(cacheKey, () -> IndexService.getJobsByMoId(moId), CACHE_TTL_SHORT);
     }
 
     public static List<Job> getAllJobs() {
         return DataStorage.getJobs();
     }
 
+    public static PaginationUtil.Page<Job> getAllJobsPaged(int page, int size) {
+        String cacheKey = "all_jobs_paged_" + page + "_" + size;
+        return CacheService.getOrCompute(cacheKey, () -> {
+            return PaginationUtil.paginate(DataStorage.getJobs(), page, size);
+        }, CACHE_TTL_SHORT);
+    }
+
     public static List<Job> getAvailableJobs() {
-        List<Job> jobs = DataStorage.getJobs();
-        List<Job> result = new java.util.ArrayList<>();
-        java.time.LocalDate today = java.time.LocalDate.now();
-        for (Job job : jobs) {
-            if (job.getStatus() != model.JobStatus.PUBLISHED) {
-                continue;
-            }
-            if (!isJobStillAvailable(job, today)) {
-                continue;
-            }
-            result.add(job);
-        }
-        return result;
+        return CacheService.getOrCompute(CacheService.availableJobsKey(), () -> {
+            List<Job> jobs = DataStorage.getJobs();
+            java.time.LocalDate today = java.time.LocalDate.now();
+            return jobs.stream()
+                    .filter(job -> job.getStatus() == model.JobStatus.PUBLISHED)
+                    .filter(job -> isJobStillAvailable(job, today))
+                    .collect(Collectors.toList());
+        }, CACHE_TTL_MEDIUM);
+    }
+
+    public static PaginationUtil.Page<Job> getAvailableJobsPaged(int page, int size) {
+        String cacheKey = "available_jobs_paged_" + page + "_" + size;
+        return CacheService.getOrCompute(cacheKey, () -> {
+            return PaginationUtil.paginate(getAvailableJobs(), page, size);
+        }, CACHE_TTL_MEDIUM);
     }
 
     private static boolean isJobStillAvailable(Job job, java.time.LocalDate today) {
@@ -198,43 +207,22 @@ public class JobService {
     }
 
     public static List<Job> filterJobs(model.JobType type, String department, String deadline) {
-        List<Job> jobs = DataStorage.getJobs();
-        List<Job> result = new java.util.ArrayList<>();
-        java.time.LocalDate today = java.time.LocalDate.now();
-        for (Job job : jobs) {
-            if (job.getStatus() != model.JobStatus.PUBLISHED || !isJobStillAvailable(job, today)) {
-                continue;
-            }
-
-            boolean match = true;
-            if (type != null && job.getType() != type) {
-                match = false;
-            }
-            if (department != null && !job.getDepartment().equals(department)) {
-                match = false;
-            }
-            if (deadline != null && !deadline.trim().isEmpty() && job.getDeadline().compareTo(deadline) < 0) {
-                match = false;
-            }
-            if (match) {
-                result.add(job);
-            }
-        }
-        return result;
+        return getAvailableJobs().stream()
+                .filter(job -> type == null || job.getType() == type)
+                .filter(job -> department == null || job.getDepartment().equals(department))
+                .filter(job -> deadline == null || deadline.trim().isEmpty() || job.getDeadline().compareTo(deadline) >= 0)
+                .collect(Collectors.toList());
     }
 
     public static List<Job> searchJobs(String keyword) {
-        List<Job> jobs = DataStorage.getJobs();
-        List<Job> result = new java.util.ArrayList<>();
-        java.time.LocalDate today = java.time.LocalDate.now();
-        for (Job job : jobs) {
-            if (job.getStatus() == model.JobStatus.PUBLISHED && isJobStillAvailable(job, today)) {
-                if (job.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
-                    job.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
-                    result.add(job);
-                }
-            }
-        }
-        return result;
+        return getAvailableJobs().stream()
+                .filter(job -> job.getTitle().toLowerCase().contains(keyword.toLowerCase()) ||
+                              job.getDescription().toLowerCase().contains(keyword.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    public static List<Job> getPendingJobs() {
+        String cacheKey = "pending_jobs";
+        return CacheService.getOrCompute(cacheKey, () -> IndexService.getJobsByStatus(JobStatus.PENDING), CACHE_TTL_SHORT);
     }
 }

@@ -9,7 +9,7 @@
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
             <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
             <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;" />
-            <Button text="Back to MO Dashboard" styleClass="navbar-menu" onAction="#handleBack" />
+            <Button text="Back to MO Dashboard" styleClass="navbar-menu" onAction="#handleBack" accessibleText="Return to dashboard" />
         </HBox>
     </VBox>
 
@@ -22,28 +22,37 @@
 
             <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 16;">
                 <Label text="Select Job" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
-                <ComboBox fx:id="jobSelector" promptText="Choose a job" style="-fx-pref-width: 420px;" />
+                <ComboBox fx:id="jobSelector" promptText="Choose a job" style="-fx-pref-width: 420px;" accessibleText="Select a job to review applications" />
             </VBox>
 
-            <HBox style="-fx-spacing: 18;">
+            <HBox style="-fx-spacing: 18;" alignment="CENTER_LEFT">
                 <VBox styleClass="stat-card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 10; -fx-pref-width: 220px;">
                     <Label text="Applicants" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
                     <Label fx:id="applicantCountLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
                 </VBox>
                 <VBox styleClass="stat-card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 10; -fx-pref-width: 220px;">
                     <Label text="Accepted" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
-                    <Label fx:id="acceptedCountLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                    <Label fx:id="acceptedCountLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #28a745;" />
                 </VBox>
                 <VBox styleClass="stat-card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 10; -fx-pref-width: 220px;">
                     <Label text="Pending / Screened" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
-                    <Label fx:id="pendingCountLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                    <Label fx:id="pendingCountLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #ffc107;" />
                 </VBox>
+                <StackPane style="-fx-pref-width: 60px; -fx-pref-height: 60px;">
+                    <ProgressIndicator fx:id="loadingIndicator" visible="false" style="-fx-progress-color: #3498db;" />
+                </StackPane>
             </HBox>
 
             <HBox spacing="24" alignment="TOP_LEFT">
                 <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 16; -fx-pref-width: 770px;">
-                    <Label text="Applicant List" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
-                    <TableView fx:id="applicantsTable" style="-fx-pref-height: 500px;">
+                    <HBox style="-fx-spacing: 8; -fx-alignment: center-left;">
+                        <Label text="Applicant List" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="selectedCountLabel" text="0 selected" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" visible="false" />
+                        <Button text="Previous" onAction="#handlePreviousPage" styleClass="btn btn-secondary" style="-fx-pref-width: 90px;" accessibleText="Show previous page" />
+                        <Button text="Next" onAction="#handleNextPage" styleClass="btn btn-secondary" style="-fx-pref-width: 90px;" accessibleText="Show next page" />
+                    </HBox>
+                    <TableView fx:id="applicantsTable" style="-fx-pref-height: 500px;" accessibleText="List of applicants for selected job">
                         <columns>
                             <TableColumn fx:id="nameColumn" text="Applicant" prefWidth="150" />
                             <TableColumn fx:id="departmentColumn" text="Department" prefWidth="120" />
@@ -53,6 +62,12 @@
                             <TableColumn fx:id="resumeStatusColumn" text="Resume" prefWidth="110" />
                         </columns>
                     </TableView>
+                    <HBox style="-fx-spacing: 8; -fx-alignment: center-left; -fx-padding: 10 0 0 0;">
+                        <Button text="Batch Screen Selected" onAction="#handleBatchScreen" styleClass="btn btn-secondary" accessibleText="Screen all selected applicants" />
+                        <Button text="Batch Reject Selected" onAction="#handleBatchReject" styleClass="btn btn-secondary" accessibleText="Reject all selected applicants" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label text="Tip: Use Ctrl+Click to select multiple" style="-fx-font-size: 12px; -fx-text-fill: #9e9e9e;" />
+                    </HBox>
                 </VBox>
 
                 <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 16; -fx-pref-width: 390px;">
@@ -65,17 +80,23 @@
                     <Label text="Resume" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
                     <Label fx:id="applicantResumeLabel" text="-" />
                     <Label text="Experience" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
-                    <TextArea fx:id="experienceArea" editable="false" wrapText="true" style="-fx-pref-height: 95px;" />
+                    <TextArea fx:id="experienceArea" editable="false" wrapText="true" style="-fx-pref-height: 95px;" accessibleText="Applicant experience" />
                     <Label text="Cover Letter" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
-                    <TextArea fx:id="coverLetterArea" editable="false" wrapText="true" style="-fx-pref-height: 110px;" />
+                    <TextArea fx:id="coverLetterArea" editable="false" wrapText="true" style="-fx-pref-height: 110px;" accessibleText="Applicant cover letter" />
                     <Label text="Feedback / Review Comment" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
-                    <TextArea fx:id="feedbackArea" wrapText="true" promptText="Add a shortlist note or rejection reason" style="-fx-pref-height: 110px;" />
+                    <TextArea fx:id="feedbackArea" wrapText="true" promptText="Add a shortlist note or rejection reason" style="-fx-pref-height: 110px;" accessibleText="Enter review feedback or rejection reason" />
                     <HBox style="-fx-spacing: 10; -fx-alignment: center-left;">
-                        <Button fx:id="screenButton" text="Mark Screened" onAction="#handleScreenApplicant" styleClass="btn btn-secondary" style="-fx-pref-width: 110px;" />
-                        <Button fx:id="acceptButton" text="Accept" onAction="#handleAcceptApplicant" styleClass="btn btn-primary" style="-fx-pref-width: 90px;" />
-                        <Button fx:id="rejectButton" text="Reject" onAction="#handleRejectApplicant" styleClass="btn btn-secondary" style="-fx-pref-width: 90px;" />
+                        <Button fx:id="screenButton" text="Mark Screened" onAction="#handleScreenApplicant" styleClass="btn btn-secondary" style="-fx-pref-width: 110px;" accessibleText="Mark applicant as screened" />
+                        <Button fx:id="acceptButton" text="Accept" onAction="#handleAcceptApplicant" styleClass="btn btn-primary" style="-fx-pref-width: 90px;" accessibleText="Accept this applicant" />
+                        <Button fx:id="rejectButton" text="Reject" onAction="#handleRejectApplicant" styleClass="btn btn-danger" style="-fx-pref-width: 90px;" accessibleText="Reject this applicant" />
                     </HBox>
                 </VBox>
+            </HBox>
+
+            <HBox spacing="16" alignment="CENTER">
+                <Label text="Keyboard shortcuts:" style="-fx-font-size: 12px; -fx-text-fill: #9e9e9e;" />
+                <Label text="Ctrl+Click" styleClass="kbd" />
+                <Label text="for multi-select" style="-fx-font-size: 12px; -fx-text-fill: #9e9e9e;" />
             </HBox>
         </VBox>
     </ScrollPane>

@@ -15,6 +15,9 @@ import model.JobType;
 import model.MO;
 import service.ApplicationService;
 import service.JobService;
+import service.KeyboardShortcutService;
+import service.NavigationHistory;
+import controller.SearchBarController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +45,7 @@ public class MOMyJobsController {
     private Stage stage;
     private final ObservableList<JobRowViewModel> rows = FXCollections.observableArrayList();
     private Job selectedJob;
+    private KeyboardShortcutService shortcutService;
 
     @FXML
     private void initialize() {
@@ -59,7 +63,159 @@ public class MOMyJobsController {
         loadJobs();
     }
 
-    public void setStage(Stage stage) { this.stage = stage; }
+    public void setStage(Stage stage) { 
+        this.stage = stage;
+        setupKeyboardShortcuts();
+    }
+    
+    private void setupKeyboardShortcuts() {
+        shortcutService = new KeyboardShortcutService(stage);
+        shortcutService.registerShortcut("ctrl+f", this::handleSearchAction);
+        shortcutService.registerShortcut("escape", this::handleBack);
+
+        if (stage.getScene() != null) {
+            Parent root = stage.getScene().getRoot();
+            shortcutService.setupEnterKeyNavigation(root);
+        }
+    }
+    
+    private void handleSearchAction() {
+        showSearchBar();
+    }
+
+    private void showSearchBar() {
+        try {
+            // Create list of MO features
+            List<SearchBarController.Feature> features = new java.util.ArrayList<>();
+            features.add(new SearchBarController.Feature("My Jobs", () -> handleMyJobs()));
+            features.add(new SearchBarController.Feature("Create Job", () -> handleCreateJob()));
+            features.add(new SearchBarController.Feature("Review Applications", () -> handleReviewApplications()));
+            features.add(new SearchBarController.Feature("Job Board", () -> handleOpenJobBoard()));
+
+            // Load search bar
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SearchBar.fxml"));
+            Parent root = loader.load();
+            SearchBarController controller = loader.getController();
+
+            // Create stage for search bar
+            Stage searchStage = new Stage();
+            searchStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            searchStage.initOwner(stage);
+            searchStage.setTitle("Search Features");
+
+            // Set up controller
+            controller.setStage(searchStage);
+            controller.setFeatures(features);
+            controller.setOnFeatureSelected(featureName -> {
+                // Find and execute the selected feature
+                for (SearchBarController.Feature feature : features) {
+                    if (feature.getName().equals(featureName)) {
+                        feature.getAction().run();
+                        break;
+                    }
+                }
+            });
+
+            // Create scene
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            searchStage.setScene(scene);
+
+
+
+            // Show search bar
+            searchStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load search bar: " + e.getMessage());
+        }
+    }
+
+    private void handleMyJobs() {
+        // Already on this page, do nothing
+    }
+
+    private void handleCreateJob() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOCreateJob.fxml"));
+            Parent root = loader.load();
+            MOCreateJobController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("MOCreateJob", () -> {
+                try {
+                    FXMLLoader myJobsLoader = new FXMLLoader(getClass().getResource("/fxml/MOMyJobs.fxml"));
+                    Parent myJobsRoot = myJobsLoader.load();
+                    MOMyJobsController myJobsController = myJobsLoader.getController();
+                    myJobsController.setUser(user);
+                    myJobsController.setStage(stage);
+                    
+                    Scene scene = new Scene(myJobsRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - My Jobs");
+                    
+                    // Force layout update to ensure components resize properly
+                    myJobsRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to load my jobs page: " + e.getMessage());
+                }
+            });
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Create Job");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load create job page: " + e.getMessage());
+        }
+    }
+
+    private void handleReviewApplications() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOApplicationReview.fxml"));
+            Parent root = loader.load();
+            MOApplicationReviewController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("MOApplicationReview", () -> {
+                try {
+                    FXMLLoader myJobsLoader = new FXMLLoader(getClass().getResource("/fxml/MOMyJobs.fxml"));
+                    Parent myJobsRoot = myJobsLoader.load();
+                    MOMyJobsController myJobsController = myJobsLoader.getController();
+                    myJobsController.setUser(user);
+                    myJobsController.setStage(stage);
+                    
+                    Scene scene = new Scene(myJobsRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - My Jobs");
+                    
+                    // Force layout update to ensure components resize properly
+                    myJobsRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to load my jobs page: " + e.getMessage());
+                }
+            });
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Application Review");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load application review page: " + e.getMessage());
+        }
+    }
 
     public void openJob(String jobId) {
         loadJobs();
@@ -185,19 +341,24 @@ public class MOMyJobsController {
 
     @FXML
     private void handleBack() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
-            Parent root = loader.load();
-            MODashboardController controller = loader.getController();
-            controller.setUser(user);
+        // If we can go back, do so; otherwise, go to dashboard
+        if (NavigationHistory.getInstance().canGoBack()) {
+            NavigationHistory.getInstance().goBack();
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
+                Parent root = loader.load();
+                MODashboardController controller = loader.getController();
+                controller.setUser(user);
 
-            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Module Organizer Dashboard");
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to return: " + e.getMessage());
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - Module Organizer Dashboard");
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to return: " + e.getMessage());
+            }
         }
     }
 
@@ -209,6 +370,29 @@ public class MOMyJobsController {
             JobListController controller = loader.getController();
             controller.setUser(user, model.UserRole.MO);
             controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("JobList", () -> {
+                try {
+                    FXMLLoader myJobsLoader = new FXMLLoader(getClass().getResource("/fxml/MOMyJobs.fxml"));
+                    Parent myJobsRoot = myJobsLoader.load();
+                    MOMyJobsController myJobsController = myJobsLoader.getController();
+                    myJobsController.setUser(user);
+                    myJobsController.setStage(stage);
+                    
+                    Scene scene = new Scene(myJobsRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - My Jobs");
+                    
+                    // Force layout update to ensure components resize properly
+                    myJobsRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to load my jobs page: " + e.getMessage());
+                }
+            });
 
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());

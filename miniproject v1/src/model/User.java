@@ -35,11 +35,39 @@ public abstract class User {
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
     
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getEmail() {
+        try {
+            return service.EncryptionService.decrypt(email);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return email;
+        }
+    }
+    public void setEmail(String email) {
+        try {
+            this.email = service.EncryptionService.encrypt(email);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.email = email;
+        }
+    }
     
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public String getPhone() {
+        try {
+            return service.EncryptionService.decrypt(phone);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return phone;
+        }
+    }
+    public void setPhone(String phone) {
+        try {
+            this.phone = service.EncryptionService.encrypt(phone);
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.phone = phone;
+        }
+    }
     
     public UserRole getRole() { return role; }
     public void setRole(UserRole role) { this.role = role; }

@@ -13,6 +13,9 @@ import java.util.List;
 import controller.TADashboardController;
 import controller.TAProfileEditController;
 import controller.LoginController;
+import controller.SearchBarController;
+import service.KeyboardShortcutService;
+import service.NavigationHistory;
 
 public class TAProfileViewController {
     @FXML
@@ -28,6 +31,10 @@ public class TAProfileViewController {
     @FXML
     private Label studentIdLabel;
     @FXML
+    private Label emailLabel;
+    @FXML
+    private Label phoneLabel;
+    @FXML
     private Label availableTimeLabel;
     @FXML
     private Label skillsLabel;
@@ -42,13 +49,135 @@ public class TAProfileViewController {
     
     private Stage stage;
     private TA user;
+    private KeyboardShortcutService shortcutService;
     
     public void setStage(Stage stage) {
         this.stage = stage;
+        setupKeyboardShortcuts();
+    }
+    
+    private void setupKeyboardShortcuts() {
+        shortcutService = new KeyboardShortcutService(stage);
+        shortcutService.registerShortcut("ctrl+f", this::handleSearchAction);
+        shortcutService.registerShortcut("escape", this::handleHome);
+
+        if (stage.getScene() != null) {
+            Parent root = stage.getScene().getRoot();
+            shortcutService.setupEnterKeyNavigation(root);
+        }
+    }
+    
+    private void handleHome() {
+        // If we can go back, do so; otherwise, stay on the current page
+        if (NavigationHistory.getInstance().canGoBack()) {
+            NavigationHistory.getInstance().goBack();
+        } else {
+            // Refresh current page
+            loadUserData();
+        }
+    }
+    
+    private void handleSearchAction() {
+        showSearchBar();
+    }
+
+    private void showSearchBar() {
+        try {
+            // Create list of TA features
+            List<SearchBarController.Feature> features = new java.util.ArrayList<>();
+            features.add(new SearchBarController.Feature("Job Requirements", () -> handleJobRequirements(new ActionEvent())));
+            features.add(new SearchBarController.Feature("My Applications", () -> handleApplicationManagement(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Update Profile", () -> handleEditProfile(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Upload Resume", () -> handleUploadResume()));
+            features.add(new SearchBarController.Feature("Personal Center", () -> handlePersonalCenter(new ActionEvent())));
+
+            // Load search bar
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SearchBar.fxml"));
+            Parent root = loader.load();
+            SearchBarController controller = loader.getController();
+
+            // Create stage for search bar
+            Stage searchStage = new Stage();
+            searchStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            searchStage.initOwner(stage);
+            searchStage.setTitle("Search Features");
+
+            // Set up controller
+            controller.setStage(searchStage);
+            controller.setFeatures(features);
+            controller.setOnFeatureSelected(featureName -> {
+                // Find and execute the selected feature
+                for (SearchBarController.Feature feature : features) {
+                    if (feature.getName().equals(featureName)) {
+                        feature.getAction().run();
+                        break;
+                    }
+                }
+            });
+
+            // Create scene
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            searchStage.setScene(scene);
+
+
+
+            // Show search bar
+            searchStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleUploadResume() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAUploadResume.fxml"));
+            Parent root = loader.load();
+            TAUploadResumeController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("TAUploadResume", () -> {
+                try {
+                    FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/fxml/TAProfileView.fxml"));
+                    Parent profileRoot = profileLoader.load();
+                    TAProfileViewController profileController = profileLoader.getController();
+                    profileController.setUser(user);
+                    profileController.setStage(stage);
+                    
+                    Scene scene = new Scene(profileRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Personal Center");
+                    
+                    // Force layout update to ensure components resize properly
+                    profileRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Upload Resume");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
     public void setUser(TA user) {
         this.user = user;
+        // 清除缓存并重新获取用户数据
+        if (user != null) {
+            service.CacheService.invalidate("ta_profile_" + user.getId());
+            model.TA updatedUser = service.UserService.getTAProfile(user.getId());
+            if (updatedUser != null) {
+                this.user = updatedUser;
+            }
+        }
         loadUserData();
     }
     
@@ -60,6 +189,8 @@ public class TAProfileViewController {
             departmentLabel.setText(user.getDepartment() != null ? user.getDepartment() : "");
             gradeLabel.setText(user.getGrade() != null ? user.getGrade() : "");
             studentIdLabel.setText(user.getStudentId() != null ? user.getStudentId() : "");
+            emailLabel.setText(user.getEmail() != null ? user.getEmail() : "");
+            phoneLabel.setText(user.getPhone() != null ? user.getPhone() : "");
             availableTimeLabel.setText(user.getAvailableTime() != null ? user.getAvailableTime() : "");
             
             // Convert skills list to string
@@ -89,22 +220,48 @@ public class TAProfileViewController {
             controller.setUser(user);
             
             // Get current stage
-            Stage stage = null;
+            final Stage currentStage;
             if (event.getSource() instanceof Button) {
-                stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+                currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             } else {
-                stage = this.stage;
+                currentStage = this.stage;
             }
             
-            controller.setStage(stage);
+            controller.setStage(currentStage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("TAProfileEdit", () -> {
+                try {
+                    FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/fxml/TAProfileView.fxml"));
+                    Parent profileRoot = profileLoader.load();
+                    TAProfileViewController profileController = profileLoader.getController();
+                    profileController.setUser(user);
+                    profileController.setStage(currentStage);
+                    
+                    Scene scene = new Scene(profileRoot, currentStage.getWidth(), currentStage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    currentStage.setScene(scene);
+                    currentStage.setTitle("BUPT International School TA Recruitment System - Personal Center");
+                    
+                    // Force layout update to ensure components resize properly
+                    profileRoot.requestLayout();
+                    currentStage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
             
             // Keep current window size and add stylesheet
-            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            Scene scene = new Scene(root, currentStage.getWidth(), currentStage.getHeight());
             // Add stylesheet
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Update Profile");
-            stage.centerOnScreen();
+            currentStage.setScene(scene);
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                currentStage.sizeToScene();
+            currentStage.setTitle("BUPT International School TA Recruitment System - Update Profile");
+            currentStage.centerOnScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,21 +274,30 @@ public class TAProfileViewController {
     
     @FXML
     private void handleHome(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TADashboard.fxml"));
-            Parent root = loader.load();
-            TADashboardController controller = loader.getController();
-            // Returning from other pages, don't show welcome guide
-            controller.setUser(user, false);
-            
-            // Keep current window size and add stylesheet
-            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-            // Add stylesheet
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - TA Dashboard");
-        } catch (Exception e) {
-            e.printStackTrace();
+        // If we can go back, do so; otherwise, go to dashboard
+        if (NavigationHistory.getInstance().canGoBack()) {
+            NavigationHistory.getInstance().goBack();
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TADashboard.fxml"));
+                Parent root = loader.load();
+                TADashboardController controller = loader.getController();
+                // Returning from other pages, don't show welcome guide
+                controller.setUser(user, false);
+                
+                // Keep current window size and add stylesheet
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                // Add stylesheet
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                    
+                    // Force layout update to ensure components resize properly
+                    root.requestLayout();
+                    stage.sizeToScene();
+                stage.setTitle("BUPT International School TA Recruitment System - TA Dashboard");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
     
@@ -144,9 +310,35 @@ public class TAProfileViewController {
             controller.setUser(user, model.UserRole.TA);
             controller.setStage(stage);
 
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("JobList", () -> {
+                try {
+                    FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/fxml/TAProfileView.fxml"));
+                    Parent profileRoot = profileLoader.load();
+                    TAProfileViewController profileController = profileLoader.getController();
+                    profileController.setUser(user);
+                    profileController.setStage(stage);
+                    
+                    Scene scene = new Scene(profileRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Personal Center");
+                    
+                    // Force layout update to ensure components resize properly
+                    profileRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                stage.sizeToScene();
             stage.setTitle("BUPT International School TA Recruitment System - Job Requirements");
             stage.centerOnScreen();
         } catch (Exception e) {
@@ -163,9 +355,35 @@ public class TAProfileViewController {
             controller.setUser(user);
             controller.setStage(stage);
 
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("TAApplicationHistory", () -> {
+                try {
+                    FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/fxml/TAProfileView.fxml"));
+                    Parent profileRoot = profileLoader.load();
+                    TAProfileViewController profileController = profileLoader.getController();
+                    profileController.setUser(user);
+                    profileController.setStage(stage);
+                    
+                    Scene scene = new Scene(profileRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Personal Center");
+                    
+                    // Force layout update to ensure components resize properly
+                    profileRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                stage.sizeToScene();
             stage.setTitle("BUPT International School TA Recruitment System - Application History");
             stage.centerOnScreen();
         } catch (Exception e) {
@@ -241,9 +459,32 @@ public class TAProfileViewController {
             
             controller.setStage(currentStage);
             
-            Scene scene = new Scene(root, 800, 600);
+            // Save current window state
+            boolean isFullScreen = currentStage.isFullScreen();
+            double currentWidth = currentStage.getWidth();
+            double currentHeight = currentStage.getHeight();
+            
+            // Create new scene without hardcoded size
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            
+            // Apply saved window state
             currentStage.setScene(scene);
+            if (isFullScreen) {
+                currentStage.setFullScreen(true);
+            } else if (currentWidth > 0 && currentHeight > 0) {
+                currentStage.setWidth(currentWidth);
+                currentStage.setHeight(currentHeight);
+            } else {
+                // Default size if no previous size
+                currentStage.setWidth(800);
+                currentStage.setHeight(600);
+            }
             currentStage.setTitle("BUPT International School TA Recruitment System - Login");
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                currentStage.sizeToScene();
         } catch (Exception e) {
             e.printStackTrace();
         }
