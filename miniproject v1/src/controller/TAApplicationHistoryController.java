@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -86,12 +87,38 @@ public class TAApplicationHistoryController {
         reviewCommentColumn.setCellValueFactory(new PropertyValueFactory<>("reviewComment"));
         matchScoreColumn.setCellValueFactory(new PropertyValueFactory<>("matchScore"));
 
+        jobTitleColumn.setCellFactory(col -> createAlignedTextCell());
+        departmentColumn.setCellFactory(col -> createAlignedTextCell());
+        appliedAtColumn.setCellFactory(col -> createAlignedTextCell());
+        statusColumn.setCellFactory(col -> createAlignedTextCell());
+        reviewTimeColumn.setCellFactory(col -> createAlignedTextCell());
+        reviewCommentColumn.setCellFactory(col -> createAlignedTextCell());
+        matchScoreColumn.setCellFactory(col -> createAlignedTextCell());
+
+        applicationsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         statusFilter.getItems().addAll("ALL", "PENDING", "SCREENED", "ACCEPTED", "REJECTED", "WITHDRAWN");
         statusFilter.setValue("ALL");
         departmentFilter.getItems().add("ALL");
         departmentFilter.setValue("ALL");
 
         applicationsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> showDetails(newValue));
+    }
+
+    private TableCell<ApplicationHistoryViewModel, String> createAlignedTextCell() {
+        return new TableCell<ApplicationHistoryViewModel, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
+                    setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
+                }
+                setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+            }
+        };
     }
 
     public void setUser(TA user) {
@@ -168,9 +195,10 @@ public class TAApplicationHistoryController {
         }
     }
 
+    @FXML
     private void handleJobRequirements() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/JobList.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAJobBoard.fxml"));
             Parent root = loader.load();
             JobListController controller = loader.getController();
             controller.setUser(user, model.UserRole.TA);
@@ -209,6 +237,7 @@ public class TAApplicationHistoryController {
         }
     }
 
+    @FXML
     private void handleApplicationManagement() {
         // Already on this page, do nothing
     }
@@ -295,6 +324,7 @@ public class TAApplicationHistoryController {
         }
     }
 
+    @FXML
     private void handlePersonalCenter() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAProfileView.fxml"));
@@ -448,7 +478,13 @@ public class TAApplicationHistoryController {
         if (value == null || value.isEmpty() || "null".equalsIgnoreCase(value)) {
             return "-";
         }
-        return value.replace('T', ' ');
+
+        String normalized = value.replace('T', ' ').trim();
+        int dotIndex = normalized.indexOf('.');
+        if (dotIndex > 0) {
+            normalized = normalized.substring(0, dotIndex);
+        }
+        return normalized;
     }
 
     private String safeText(String value) {

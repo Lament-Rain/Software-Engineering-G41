@@ -7,15 +7,13 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.JobListController">
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
-            <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
-            <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;" />
-            <HBox style="-fx-spacing: 24; -fx-alignment: center;">
-                <Label text="Position Directory" textFill="rgba(255,255,255,0.85)" />
-                <Separator orientation="VERTICAL" styleClass="navbar-separator" />
-                <Button text="Back" styleClass="navbar-menu" onAction="#handleBack" accessibleText="Go back to dashboard" />
-                <Separator orientation="VERTICAL" styleClass="navbar-separator" />
-                <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" accessibleText="Log out" />
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu" onAction="#handleBack" accessibleText="Go back to dashboard" />
+                <Button text="Job Board" styleClass="navbar-menu active" onAction="#handleBack" accessibleText="Browse jobs" />
+                <Button text="Back to Dashboard" styleClass="navbar-menu" onAction="#handleBack" accessibleText="Go back to dashboard" />
             </HBox>
         </HBox>
     </VBox>
@@ -115,3 +113,7 @@
         </VBox>
     </ScrollPane>
 </AnchorPane>
+
+
+
+

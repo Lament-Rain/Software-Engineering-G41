@@ -14,10 +14,11 @@ public class DataStorage {
     private static CopyOnWriteArrayList<Application> applications = new CopyOnWriteArrayList<>();
     private static CopyOnWriteArrayList<Log> logs = new CopyOnWriteArrayList<>();
 
-    private static final String USERS_FILE = "src/data/users.txt";
-    private static final String JOBS_FILE = "src/data/jobs.txt";
-    private static final String APPLICATIONS_FILE = "src/data/applications.txt";
-    private static final String LOGS_FILE = "src/data/logs.txt";
+    private static final File DATA_DIR = resolveDataDirectory();
+    private static final String USERS_FILE = new File(DATA_DIR, "users.txt").getAbsolutePath();
+    private static final String JOBS_FILE = new File(DATA_DIR, "jobs.txt").getAbsolutePath();
+    private static final String APPLICATIONS_FILE = new File(DATA_DIR, "applications.txt").getAbsolutePath();
+    private static final String LOGS_FILE = new File(DATA_DIR, "logs.txt").getAbsolutePath();
 
     private static final Object usersLock = new Object();
     private static final Object jobsLock = new Object();
@@ -27,9 +28,8 @@ public class DataStorage {
     // Initialize data storage
     public static void initialize() {
         try {
-            File dataDir = new File("src/data");
-            if (!dataDir.exists()) {
-                dataDir.mkdirs();
+            if (!DATA_DIR.exists()) {
+                DATA_DIR.mkdirs();
             }
 
             loadUsers();
@@ -52,6 +52,23 @@ public class DataStorage {
     }
 
     // Load user data
+    public static File getDataDirectory() {
+        return DATA_DIR;
+    }
+
+    private static File resolveDataDirectory() {
+        String override = System.getProperty("app.data.dir");
+        if (override != null && !override.isBlank()) {
+            return new File(override);
+        }
+
+        File appData = new File("data");
+        if (appData.exists() || !new File("src/data").exists()) {
+            return appData;
+        }
+        return new File("src/data");
+    }
+
     private static void loadUsers() {
         try (BufferedReader reader = new BufferedReader(new FileReader(USERS_FILE))) {
             String line;
@@ -155,16 +172,22 @@ public class DataStorage {
                         String resumePath = parseField(line, "resumePath='");
                         ta.setResumePath(resumePath);
                     }
+                    if (line.contains("status=")) {
+                        String statusStr = parseField(line, "status=", ",");
+                        statusStr = statusStr.replaceAll("[^A-Z_]", "");
+                        try {
+                            ta.setStatus(model.UserStatus.valueOf(statusStr));
+                        } catch (IllegalArgumentException e) {
+                            ta.setStatus(model.UserStatus.ACTIVE);
+                        }
+                    }
                     if (line.contains("profileStatus=")) {
                         String profileStatusStr = parseField(line, "profileStatus=", ",");
-                        // Remove possible extra characters, such as '}'
-                        profileStatusStr = profileStatusStr.replaceAll("[}\s]", "");
+                        profileStatusStr = profileStatusStr.replaceAll("[}\\s]", "");
                         try {
                             model.ProfileStatus profileStatus = model.ProfileStatus.valueOf(profileStatusStr);
                             ta.setProfileStatus(profileStatus);
                         } catch (IllegalArgumentException e) {
-                            e.printStackTrace();
-                            // If parsing fails, set the default value
                             ta.setProfileStatus(model.ProfileStatus.DRAFT);
                         }
                     }
@@ -692,3 +715,6 @@ public class DataStorage {
         return logs;
     }
 }
+
+
+

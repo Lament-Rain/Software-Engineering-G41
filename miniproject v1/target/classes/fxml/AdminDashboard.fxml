@@ -12,29 +12,30 @@
 
 <AnchorPane fx:id="adminDashboardPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminDashboardController">
     <!-- 导航栏 -->
-    <VBox style="-fx-background-color: #ffffff; -fx-effect: dropshadow(0, rgba(0, 51, 102, 0.12), 4, 0, 0, 6); -fx-border-width: 0 0 1 0; -fx-border-color: rgba(0, 51, 102, 0.1); -fx-height: 60px;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <HBox alignment="CENTER_LEFT" style="-fx-padding: 0 20 0 20; -fx-spacing: 20; -fx-alignment: center; -fx-fill-width: true; -fx-height: 60px;">
-            <Label text="BUPT TA System" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #003366;" />
-            <HBox style="-fx-spacing: 12; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;">
-                <Button text="Home" style="-fx-background-color: #003366; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 6 12 6 12; -fx-background-radius: 6px; -fx-min-width: 80px;" onAction="#handleHome" accessibleText="Go to home page" />
-                <Button text="User Management" style="-fx-background-color: transparent; -fx-text-fill: #4b5563; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 6 12 6 12; -fx-background-radius: 6px; -fx-min-width: 120px;" onAction="#handleUserManagement" accessibleText="Manage system users" />
-                <Button text="Job Management" style="-fx-background-color: transparent; -fx-text-fill: #4b5563; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 6 12 6 12; -fx-background-radius: 6px; -fx-min-width: 120px;" onAction="#handleJobManagement" accessibleText="Manage job postings" />
-                <Button text="System Settings" style="-fx-background-color: transparent; -fx-text-fill: #4b5563; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 6 12 6 12; -fx-background-radius: 6px; -fx-min-width: 120px;" onAction="#handleSystemConfiguration" accessibleText="Configure system settings" />
-                <Button text="Approval Center" style="-fx-background-color: transparent; -fx-text-fill: #4b5563; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 6 12 6 12; -fx-background-radius: 6px; -fx-min-width: 120px;" onAction="#handleApprovalCenter" accessibleText="Review pending approvals" />
-                <Button text="Analytics" style="-fx-background-color: transparent; -fx-text-fill: #4b5563; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 6 12 6 12; -fx-background-radius: 6px; -fx-min-width: 100px;" onAction="#handleStatisticsAnalysis" accessibleText="View system analytics" />
-            </HBox>
-            <HBox style="-fx-spacing: 12; -fx-alignment: center;">
-                <VBox style="-fx-background-color: #003366; -fx-background-radius: 50%; -fx-width: 32px; -fx-height: 32px; -fx-alignment: center; -fx-border-width: 2px; -fx-border-color: #ffffff; -fx-effect: dropshadow(0, rgba(0, 51, 102, 0.1), 2, 0, 0, 2);">
-                    <Label text="Ad" style="-fx-text-fill: #ffffff; -fx-font-weight: 600; -fx-font-size: 12px;" />
-                </VBox>
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
+                <StackPane style="-fx-background-radius: 50%; -fx-background-color: #003366; -fx-pref-width: 36px; -fx-pref-height: 36px; -fx-alignment: center;">
+                    <Label text="Ad" style="-fx-text-fill: #ffffff; -fx-font-weight: 600; -fx-font-size: 14px;" />
+                </StackPane>
                 <Label text="Welcome, Admin" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
-                <Button text="Logout" style="-fx-background-color: transparent; -fx-text-fill: #4b5563; -fx-font-size: 14px; -fx-padding: 6 12 6 12; -fx-background-radius: 6px;" onAction="#handleLogout" accessibleText="Log out of the system" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu active" onAction="#handleHome" accessibleText="Go to home page" />
+                <Button text="User Management" styleClass="navbar-menu" onAction="#handleUserManagement" accessibleText="Manage system users" />
+                <Button text="Job Management" styleClass="navbar-menu" onAction="#handleJobManagement" accessibleText="Manage job postings" />
+                <Button text="System Settings" styleClass="navbar-menu" onAction="#handleSystemConfiguration" accessibleText="Configure system settings" />
+                <Button text="Approval Center" styleClass="navbar-menu" onAction="#handleApprovalCenter" accessibleText="Review pending approvals" />
+                <Button text="Analytics" styleClass="navbar-menu" onAction="#handleStatisticsAnalysis" accessibleText="View system analytics" />
+                <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" accessibleText="Log out of the system" />
             </HBox>
         </HBox>
     </VBox>
 
     <!-- 主内容区 -->
-    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0">
+    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
         <VBox style="-fx-padding: 48px 24px 48px 24px; -fx-spacing: 48px; -fx-fill-width: true; -fx-background-color: #f9fafb; -fx-alignment: center; -fx-pref-width: 1240px;">
             <!-- 页面标题 -->
             <VBox style="-fx-spacing: 8; -fx-alignment: center-left; -fx-fill-width: true;">
@@ -98,7 +99,6 @@
                 <Label text="Quick Actions" style="-fx-font-size: 20px; -fx-font-weight: 600; -fx-text-fill: #1f2937; -fx-padding: 0 0 16 0;" />
                 <HBox style="-fx-spacing: 16; -fx-wrap-text: true; -fx-alignment: center-left; -fx-fill-width: true;">
                     <Button text="Admin Configuration" style="-fx-background-color: #003366; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 10 20 10 20; -fx-background-radius: 8px;" onAction="#handleAdminConfiguration" accessibleText="Configure admin settings" />
-                    <Button text="Scheduled Reports" style="-fx-background-color: #003366; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 10 20 10 20; -fx-background-radius: 8px;" onAction="#handleScheduleReports" accessibleText="Schedule system reports" />
                     <Button text="Bulk Operations" style="-fx-background-color: #003366; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 10 20 10 20; -fx-background-radius: 8px;" onAction="#handleBulkOperations" accessibleText="Perform bulk operations" />
                     <Button text="AI Workload Balancing" style="-fx-background-color: #ffffff; -fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 10 20 10 20; -fx-background-radius: 8px; -fx-border-width: 1px; -fx-border-color: #d1d5db;" onAction="#handleAIWorkloadBalancing" accessibleText="Balance workload using AI" />
                     <Button text="Model API Config" style="-fx-background-color: #ffffff; -fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 10 20 10 20; -fx-background-radius: 8px; -fx-border-width: 1px; -fx-border-color: #d1d5db;" onAction="#handleModelAPIConfig" accessibleText="Configure model API settings" />

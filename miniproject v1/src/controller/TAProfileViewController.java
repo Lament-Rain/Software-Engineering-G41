@@ -6,8 +6,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import model.TA;
 import java.util.List;
 import controller.TADashboardController;
@@ -16,6 +20,9 @@ import controller.LoginController;
 import controller.SearchBarController;
 import service.KeyboardShortcutService;
 import service.NavigationHistory;
+import service.WorkloadService;
+import service.AdminConfigService;
+import model.AdminConfig;
 
 public class TAProfileViewController {
     @FXML
@@ -35,17 +42,15 @@ public class TAProfileViewController {
     @FXML
     private Label phoneLabel;
     @FXML
-    private Label availableTimeLabel;
-    @FXML
     private Label skillsLabel;
     @FXML
     private Label experienceLabel;
     @FXML
     private Label awardsLabel;
     @FXML
-    private Label languageSkillsLabel;
-    @FXML
     private Label otherSkillsLabel;
+    @FXML
+    private AnchorPane workloadGaugePane;
     
     private Stage stage;
     private TA user;
@@ -54,6 +59,13 @@ public class TAProfileViewController {
     public void setStage(Stage stage) {
         this.stage = stage;
         setupKeyboardShortcuts();
+        if (workloadGaugePane != null) {
+            workloadGaugePane.widthProperty().addListener((obs, oldVal, newVal) -> {
+                if (user != null) {
+                    renderWorkloadGauge(WorkloadService.getCurrentWorkload(user), AdminConfigService.loadConfig());
+                }
+            });
+        }
     }
     
     private void setupKeyboardShortcuts() {
@@ -68,12 +80,18 @@ public class TAProfileViewController {
     }
     
     private void handleHome() {
-        // If we can go back, do so; otherwise, stay on the current page
-        if (NavigationHistory.getInstance().canGoBack()) {
-            NavigationHistory.getInstance().goBack();
-        } else {
-            // Refresh current page
-            loadUserData();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TADashboard.fxml"));
+            Parent root = loader.load();
+            TADashboardController controller = loader.getController();
+            controller.setUser(user, false);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - TA Dashboard");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     
@@ -191,7 +209,6 @@ public class TAProfileViewController {
             studentIdLabel.setText(user.getStudentId() != null ? user.getStudentId() : "");
             emailLabel.setText(user.getEmail() != null ? user.getEmail() : "");
             phoneLabel.setText(user.getPhone() != null ? user.getPhone() : "");
-            availableTimeLabel.setText(user.getAvailableTime() != null ? user.getAvailableTime() : "");
             
             // Convert skills list to string
             if (user.getSkills() != null && !user.getSkills().isEmpty()) {
@@ -206,11 +223,97 @@ public class TAProfileViewController {
             
             experienceLabel.setText(user.getExperience() != null ? user.getExperience() : "");
             awardsLabel.setText(user.getAwards() != null ? user.getAwards() : "");
-            languageSkillsLabel.setText(user.getLanguageSkills() != null ? user.getLanguageSkills() : "");
             otherSkillsLabel.setText(user.getOtherSkills() != null ? user.getOtherSkills() : "");
+
+            int workload = WorkloadService.getCurrentWorkload(user);
+            AdminConfig cfg = AdminConfigService.loadConfig();
+            renderWorkloadGauge(workload, cfg);
         }
     }
     
+    private void renderWorkloadGauge(int workload, AdminConfig cfg) {
+        if (workloadGaugePane == null || cfg == null) {
+            return;
+        }
+
+        workloadGaugePane.getChildren().clear();
+
+        double paneWidth = workloadGaugePane.getWidth() > 0 ? workloadGaugePane.getWidth() : workloadGaugePane.getPrefWidth();
+        if (paneWidth <= 0) {
+            paneWidth = 340;
+        }
+
+        double left = 12;
+        double right = Math.max(left + 110, paneWidth - 12);
+        double barY = 18;
+        double barH = 8;
+
+        int low = cfg.getLowThreshold();
+        int mid = cfg.getMidThreshold();
+        int high = cfg.getHighThreshold();
+        int max = cfg.getMaxThreshold();
+        if (max <= low) {
+            max = Math.max(low + 1, 1);
+        }
+
+        double usable = right - left;
+        double xLow = left;
+        double xMid = left + usable * ((double) (mid - low) / (max - low));
+        double xHigh = left + usable * ((double) (high - low) / (max - low));
+        double xMax = right;
+
+        Rectangle lowSeg = new Rectangle(xLow, barY, Math.max(0, xMid - xLow), barH);
+        lowSeg.setArcWidth(6);
+        lowSeg.setArcHeight(6);
+        lowSeg.setStyle("-fx-fill: #16a34a;");
+
+        Rectangle midSeg = new Rectangle(xMid, barY, Math.max(0, xHigh - xMid), barH);
+        midSeg.setStyle("-fx-fill: #eab308;");
+
+        Rectangle highSeg = new Rectangle(xHigh, barY, Math.max(0, xMax - xHigh), barH);
+        highSeg.setArcWidth(6);
+        highSeg.setArcHeight(6);
+        highSeg.setStyle("-fx-fill: #dc2626;");
+
+        Line midLine = new Line(xMid, barY - 2, xMid, barY + barH + 2);
+        midLine.setStyle("-fx-stroke: #ffffff; -fx-stroke-width: 2;");
+        Line highLine = new Line(xHigh, barY - 2, xHigh, barY + barH + 2);
+        highLine.setStyle("-fx-stroke: #ffffff; -fx-stroke-width: 2;");
+
+        Label lowTick = createTickLabel(String.valueOf(low), xLow - 4, 0);
+        Label midTick = createTickLabel(String.valueOf(mid), xMid - 8, 0);
+        Label highTick = createTickLabel(String.valueOf(high), xHigh - 10, 0);
+        Label maxTick = createTickLabel(String.valueOf(max), xMax - 12, 0);
+
+        double clamped = Math.max(low, Math.min(workload, max));
+        double xCurrent = left + usable * ((clamped - low) / (double) (max - low));
+
+        Polygon arrow = new Polygon(
+                xCurrent, barY + barH + 2,
+                xCurrent - 6, barY + barH + 12,
+                xCurrent + 6, barY + barH + 12
+        );
+        arrow.setStyle("-fx-fill: #1f2937;");
+
+        Label currentLabel = createTickLabel(workload + "h", xCurrent - 12, barY + barH + 14);
+        currentLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: 700; -fx-text-fill: #1f2937;");
+
+        workloadGaugePane.getChildren().addAll(
+                lowSeg, midSeg, highSeg,
+                midLine, highLine,
+                lowTick, midTick, highTick, maxTick,
+                arrow, currentLabel
+        );
+    }
+
+    private Label createTickLabel(String text, double x, double y) {
+        Label label = new Label(text);
+        label.setLayoutX(x);
+        label.setLayoutY(y);
+        label.setStyle("-fx-font-size: 11px; -fx-font-weight: 600; -fx-text-fill: #6b7280;");
+        return label;
+    }
+
     @FXML
     private void handleEditProfile(ActionEvent event) {
         try {
@@ -304,7 +407,7 @@ public class TAProfileViewController {
     @FXML
     private void handleJobRequirements(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/JobList.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAJobBoard.fxml"));
             Parent root = loader.load();
             JobListController controller = loader.getController();
             controller.setUser(user, model.UserRole.TA);

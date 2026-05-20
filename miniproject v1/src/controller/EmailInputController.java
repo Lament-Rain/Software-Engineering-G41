@@ -11,10 +11,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import service.CaptchaService;
-import service.FormValidationService;
 import service.ToastService;
 
 public class EmailInputController {
+
+    public enum FlowMode {
+        REGISTER,
+        RESET_PASSWORD
+    }
 
     @FXML
     private TextField emailField;
@@ -38,6 +42,7 @@ public class EmailInputController {
     private Stage stage;
     private String currentCaptcha;
     private RegisterController registerController;
+    private FlowMode flowMode = FlowMode.REGISTER;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -45,6 +50,10 @@ public class EmailInputController {
 
     public void setRegisterController(RegisterController registerController) {
         this.registerController = registerController;
+    }
+
+    public void setFlowMode(FlowMode flowMode) {
+        this.flowMode = flowMode == null ? FlowMode.REGISTER : flowMode;
     }
 
     @FXML
@@ -87,11 +96,11 @@ public class EmailInputController {
                 controller.setStage(stage);
                 controller.setEmail(email);
                 controller.setRegisterController(registerController);
+                controller.setFlowMode(flowMode);
 
-                // Get current window size
                 double width = stage.getWidth();
                 double height = stage.getHeight();
-                
+
                 Scene scene = new Scene(root, width, height);
                 scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
                 stage.setScene(scene);
@@ -113,10 +122,9 @@ public class EmailInputController {
             LoginController controller = loader.getController();
             controller.setStage(stage);
 
-            // Get current window size
             double width = stage.getWidth();
             double height = stage.getHeight();
-            
+
             Scene scene = new Scene(root, width, height);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
@@ -129,15 +137,15 @@ public class EmailInputController {
 
     private boolean validateEmailField() {
         String email = emailField.getText().trim();
-        if (email.isEmpty() || !email.contains("@")) {
-            showEmailError("Please enter a valid email address");
+        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
+        if (email.isEmpty() || !email.matches(emailRegex)) {
+            showEmailError("Please enter a valid email format, e.g. name@company.com");
             return false;
         } else {
             clearEmailError();
             return true;
         }
     }
-
     private boolean validateCaptchaField() {
         String input = captchaField.getText().trim();
         if (input.isEmpty() || input.length() != 4) {
@@ -194,3 +202,5 @@ public class EmailInputController {
         errorMessage.setManaged(false);
     }
 }
+
+

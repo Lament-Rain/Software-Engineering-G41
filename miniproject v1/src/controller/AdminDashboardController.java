@@ -19,7 +19,6 @@ import service.KeyboardShortcutService;
 import service.ToastService;
 import service.NavigationHistory;
 import controller.SearchBarController;
-import controller.SearchBarController.Feature;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -112,12 +111,26 @@ public class AdminDashboardController {
     // Admin configuration
     @FXML
     private void handleAdminConfiguration(ActionEvent event) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle("Notice");
-        alert.setHeaderText("Admin Configuration");
-        alert.setContentText("Admin configuration feature is not implemented yet");
-        alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-        alert.showAndWait();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminConfig.fxml"));
+            Parent root = loader.load();
+            AdminConfigController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Admin Configuration");
+        } catch (Exception e) {
+            e.printStackTrace();
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Failed to load admin configuration");
+            alert.setContentText("Please try again later.");
+            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        }
     }
     
     // Scheduled report generation
@@ -134,23 +147,49 @@ public class AdminDashboardController {
     // Bulk operations
     @FXML
     private void handleBulkOperations(ActionEvent event) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle("Notice");
-        alert.setHeaderText("Bulk Operations");
-        alert.setContentText("Bulk operations feature is not implemented yet");
-        alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-        alert.showAndWait();
+        javafx.scene.control.ChoiceDialog<String> dialog = new javafx.scene.control.ChoiceDialog<>(
+                "User Enable",
+                java.util.List.of(
+                        "User Enable",
+                        "User Disable",
+                        "Job reviewed",
+                        "Job available",
+                        "Job closed"
+                )
+        );
+        dialog.setTitle("Bulk Operations");
+        dialog.setHeaderText("Choose an operation type");
+        dialog.setContentText("Operation:");
+
+        java.util.Optional<String> result = dialog.showAndWait();
+        result.ifPresent(choice -> {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+            alert.setTitle("Bulk Operations");
+            alert.setHeaderText("Selected: " + choice);
+            alert.setContentText("Batch flow for '" + choice + "' can be connected here.");
+            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        });
     }
     
     // AI workload balancing
     @FXML
     private void handleAIWorkloadBalancing(ActionEvent event) {
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-        alert.setTitle("Notice");
-        alert.setHeaderText("AI Workload Balancing");
-        alert.setContentText("AI workload balancing feature is not implemented yet");
-        alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-        alert.showAndWait();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminWorkloadOverview.fxml"));
+            Parent root = loader.load();
+            AdminWorkloadOverviewController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Workload Overview");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open workload overview", ToastService.ToastType.ERROR);
+        }
     }
     
     // 大模型API配置
@@ -253,7 +292,7 @@ public class AdminDashboardController {
                 
                 // 调用API
                 testResultArea.setText("正在调用API...");
-                String response = AIService.callDoubaoDeepThinking(testInput);
+                String response = AIService.callDoubaoDeepThinking(testInput, false);
                 String parsedResponse = AIService.parseDoubaoResponse(response);
                 testResultArea.setText(parsedResponse);
                 
@@ -518,577 +557,24 @@ public class AdminDashboardController {
     // Handle user management button click
     @FXML
     private void handleUserManagement(ActionEvent event) {
-        // Create user management dialog
-        javafx.scene.control.Dialog<Void> dialog = new javafx.scene.control.Dialog<>();
-        dialog.setTitle("User Management");
-        dialog.setHeaderText("User management");
-        
-        // Create button layout
-        javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(10);
-        vbox.setPadding(new javafx.geometry.Insets(20));
-        
-        // Add feature buttons
-        javafx.scene.control.Button viewUsersBtn = new javafx.scene.control.Button("View All Users");
-        viewUsersBtn.setPrefWidth(200);
-        viewUsersBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
-        viewUsersBtn.setOnMouseEntered(mouseEvent -> viewUsersBtn.setStyle("-fx-background-color: #bdbdbd; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"));
-        viewUsersBtn.setOnMouseExited(mouseEvent -> viewUsersBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);"));
-        viewUsersBtn.setOnAction(e -> {
-            // Implement view all users feature
-            javafx.scene.control.Dialog<Void> viewUsersDialog = new javafx.scene.control.Dialog<>();
-            viewUsersDialog.setTitle("View All Users");
-            viewUsersDialog.setHeaderText("All Users List");
-            viewUsersDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-            
-            // Create table view
-            javafx.scene.control.TableView<model.User> userTable = new javafx.scene.control.TableView<>();
-            userTable.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-            
-            // Create columns
-            javafx.scene.control.TableColumn<model.User, String> usernameCol = new javafx.scene.control.TableColumn<>("Username");
-            usernameCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("username"));
-            usernameCol.setStyle("-fx-font-weight: bold; -fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.User, String> emailCol = new javafx.scene.control.TableColumn<>("Email");
-            emailCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("email"));
-            emailCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.User, String> phoneCol = new javafx.scene.control.TableColumn<>("Phone");
-            phoneCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("phone"));
-            phoneCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.User, model.UserRole> roleCol = new javafx.scene.control.TableColumn<>("Role");
-            roleCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("role"));
-            roleCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.User, model.UserStatus> statusCol = new javafx.scene.control.TableColumn<>("Status");
-            statusCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("status"));
-            statusCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            // Add columns to table
-            userTable.getColumns().addAll(usernameCol, emailCol, phoneCol, roleCol, statusCol);
-            
-            // Load user data
-            java.util.List<model.User> users = service.UserService.getAllUsers();
-            userTable.setItems(javafx.collections.FXCollections.observableArrayList(users));
-            
-            // Set table to resizable columns
-            userTable.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
-            
-            // Create scroll pane
-            javafx.scene.control.ScrollPane scrollPane = new javafx.scene.control.ScrollPane();
-            scrollPane.setContent(userTable);
-            scrollPane.setPrefHeight(400);
-            scrollPane.setPrefWidth(600);
-            scrollPane.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-            
-            // Set dialog content
-            viewUsersDialog.getDialogPane().setContent(scrollPane);
-            
-            // Add confirm button
-            javafx.scene.control.ButtonType okButtonType = new javafx.scene.control.ButtonType("OK", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
-            viewUsersDialog.getDialogPane().getButtonTypes().add(okButtonType);
-            
-            // Style confirm button
-            javafx.scene.control.Button okButton = (javafx.scene.control.Button) viewUsersDialog.getDialogPane().lookupButton(okButtonType);
-            okButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            okButton.setOnMouseEntered(mouseEvent -> okButton.setStyle("-fx-background-color: #0b7dda; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            okButton.setOnMouseExited(mouseEvent -> okButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            
-            // Show dialog
-            viewUsersDialog.showAndWait();
-        });
-        
-        javafx.scene.control.Button addUserBtn = new javafx.scene.control.Button("Add New User");
-        addUserBtn.setPrefWidth(200);
-        addUserBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
-        addUserBtn.setOnMouseEntered(mouseEvent -> addUserBtn.setStyle("-fx-background-color: #bdbdbd; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"));
-        addUserBtn.setOnMouseExited(mouseEvent -> addUserBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);"));
-        addUserBtn.setOnAction(e -> {
-            // Implement add new user feature
-            javafx.scene.control.Dialog<java.util.Map<String, Object>> addUserDialog = new javafx.scene.control.Dialog<>();
-addUserDialog.setTitle("Add New User");
-addUserDialog.setHeaderText("Add New User");
-            addUserDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-            
-            // Create form
-            javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
-            grid.setHgap(15);
-            grid.setVgap(15);
-            grid.setPadding(new javafx.geometry.Insets(20, 20, 10, 20));
-            grid.setStyle("-fx-background-color: white; -fx-padding: 20px; -fx-border-radius: 8px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);");
-            
-            // Add form elements
-            javafx.scene.control.Label usernameLabel = new javafx.scene.control.Label("Username:");
-            usernameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-            javafx.scene.control.TextField usernameField = new javafx.scene.control.TextField();
-            usernameField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-            
-            javafx.scene.control.Label passwordLabel = new javafx.scene.control.Label("Password:");
-            passwordLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-            javafx.scene.control.PasswordField passwordField = new javafx.scene.control.PasswordField();
-            passwordField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-            
-            javafx.scene.control.Label emailLabel = new javafx.scene.control.Label("Email:");
-            emailLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-            javafx.scene.control.TextField emailField = new javafx.scene.control.TextField();
-            emailField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-            
-            javafx.scene.control.Label phoneLabel = new javafx.scene.control.Label("Phone:");
-            phoneLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-            javafx.scene.control.TextField phoneField = new javafx.scene.control.TextField();
-            phoneField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-            
-            javafx.scene.control.Label roleLabel = new javafx.scene.control.Label("Role:");
-            roleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-            javafx.scene.control.ComboBox<model.UserRole> roleComboBox = new javafx.scene.control.ComboBox<>();
-            roleComboBox.getItems().addAll(model.UserRole.TA, model.UserRole.MO, model.UserRole.ADMIN);
-            roleComboBox.setValue(model.UserRole.TA);
-            roleComboBox.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-            
-            javafx.scene.control.Label departmentLabel = new javafx.scene.control.Label("Department:");
-            departmentLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-            javafx.scene.control.TextField departmentField = new javafx.scene.control.TextField();
-            departmentField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-            
-            // Add to grid
-            grid.add(usernameLabel, 0, 0);
-            grid.add(usernameField, 1, 0);
-            grid.add(passwordLabel, 0, 1);
-            grid.add(passwordField, 1, 1);
-            grid.add(emailLabel, 0, 2);
-            grid.add(emailField, 1, 2);
-            grid.add(phoneLabel, 0, 3);
-            grid.add(phoneField, 1, 3);
-            grid.add(roleLabel, 0, 4);
-            grid.add(roleComboBox, 1, 4);
-            grid.add(departmentLabel, 0, 5);
-            grid.add(departmentField, 1, 5);
-            
-            // Set dialog content
-            addUserDialog.getDialogPane().setContent(grid);
-            
-            // Add buttons
-            javafx.scene.control.ButtonType okButtonType = new javafx.scene.control.ButtonType("OK", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
-            javafx.scene.control.ButtonType cancelButtonType = new javafx.scene.control.ButtonType("Cancel", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
-            addUserDialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
-            
-            // Style buttons
-            javafx.scene.control.Button okButton = (javafx.scene.control.Button) addUserDialog.getDialogPane().lookupButton(okButtonType);
-            okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            okButton.setOnMouseEntered(mouseEvent -> okButton.setStyle("-fx-background-color: #45a049; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            okButton.setOnMouseExited(mouseEvent -> okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            
-            javafx.scene.control.Button cancelButton = (javafx.scene.control.Button) addUserDialog.getDialogPane().lookupButton(cancelButtonType);
-            cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            cancelButton.setOnMouseEntered(mouseEvent -> cancelButton.setStyle("-fx-background-color: #da190b; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            cancelButton.setOnMouseExited(mouseEvent -> cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            
-            // Set result converter
-            addUserDialog.setResultConverter(dialogButton -> {
-                if (dialogButton == okButtonType) {
-                    java.util.Map<String, Object> result = new java.util.HashMap<>();
-                    result.put("username", usernameField.getText());
-                    result.put("password", passwordField.getText());
-                    result.put("email", emailField.getText());
-                    result.put("phone", phoneField.getText());
-                    result.put("role", roleComboBox.getValue());
-                    result.put("department", departmentField.getText());
-                    return result;
-                }
-                return null;
-            });
-            
-            // Show dialog and handle result
-            java.util.Optional<java.util.Map<String, Object>> result = addUserDialog.showAndWait();
-            result.ifPresent(data -> {
-                model.User user = service.UserService.register(
-                    (String) data.get("username"),
-                    (String) data.get("password"),
-                    (String) data.get("email"),
-                    (String) data.get("phone"),
-                    (model.UserRole) data.get("role"),
-                    (String) data.get("department")
-                );
-                
-                if (user != null) {
-                    javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                    successAlert.setTitle("Success");
-                    successAlert.setHeaderText("User added successfully");
-                    successAlert.setContentText("User " + user.getUsername() + " was added successfully");
-                    successAlert.showAndWait();
-                } else {
-                    javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                    errorAlert.setTitle("Error");
-                    errorAlert.setHeaderText("Failed to add user");
-                    errorAlert.setContentText("Please check whether the input information is correct");
-                    errorAlert.showAndWait();
-                }
-            });
-        });
-        
-        javafx.scene.control.Button editUserBtn = new javafx.scene.control.Button("Edit User Information");
-        editUserBtn.setPrefWidth(200);
-        editUserBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
-        editUserBtn.setOnMouseEntered(mouseEvent -> editUserBtn.setStyle("-fx-background-color: #bdbdbd; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"));
-        editUserBtn.setOnMouseExited(mouseEvent -> editUserBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);"));
-        editUserBtn.setOnAction(e -> {
-            // Implement edit user information feature
-            javafx.scene.control.Dialog<Void> editUserDialog = new javafx.scene.control.Dialog<>();
-            editUserDialog.setTitle("Edit User Information");
-            editUserDialog.setHeaderText("Select a user to edit");
-            editUserDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-            
-            // Create table view
-            javafx.scene.control.TableView<model.User> userTable = new javafx.scene.control.TableView<>();
-            userTable.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4px; -fx-selection-bar: #90caf9; -fx-selection-bar-text: #000000; -fx-cell-focus-inner-border: #90caf9; -fx-focus-color: #90caf9;");
-            
-            // Create columns
-            javafx.scene.control.TableColumn<model.User, String> usernameCol = new javafx.scene.control.TableColumn<>("Username");
-            usernameCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("username"));
-            usernameCol.setStyle("-fx-font-weight: bold; -fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.User, String> emailCol = new javafx.scene.control.TableColumn<>("Email");
-            emailCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("email"));
-            emailCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.User, String> phoneCol = new javafx.scene.control.TableColumn<>("Phone");
-            phoneCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("phone"));
-            phoneCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            // Add columns to table
-            userTable.getColumns().addAll(usernameCol, emailCol, phoneCol);
-            
-            // Load user data
-            java.util.List<model.User> users = service.UserService.getAllUsers();
-            userTable.setItems(javafx.collections.FXCollections.observableArrayList(users));
-            
-            // Set table to resizable columns
-            userTable.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
-            
-            // Set selection mode to single row selection
-            userTable.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.SINGLE);
-            
-            // Create edit button
-            javafx.scene.control.Button editBtn = new javafx.scene.control.Button("Edit Selected User");
-            editBtn.setStyle("-fx-background-color: #ff9800; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            editBtn.setOnMouseEntered(mouseEvent -> editBtn.setStyle("-fx-background-color: #e68a00; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            editBtn.setOnMouseExited(mouseEvent -> editBtn.setStyle("-fx-background-color: #ff9800; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            editBtn.setOnAction(editEvent -> {
-                model.User selectedUser = userTable.getSelectionModel().getSelectedItem();
-                if (selectedUser != null) {
-                    // Create edit form
-                    javafx.scene.control.Dialog<java.util.Map<String, Object>> editFormDialog = new javafx.scene.control.Dialog<>();
-                    editFormDialog.setTitle("Edit User Information");
-                    editFormDialog.setHeaderText("Edit User: " + selectedUser.getUsername());
-                    editFormDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-                    
-                    // Create form
-                    javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
-                    grid.setHgap(15);
-                    grid.setVgap(15);
-                    grid.setPadding(new javafx.geometry.Insets(20, 20, 10, 20));
-                    grid.setStyle("-fx-background-color: white; -fx-padding: 20px; -fx-border-radius: 8px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);");
-                    
-                    // Add form elements
-                    javafx.scene.control.Label usernameLabel = new javafx.scene.control.Label("Username:");
-                    usernameLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-                    javafx.scene.control.TextField usernameField = new javafx.scene.control.TextField(selectedUser.getUsername());
-                    usernameField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-                    
-                    javafx.scene.control.Label emailLabel = new javafx.scene.control.Label("Email:");
-                    emailLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-                    javafx.scene.control.TextField emailField = new javafx.scene.control.TextField(selectedUser.getEmail());
-                    emailField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-                    
-                    javafx.scene.control.Label phoneLabel = new javafx.scene.control.Label("Phone:");
-                    phoneLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-                    javafx.scene.control.TextField phoneField = new javafx.scene.control.TextField(selectedUser.getPhone());
-                    phoneField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-                    
-                    // Add to grid
-                    grid.add(usernameLabel, 0, 0);
-                    grid.add(usernameField, 1, 0);
-                    grid.add(emailLabel, 0, 1);
-                    grid.add(emailField, 1, 1);
-                    grid.add(phoneLabel, 0, 2);
-                    grid.add(phoneField, 1, 2);
-                    
-                    // Set dialog content
-                    editFormDialog.getDialogPane().setContent(grid);
-                    
-                    // Add buttons
-                    javafx.scene.control.ButtonType okButtonType = new javafx.scene.control.ButtonType("OK", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
-                    javafx.scene.control.ButtonType cancelButtonType = new javafx.scene.control.ButtonType("Cancel", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
-                    editFormDialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
-                    
-                    // Style buttons
-                    javafx.scene.control.Button okButton = (javafx.scene.control.Button) editFormDialog.getDialogPane().lookupButton(okButtonType);
-                    okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-                    okButton.setOnMouseEntered(mouseEvent -> okButton.setStyle("-fx-background-color: #45a049; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-                    okButton.setOnMouseExited(mouseEvent -> okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-                    
-                    javafx.scene.control.Button cancelButton = (javafx.scene.control.Button) editFormDialog.getDialogPane().lookupButton(cancelButtonType);
-                    cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-                    cancelButton.setOnMouseEntered(mouseEvent -> cancelButton.setStyle("-fx-background-color: #da190b; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-                    cancelButton.setOnMouseExited(mouseEvent -> cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-                    
-                    // Set result converter
-                    editFormDialog.setResultConverter(dialogButton -> {
-                        if (dialogButton == okButtonType) {
-                            java.util.Map<String, Object> result = new java.util.HashMap<>();
-                            result.put("username", usernameField.getText());
-                            result.put("email", emailField.getText());
-                            result.put("phone", phoneField.getText());
-                            return result;
-                        }
-                        return null;
-                    });
-                    
-                    // Show dialog and handle result
-                    java.util.Optional<java.util.Map<String, Object>> result = editFormDialog.showAndWait();
-                    result.ifPresent(data -> {
-                        selectedUser.setUsername((String) data.get("username"));
-                        selectedUser.setEmail((String) data.get("email"));
-                        selectedUser.setPhone((String) data.get("phone"));
-                        
-                        boolean success = service.UserService.updateUser(selectedUser);
-                        if (success) {
-                            javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                            successAlert.setTitle("Success");
-                            successAlert.setHeaderText("User information updated successfully");
-                            successAlert.setContentText("User information has been updated successfully");
-                            successAlert.showAndWait();
-                            
-                            // Refresh table
-                            userTable.setItems(javafx.collections.FXCollections.observableArrayList(service.UserService.getAllUsers()));
-                        } else {
-                            javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                            errorAlert.setTitle("Error");
-                            errorAlert.setHeaderText("Failed to edit user");
-                            errorAlert.setContentText("Failed to update user information");
-                            errorAlert.showAndWait();
-                        }
-                    });
-                } else {
-                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("No user selected");
-                    alert.setContentText("Please select a user to edit first");
-                    alert.showAndWait();
-                }
-            });
-            
-            // Create VBox containing table and button
-            javafx.scene.layout.VBox dialogContent = new javafx.scene.layout.VBox(10);
-            dialogContent.setPadding(new javafx.geometry.Insets(10));
-            dialogContent.getChildren().addAll(userTable, editBtn);
-            
-            // Set dialog content
-            editUserDialog.getDialogPane().setContent(dialogContent);
-            
-            // Add confirm button
-            editUserDialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
-            
-            // Show dialog
-            editUserDialog.showAndWait();
-        });
-        
-        javafx.scene.control.Button disableUserBtn = new javafx.scene.control.Button("Enable/Disable User");
-        disableUserBtn.setPrefWidth(200);
-        disableUserBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
-        disableUserBtn.setOnMouseEntered(mouseEvent -> disableUserBtn.setStyle("-fx-background-color: #bdbdbd; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"));
-        disableUserBtn.setOnMouseExited(mouseEvent -> disableUserBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);"));
-        disableUserBtn.setOnAction(e -> {
-            // Implement enable/disable user feature
-            javafx.scene.control.Dialog<Void> toggleUserDialog = new javafx.scene.control.Dialog<>();
-            toggleUserDialog.setTitle("Enable/Disable User");
-            toggleUserDialog.setHeaderText("Select a user to manage");
-            toggleUserDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-            
-            // Create table view
-            javafx.scene.control.TableView<model.User> userTable = new javafx.scene.control.TableView<>();
-            userTable.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4px; -fx-selection-bar: #e3f2fd; -fx-selection-bar-text: #000000;");
-            
-            // Create columns
-            javafx.scene.control.TableColumn<model.User, String> usernameCol = new javafx.scene.control.TableColumn<>("Username");
-            usernameCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("username"));
-            usernameCol.setStyle("-fx-font-weight: bold; -fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.User, model.UserStatus> statusCol = new javafx.scene.control.TableColumn<>("Status");
-            statusCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("status"));
-            statusCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            // Add columns to table
-            userTable.getColumns().addAll(usernameCol, statusCol);
-            
-            // Load user data
-            java.util.List<model.User> users = service.UserService.getAllUsers();
-            userTable.setItems(javafx.collections.FXCollections.observableArrayList(users));
-            
-            // Set table to resizable columns
-            userTable.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
-            
-            // Create toggle status button
-            javafx.scene.control.Button toggleBtn = new javafx.scene.control.Button("Toggle Selected User Status");
-            toggleBtn.setStyle("-fx-background-color: #9c27b0; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            toggleBtn.setOnMouseEntered(mouseEvent -> toggleBtn.setStyle("-fx-background-color: #7b1fa2; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            toggleBtn.setOnMouseExited(mouseEvent -> toggleBtn.setStyle("-fx-background-color: #9c27b0; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            toggleBtn.setOnAction(toggleEvent -> {
-                model.User selectedUser = userTable.getSelectionModel().getSelectedItem();
-                if (selectedUser != null) {
-                    model.UserStatus newStatus = selectedUser.getStatus() == model.UserStatus.ACTIVE ? model.UserStatus.LOCKED : model.UserStatus.ACTIVE;
-                    boolean success = service.UserService.toggleUserStatus(selectedUser.getId(), newStatus);
-                    if (success) {
-                        javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                        successAlert.setTitle("Success");
-                        successAlert.setHeaderText("Operation successful");
-                        successAlert.setContentText("User status has been switched to " + newStatus);
-                        successAlert.showAndWait();
-                        
-                        // Refresh table
-                        userTable.setItems(javafx.collections.FXCollections.observableArrayList(service.UserService.getAllUsers()));
-                    } else {
-                        javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                        errorAlert.setTitle("Error");
-                        errorAlert.setHeaderText("Operation failed");
-                        errorAlert.setContentText("Failed to switch user status");
-                        errorAlert.showAndWait();
-                    }
-                } else {
-                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("No user selected");
-                    alert.setContentText("Please select a user to operate on first");
-                    alert.showAndWait();
-                }
-            });
-            
-            // Create VBox containing table and button
-            javafx.scene.layout.VBox dialogContent = new javafx.scene.layout.VBox(10);
-            dialogContent.setPadding(new javafx.geometry.Insets(10));
-            dialogContent.getChildren().addAll(userTable, toggleBtn);
-            
-            // Set dialog content
-            toggleUserDialog.getDialogPane().setContent(dialogContent);
-            
-            // Add confirm button
-            toggleUserDialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
-            
-            // Show dialog
-            toggleUserDialog.showAndWait();
-        });
-        
-        javafx.scene.control.Button deleteUserBtn = new javafx.scene.control.Button("Delete User");
-        deleteUserBtn.setPrefWidth(200);
-        deleteUserBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
-        deleteUserBtn.setOnMouseEntered(mouseEvent -> deleteUserBtn.setStyle("-fx-background-color: #bdbdbd; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"));
-        deleteUserBtn.setOnMouseExited(mouseEvent -> deleteUserBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);"));
-        deleteUserBtn.setOnAction(e -> {
-            // Implement delete user feature
-            javafx.scene.control.Dialog<Void> deleteUserDialog = new javafx.scene.control.Dialog<>();
-            deleteUserDialog.setTitle("Delete User");
-            deleteUserDialog.setHeaderText("Select a user to delete");
-            deleteUserDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-            
-            // Create table view
-            javafx.scene.control.TableView<model.User> userTable = new javafx.scene.control.TableView<>();
-            userTable.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4px; -fx-selection-bar: #e3f2fd; -fx-selection-bar-text: #000000;");
-            
-            // Create columns
-            javafx.scene.control.TableColumn<model.User, String> usernameCol = new javafx.scene.control.TableColumn<>("Username");
-            usernameCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("username"));
-            usernameCol.setStyle("-fx-font-weight: bold; -fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.User, String> emailCol = new javafx.scene.control.TableColumn<>("Email");
-            emailCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("email"));
-            emailCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            // Add columns to table
-            userTable.getColumns().addAll(usernameCol, emailCol);
-            
-            // Load user data
-            java.util.List<model.User> users = service.UserService.getAllUsers();
-            userTable.setItems(javafx.collections.FXCollections.observableArrayList(users));
-            
-            // Set table to resizable columns
-            userTable.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
-            
-            // Create delete button
-            javafx.scene.control.Button deleteBtn = new javafx.scene.control.Button("Delete Selected User");
-            deleteBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            deleteBtn.setOnMouseEntered(mouseEvent -> deleteBtn.setStyle("-fx-background-color: #da190b; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            deleteBtn.setOnMouseExited(mouseEvent -> deleteBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            deleteBtn.setOnAction(deleteEvent -> {
-                model.User selectedUser = userTable.getSelectionModel().getSelectedItem();
-                if (selectedUser != null) {
-                    // Confirm deletion
-                    javafx.scene.control.Alert confirmAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                    confirmAlert.setTitle("Confirm Deletion");
-                    confirmAlert.setHeaderText("Delete User");
-                    confirmAlert.setContentText("Are you sure you want to delete user " + selectedUser.getUsername() + "?");
-                    
-                    java.util.Optional<javafx.scene.control.ButtonType> result = confirmAlert.showAndWait();
-                    if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
-                        // Delete user from data storage
-                        java.util.List<model.User> allUsers = service.DataStorage.getUsers();
-                        boolean removed = allUsers.removeIf(user -> user.getId().equals(selectedUser.getId()));
-                        if (removed) {
-                            service.DataStorage.saveUsers(allUsers);
-                            service.DataStorage.addLog("DELETE_USER", "admin", "User deleted: " + selectedUser.getUsername());
-                            
-                            javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                            successAlert.setTitle("Success");
-                            successAlert.setHeaderText("User deleted successfully");
-                            successAlert.setContentText("The user has been deleted successfully");
-                            successAlert.showAndWait();
-                            
-                            // Refresh table
-                            userTable.setItems(javafx.collections.FXCollections.observableArrayList(service.UserService.getAllUsers()));
-                        } else {
-                            javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                            errorAlert.setTitle("Error");
-                            errorAlert.setHeaderText("Failed to delete user");
-                            errorAlert.setContentText("Failed to delete user");
-                            errorAlert.showAndWait();
-                        }
-                    }
-                } else {
-                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("No user selected");
-                    alert.setContentText("Please select a user to delete first");
-                    alert.showAndWait();
-                }
-            });
-            
-            // Create VBox containing table and button
-            javafx.scene.layout.VBox dialogContent = new javafx.scene.layout.VBox(10);
-            dialogContent.setPadding(new javafx.geometry.Insets(10));
-            dialogContent.getChildren().addAll(userTable, deleteBtn);
-            
-            // Set dialog content
-            deleteUserDialog.getDialogPane().setContent(dialogContent);
-            
-            // Add confirm button
-            deleteUserDialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
-            
-            // Show dialog
-            deleteUserDialog.showAndWait();
-        });
-        
-        // Add buttons to VBox
-        vbox.getChildren().addAll(viewUsersBtn, addUserBtn, editUserBtn, disableUserBtn, deleteUserBtn);
-        
-        // Set dialog content
-        dialog.getDialogPane().setContent(vbox);
-        
-        // Add confirm button
-        dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
-        
-        // Show dialog
-        dialog.showAndWait();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminUserManagement.fxml"));
+            Parent root = loader.load();
+            AdminUserManagementController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - User Management");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open user management", ToastService.ToastType.ERROR);
+        }
     }
+
+
     
     // Handle approval center button click
     @FXML
@@ -1119,603 +605,24 @@ addUserDialog.setHeaderText("Add New User");
 
     @FXML
     private void handleJobManagement(ActionEvent event) {
-        // Create job management dialog
-        javafx.scene.control.Dialog<Void> dialog = new javafx.scene.control.Dialog<>();
-        dialog.setTitle("Job Management");
-        dialog.setHeaderText("Job Management Features");
-        
-        // Create button layout
-        javafx.scene.layout.VBox vbox = new javafx.scene.layout.VBox(10);
-        vbox.setPadding(new javafx.geometry.Insets(20));
-        
-        // Add feature buttons
-        javafx.scene.control.Button viewJobsBtn = new javafx.scene.control.Button("View All Jobs");
-        viewJobsBtn.setPrefWidth(200);
-        viewJobsBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
-        viewJobsBtn.setOnMouseEntered(mouseEvent -> viewJobsBtn.setStyle("-fx-background-color: #bdbdbd; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"));
-        viewJobsBtn.setOnMouseExited(mouseEvent -> viewJobsBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);"));
-        viewJobsBtn.setOnAction(e -> {
-            // Implement view all jobs feature
-            javafx.scene.control.Dialog<Void> viewJobsDialog = new javafx.scene.control.Dialog<>();
-            viewJobsDialog.setTitle("View All Jobs");
-            viewJobsDialog.setHeaderText("All Jobs List");
-            viewJobsDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-            
-            // Create table view
-            javafx.scene.control.TableView<model.Job> jobTable = new javafx.scene.control.TableView<>();
-            jobTable.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4px; -fx-selection-bar: #e3f2fd; -fx-selection-bar-text: #000000;");
-            
-            // Create columns
-            javafx.scene.control.TableColumn<model.Job, String> titleCol = new javafx.scene.control.TableColumn<>("Job Title");
-            titleCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("title"));
-            titleCol.setStyle("-fx-font-weight: bold; -fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.Job, model.JobType> typeCol = new javafx.scene.control.TableColumn<>("Job Type");
-            typeCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("type"));
-            typeCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.Job, String> departmentCol = new javafx.scene.control.TableColumn<>("Department");
-            departmentCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("department"));
-            departmentCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.Job, model.JobStatus> statusCol = new javafx.scene.control.TableColumn<>("Status");
-            statusCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("status"));
-            statusCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            // Add columns to table
-            jobTable.getColumns().addAll(titleCol, typeCol, departmentCol, statusCol);
-            
-            // Load job data
-            java.util.List<model.Job> jobs = service.JobService.getAllJobs();
-            jobTable.setItems(javafx.collections.FXCollections.observableArrayList(jobs));
-            
-            // Set table to resizable columns
-            jobTable.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
-            
-            // Create scroll pane
-            javafx.scene.control.ScrollPane scrollPane = new javafx.scene.control.ScrollPane();
-            scrollPane.setContent(jobTable);
-            scrollPane.setPrefHeight(400);
-            scrollPane.setPrefWidth(600);
-            scrollPane.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-            
-            // Set dialog content
-            viewJobsDialog.getDialogPane().setContent(scrollPane);
-            
-            // Add confirm button
-            javafx.scene.control.ButtonType okButtonType = new javafx.scene.control.ButtonType("OK", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
-            viewJobsDialog.getDialogPane().getButtonTypes().add(okButtonType);
-            
-            // Style confirm button
-            javafx.scene.control.Button okButton = (javafx.scene.control.Button) viewJobsDialog.getDialogPane().lookupButton(okButtonType);
-            okButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            okButton.setOnMouseEntered(mouseEvent -> okButton.setStyle("-fx-background-color: #0b7dda; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            okButton.setOnMouseExited(mouseEvent -> okButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            
-            // Show dialog
-            viewJobsDialog.showAndWait();
-        });
-        
-        javafx.scene.control.Button reviewJobsBtn = new javafx.scene.control.Button("Review Job Postings");
-        reviewJobsBtn.setPrefWidth(200);
-        reviewJobsBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
-        reviewJobsBtn.setOnMouseEntered(mouseEvent -> reviewJobsBtn.setStyle("-fx-background-color: #bdbdbd; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"));
-        reviewJobsBtn.setOnMouseExited(mouseEvent -> reviewJobsBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);"));
-        reviewJobsBtn.setOnAction(e -> {
-            // Implement review job posting feature
-            javafx.scene.control.Dialog<Void> reviewJobsDialog = new javafx.scene.control.Dialog<>();
-            reviewJobsDialog.setTitle("Review Job Postings");
-            reviewJobsDialog.setHeaderText("Pending Job Review List");
-            reviewJobsDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-            
-            // Create table view
-            javafx.scene.control.TableView<model.Job> jobTable = new javafx.scene.control.TableView<>();
-            jobTable.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4px; -fx-selection-bar: #e3f2fd; -fx-selection-bar-text: #000000;");
-            
-            // Create columns
-            javafx.scene.control.TableColumn<model.Job, String> titleCol = new javafx.scene.control.TableColumn<>("Job Title");
-            titleCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("title"));
-            titleCol.setStyle("-fx-font-weight: bold; -fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.Job, String> departmentCol = new javafx.scene.control.TableColumn<>("Department");
-            departmentCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("department"));
-            departmentCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            // Add columns to table
-            jobTable.getColumns().addAll(titleCol, departmentCol);
-            
-            // 加载待审核职位数据
-            java.util.List<model.Job> jobs = service.JobService.getAllJobs();
-            java.util.List<model.Job> pendingJobs = new java.util.ArrayList<>();
-            for (model.Job job : jobs) {
-                if (job.getStatus() == model.JobStatus.PENDING) {
-                    pendingJobs.add(job);
-                }
-            }
-            jobTable.setItems(javafx.collections.FXCollections.observableArrayList(pendingJobs));
-            
-            // Set table to resizable columns
-            jobTable.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
-            
-            // Create review button
-            javafx.scene.control.Button reviewBtn = new javafx.scene.control.Button("Review Selected Job");
-            reviewBtn.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            reviewBtn.setOnMouseEntered(mouseEvent -> reviewBtn.setStyle("-fx-background-color: #0b7dda; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            reviewBtn.setOnMouseExited(mouseEvent -> reviewBtn.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            reviewBtn.setOnAction(reviewEvent -> {
-                model.Job selectedJob = jobTable.getSelectionModel().getSelectedItem();
-                if (selectedJob != null) {
-                    // 创建审核表单
-                    javafx.scene.control.Dialog<model.JobStatus> reviewFormDialog = new javafx.scene.control.Dialog<>();
-                    reviewFormDialog.setTitle("Review Job");
-                    reviewFormDialog.setHeaderText("Review Job: " + selectedJob.getTitle());
-                    reviewFormDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-                    
-                    // Create form
-                    javafx.scene.layout.VBox vbox1 = new javafx.scene.layout.VBox(15);
-                    vbox1.setPadding(new javafx.geometry.Insets(20));
-                    vbox1.setStyle("-fx-background-color: white; -fx-padding: 20px; -fx-border-radius: 8px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);");
-                    
-                    // 添加审核选项
-                    javafx.scene.control.Label statusLabel = new javafx.scene.control.Label("Review Result:");
-                    statusLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-                    javafx.scene.control.ToggleGroup toggleGroup = new javafx.scene.control.ToggleGroup();
-                    
-                    javafx.scene.control.RadioButton approveBtn = new javafx.scene.control.RadioButton("Approved");
-                    approveBtn.setToggleGroup(toggleGroup);
-                    approveBtn.setSelected(true);
-                    approveBtn.setStyle("-fx-font-size: 14px;");
-                    
-                    javafx.scene.control.RadioButton rejectBtn = new javafx.scene.control.RadioButton("Rejected");
-                    rejectBtn.setToggleGroup(toggleGroup);
-                    rejectBtn.setStyle("-fx-font-size: 14px;");
-                    
-                    javafx.scene.control.Label commentLabel = new javafx.scene.control.Label("Review comments:");
-                    commentLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-                    javafx.scene.control.TextArea commentField = new javafx.scene.control.TextArea();
-                    commentField.setPrefHeight(100);
-                    commentField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-                    
-                    // Add to VBox
-                    vbox1.getChildren().addAll(statusLabel, approveBtn, rejectBtn, commentLabel, commentField);
-                    
-                    // Set dialog content
-                    reviewFormDialog.getDialogPane().setContent(vbox1);
-                    
-                    // Add buttons
-                    javafx.scene.control.ButtonType okButtonType = new javafx.scene.control.ButtonType("OK", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
-                    javafx.scene.control.ButtonType cancelButtonType = new javafx.scene.control.ButtonType("Cancel", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
-                    reviewFormDialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
-                    
-                    // Style buttons
-                    javafx.scene.control.Button okButton = (javafx.scene.control.Button) reviewFormDialog.getDialogPane().lookupButton(okButtonType);
-                    okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-                    okButton.setOnMouseEntered(mouseEvent -> okButton.setStyle("-fx-background-color: #45a049; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-                    okButton.setOnMouseExited(mouseEvent -> okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-                    
-                    javafx.scene.control.Button cancelButton = (javafx.scene.control.Button) reviewFormDialog.getDialogPane().lookupButton(cancelButtonType);
-                    cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-                    cancelButton.setOnMouseEntered(mouseEvent -> cancelButton.setStyle("-fx-background-color: #da190b; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-                    cancelButton.setOnMouseExited(mouseEvent -> cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-                    
-                    // Set result converter
-                    reviewFormDialog.setResultConverter(dialogButton -> {
-                        if (dialogButton == okButtonType) {
-                            if (approveBtn.isSelected()) {
-                                return model.JobStatus.PUBLISHED;
-                            } else {
-                                return model.JobStatus.REJECTED;
-                            }
-                        }
-                        return null;
-                    });
-                    
-                    // Show dialog and handle result
-                    java.util.Optional<model.JobStatus> result = reviewFormDialog.showAndWait();
-                    result.ifPresent(status -> {
-                        boolean success = service.JobService.reviewJob(selectedJob.getId(), status, commentField.getText(), user.getId());
-                        if (success) {
-                            javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                            successAlert.setTitle("Success");
-                            successAlert.setHeaderText("Review successful");
-                            successAlert.setContentText("The job review has been completed");
-                            successAlert.showAndWait();
-                            
-                            // Refresh table
-                            java.util.List<model.Job> updatedPendingJobs = new java.util.ArrayList<>();
-                            for (model.Job job : service.JobService.getAllJobs()) {
-                                if (job.getStatus() == model.JobStatus.PENDING) {
-                                    updatedPendingJobs.add(job);
-                                }
-                            }
-                            jobTable.setItems(javafx.collections.FXCollections.observableArrayList(updatedPendingJobs));
-                        } else {
-                            javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                            errorAlert.setTitle("Error");
-                            errorAlert.setHeaderText("Review failed");
-                            errorAlert.setContentText("The job review failed");
-                            errorAlert.showAndWait();
-                        }
-                    });
-                } else {
-                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("No job selected");
-                    alert.setContentText("Please select a job first");
-                    alert.showAndWait();
-                }
-            });
-            
-            // Create VBox containing table and button
-            javafx.scene.layout.VBox dialogContent = new javafx.scene.layout.VBox(10);
-            dialogContent.setPadding(new javafx.geometry.Insets(10));
-            dialogContent.getChildren().addAll(jobTable, reviewBtn);
-            
-            // Set dialog content
-            reviewJobsDialog.getDialogPane().setContent(dialogContent);
-            
-            // Add confirm button
-            reviewJobsDialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
-            
-            // Show dialog
-            reviewJobsDialog.showAndWait();
-        });
-        
-        javafx.scene.control.Button editJobBtn = new javafx.scene.control.Button("Edit Job Information");
-        editJobBtn.setPrefWidth(200);
-        editJobBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
-        editJobBtn.setOnMouseEntered(mouseEvent -> editJobBtn.setStyle("-fx-background-color: #bdbdbd; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"));
-        editJobBtn.setOnMouseExited(mouseEvent -> editJobBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);"));
-        editJobBtn.setOnAction(e -> {
-            // 实现编辑职位信息功能
-            javafx.scene.control.Dialog<Void> editJobDialog = new javafx.scene.control.Dialog<>();
-            editJobDialog.setTitle("Edit Job Information");
-            editJobDialog.setHeaderText("Select a job to edit");
-            editJobDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-            
-            // Create table view
-            javafx.scene.control.TableView<model.Job> jobTable = new javafx.scene.control.TableView<>();
-            jobTable.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4px; -fx-selection-bar: #e3f2fd; -fx-selection-bar-text: #000000;");
-            
-            // Create columns
-            javafx.scene.control.TableColumn<model.Job, String> titleCol = new javafx.scene.control.TableColumn<>("Job Title");
-            titleCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("title"));
-            titleCol.setStyle("-fx-font-weight: bold; -fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.Job, String> departmentCol = new javafx.scene.control.TableColumn<>("Department");
-            departmentCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("department"));
-            departmentCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            // Add columns to table
-            jobTable.getColumns().addAll(titleCol, departmentCol);
-            
-            // Load job data
-            java.util.List<model.Job> jobs = service.JobService.getAllJobs();
-            jobTable.setItems(javafx.collections.FXCollections.observableArrayList(jobs));
-            
-            // Set table to resizable columns
-            jobTable.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
-            
-            // Create edit button
-            javafx.scene.control.Button editBtn = new javafx.scene.control.Button("Edit Selected Job");
-            editBtn.setStyle("-fx-background-color: #ff9800; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            editBtn.setOnMouseEntered(mouseEvent -> editBtn.setStyle("-fx-background-color: #e68a00; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            editBtn.setOnMouseExited(mouseEvent -> editBtn.setStyle("-fx-background-color: #ff9800; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            editBtn.setOnAction(editEvent -> {
-                model.Job selectedJob = jobTable.getSelectionModel().getSelectedItem();
-                if (selectedJob != null) {
-                    // Create edit form
-                    javafx.scene.control.Dialog<java.util.Map<String, Object>> editFormDialog = new javafx.scene.control.Dialog<>();
-                    editFormDialog.setTitle("Edit Job Information");
-                    editFormDialog.setHeaderText("Edit Job: " + selectedJob.getTitle());
-                    editFormDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-                    
-                    // Create form
-                    javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
-                    grid.setHgap(15);
-                    grid.setVgap(15);
-                    grid.setPadding(new javafx.geometry.Insets(20, 20, 10, 20));
-                    grid.setStyle("-fx-background-color: white; -fx-padding: 20px; -fx-border-radius: 8px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 0);");
-                    
-                    // Add form elements
-                    javafx.scene.control.Label titleLabel = new javafx.scene.control.Label("Title:");
-                    titleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-                    javafx.scene.control.TextField titleField = new javafx.scene.control.TextField(selectedJob.getTitle());
-                    titleField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-                    
-                    javafx.scene.control.Label descriptionLabel = new javafx.scene.control.Label("Description:");
-                    descriptionLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
-                    javafx.scene.control.TextArea descriptionField = new javafx.scene.control.TextArea(selectedJob.getDescription());
-                    descriptionField.setPrefHeight(100);
-                    descriptionField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
-                    
-                    // Add to grid
-                    grid.add(titleLabel, 0, 0);
-                    grid.add(titleField, 1, 0);
-                    grid.add(descriptionLabel, 0, 1);
-                    grid.add(descriptionField, 1, 1);
-                    
-                    // Set dialog content
-                    editFormDialog.getDialogPane().setContent(grid);
-                    
-                    // Add buttons
-                    javafx.scene.control.ButtonType okButtonType = new javafx.scene.control.ButtonType("OK", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
-                    javafx.scene.control.ButtonType cancelButtonType = new javafx.scene.control.ButtonType("Cancel", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
-                    editFormDialog.getDialogPane().getButtonTypes().addAll(okButtonType, cancelButtonType);
-                    
-                    // Style buttons
-                    javafx.scene.control.Button okButton = (javafx.scene.control.Button) editFormDialog.getDialogPane().lookupButton(okButtonType);
-                    okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-                    okButton.setOnMouseEntered(mouseEvent -> okButton.setStyle("-fx-background-color: #45a049; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-                    okButton.setOnMouseExited(mouseEvent -> okButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-                    
-                    javafx.scene.control.Button cancelButton = (javafx.scene.control.Button) editFormDialog.getDialogPane().lookupButton(cancelButtonType);
-                    cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-                    cancelButton.setOnMouseEntered(mouseEvent -> cancelButton.setStyle("-fx-background-color: #da190b; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-                    cancelButton.setOnMouseExited(mouseEvent -> cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-                    
-                    // Set result converter
-                    editFormDialog.setResultConverter(dialogButton -> {
-                        if (dialogButton == okButtonType) {
-                            java.util.Map<String, Object> result = new java.util.HashMap<>();
-                            result.put("title", titleField.getText());
-                            result.put("description", descriptionField.getText());
-                            return result;
-                        }
-                        return null;
-                    });
-                    
-                    // Show dialog and handle result
-                    java.util.Optional<java.util.Map<String, Object>> result = editFormDialog.showAndWait();
-                    result.ifPresent(data -> {
-                        selectedJob.setTitle((String) data.get("title"));
-                        selectedJob.setDescription((String) data.get("description"));
-                        
-                        boolean success = service.JobService.updateJob(selectedJob);
-                        if (success) {
-                            javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                            successAlert.setTitle("Success");
-                            successAlert.setHeaderText("Edit successful");
-                            successAlert.setContentText("The job information has been updated successfully");
-                            successAlert.showAndWait();
-                            
-                            // Refresh table
-                            jobTable.setItems(javafx.collections.FXCollections.observableArrayList(service.JobService.getAllJobs()));
-                        } else {
-                            javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                            errorAlert.setTitle("Error");
-                            errorAlert.setHeaderText("Edit failed");
-                            errorAlert.setContentText("Failed to update job information");
-                            errorAlert.showAndWait();
-                        }
-                    });
-                } else {
-                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("No job selected");
-                    alert.setContentText("Please select the job to edit first");
-                    alert.showAndWait();
-                }
-            });
-            
-            // Create VBox containing table and button
-            javafx.scene.layout.VBox dialogContent = new javafx.scene.layout.VBox(10);
-            dialogContent.setPadding(new javafx.geometry.Insets(10));
-            dialogContent.getChildren().addAll(jobTable, editBtn);
-            
-            // Set dialog content
-            editJobDialog.getDialogPane().setContent(dialogContent);
-            
-            // Add confirm button
-            editJobDialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
-            
-            // Show dialog
-            editJobDialog.showAndWait();
-        });
-        
-        javafx.scene.control.Button disableJobBtn = new javafx.scene.control.Button("Toggle Job Availability");
-        disableJobBtn.setPrefWidth(200);
-        disableJobBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
-        disableJobBtn.setOnMouseEntered(mouseEvent -> disableJobBtn.setStyle("-fx-background-color: #bdbdbd; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"));
-        disableJobBtn.setOnMouseExited(mouseEvent -> disableJobBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);"));
-        disableJobBtn.setOnAction(e -> {
-            // 实现禁用/启用职位功能
-            javafx.scene.control.Dialog<Void> toggleJobDialog = new javafx.scene.control.Dialog<>();
-            toggleJobDialog.setTitle("Toggle Job Availability");
-            toggleJobDialog.setHeaderText("Select the job to manage");
-            toggleJobDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-            
-            // Create table view
-            javafx.scene.control.TableView<model.Job> jobTable = new javafx.scene.control.TableView<>();
-            jobTable.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4px; -fx-selection-bar: #e3f2fd; -fx-selection-bar-text: #000000;");
-            
-            // Create columns
-            javafx.scene.control.TableColumn<model.Job, String> titleCol = new javafx.scene.control.TableColumn<>("Job Title");
-            titleCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("title"));
-            titleCol.setStyle("-fx-font-weight: bold; -fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.Job, model.JobStatus> statusCol = new javafx.scene.control.TableColumn<>("Status");
-            statusCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("status"));
-            statusCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            // Add columns to table
-            jobTable.getColumns().addAll(titleCol, statusCol);
-            
-            // Load job data
-            java.util.List<model.Job> jobs = service.JobService.getAllJobs();
-            jobTable.setItems(javafx.collections.FXCollections.observableArrayList(jobs));
-            
-            // Set table to resizable columns
-            jobTable.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
-            
-            // Create toggle status button
-            javafx.scene.control.Button toggleBtn = new javafx.scene.control.Button("Toggle Selected Job Status");
-            toggleBtn.setStyle("-fx-background-color: #9c27b0; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            toggleBtn.setOnMouseEntered(mouseEvent -> toggleBtn.setStyle("-fx-background-color: #7b1fa2; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            toggleBtn.setOnMouseExited(mouseEvent -> toggleBtn.setStyle("-fx-background-color: #9c27b0; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            toggleBtn.setOnAction(toggleEvent -> {
-                model.Job selectedJob = jobTable.getSelectionModel().getSelectedItem();
-                if (selectedJob != null) {
-                    model.JobStatus newStatus;
-                    if (selectedJob.getStatus() == model.JobStatus.PUBLISHED) {
-                        newStatus = model.JobStatus.CLOSED;
-                    } else if (selectedJob.getStatus() == model.JobStatus.CLOSED) {
-                        newStatus = model.JobStatus.PUBLISHED;
-                    } else {
-                        newStatus = model.JobStatus.PUBLISHED;
-                    }
-                    
-                    boolean success = service.JobService.closeJob(selectedJob.getId(), user.getId());
-                    if (success) {
-                        javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                        successAlert.setTitle("Success");
-                        successAlert.setHeaderText("Operation successful");
-                        successAlert.setContentText("Job status has been updated to " + newStatus);
-                        successAlert.showAndWait();
-                        
-                        // Refresh table
-                        jobTable.setItems(javafx.collections.FXCollections.observableArrayList(service.JobService.getAllJobs()));
-                    } else {
-                        javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                        errorAlert.setTitle("Error");
-                        errorAlert.setHeaderText("Operation failed");
-                        errorAlert.setContentText("Failed to update job status");
-                        errorAlert.showAndWait();
-                    }
-                } else {
-                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("No job selected");
-                    alert.setContentText("Please select the job to operate on first");
-                    alert.showAndWait();
-                }
-            });
-            
-            // Create VBox containing table and button
-            javafx.scene.layout.VBox dialogContent = new javafx.scene.layout.VBox(10);
-            dialogContent.setPadding(new javafx.geometry.Insets(10));
-            dialogContent.getChildren().addAll(jobTable, toggleBtn);
-            
-            // Set dialog content
-            toggleJobDialog.getDialogPane().setContent(dialogContent);
-            
-            // Add confirm button
-            toggleJobDialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
-            
-            // Show dialog
-            toggleJobDialog.showAndWait();
-        });
-        
-        javafx.scene.control.Button deleteJobBtn = new javafx.scene.control.Button("Delete Job");
-        deleteJobBtn.setPrefWidth(200);
-        deleteJobBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);");
-        deleteJobBtn.setOnMouseEntered(mouseEvent -> deleteJobBtn.setStyle("-fx-background-color: #bdbdbd; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 2, 0, 0, 1);"));
-        deleteJobBtn.setOnMouseExited(mouseEvent -> deleteJobBtn.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #333333; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);"));
-        deleteJobBtn.setOnAction(e -> {
-            // Implement delete job feature
-            javafx.scene.control.Dialog<Void> deleteJobDialog = new javafx.scene.control.Dialog<>();
-            deleteJobDialog.setTitle("Delete Job");
-            deleteJobDialog.setHeaderText("Select a job to delete");
-            deleteJobDialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
-            
-            // Create table view
-            javafx.scene.control.TableView<model.Job> jobTable = new javafx.scene.control.TableView<>();
-            jobTable.setStyle("-fx-background-color: white; -fx-border-color: #ddd; -fx-border-radius: 4px; -fx-selection-bar: #e3f2fd; -fx-selection-bar-text: #000000;");
-            
-            // Create columns
-            javafx.scene.control.TableColumn<model.Job, String> titleCol = new javafx.scene.control.TableColumn<>("Job Title");
-            titleCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("title"));
-            titleCol.setStyle("-fx-font-weight: bold; -fx-background-color: #f0f0f0;");
-            
-            javafx.scene.control.TableColumn<model.Job, String> departmentCol = new javafx.scene.control.TableColumn<>("Department");
-            departmentCol.setCellValueFactory(new javafx.scene.control.cell.PropertyValueFactory<>("department"));
-            departmentCol.setStyle("-fx-background-color: #f0f0f0;");
-            
-            // Add columns to table
-            jobTable.getColumns().addAll(titleCol, departmentCol);
-            
-            // Load job data
-            java.util.List<model.Job> jobs = service.JobService.getAllJobs();
-            jobTable.setItems(javafx.collections.FXCollections.observableArrayList(jobs));
-            
-            // Set table to resizable columns
-            jobTable.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
-            
-            // Create delete button
-            javafx.scene.control.Button deleteBtn = new javafx.scene.control.Button("Delete Selected Job");
-            deleteBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
-            deleteBtn.setOnMouseEntered(mouseEvent -> deleteBtn.setStyle("-fx-background-color: #da190b; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            deleteBtn.setOnMouseExited(mouseEvent -> deleteBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
-            deleteBtn.setOnAction(deleteEvent -> {
-                model.Job selectedJob = jobTable.getSelectionModel().getSelectedItem();
-                if (selectedJob != null) {
-                    // Confirm deletion
-                    javafx.scene.control.Alert confirmAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.CONFIRMATION);
-                    confirmAlert.setTitle("Confirm Deletion");
-                    confirmAlert.setHeaderText("Delete Job");
-                    confirmAlert.setContentText("Are you sure you want to delete job " + selectedJob.getTitle() + "?");
-                    
-                    java.util.Optional<javafx.scene.control.ButtonType> result = confirmAlert.showAndWait();
-                    if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
-                        // Delete job from data storage
-                        java.util.List<model.Job> allJobs = service.DataStorage.getJobs();
-                        boolean removed = allJobs.removeIf(job -> job.getId().equals(selectedJob.getId()));
-                        if (removed) {
-                            service.DataStorage.saveJobs(allJobs);
-                            service.DataStorage.addLog("DELETE_JOB", "admin", "Job deleted: " + selectedJob.getTitle());
-                            
-                            javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                            successAlert.setTitle("Success");
-                            successAlert.setHeaderText("Delete successful");
-                            successAlert.setContentText("The job has been deleted successfully");
-                            successAlert.showAndWait();
-                            
-                            // Refresh table
-                            jobTable.setItems(javafx.collections.FXCollections.observableArrayList(service.JobService.getAllJobs()));
-                        } else {
-                            javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
-                            errorAlert.setTitle("Error");
-                            errorAlert.setHeaderText("Delete failed");
-                            errorAlert.setContentText("Delete failed");
-                            errorAlert.showAndWait();
-                        }
-                    }
-                } else {
-                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
-                    alert.setTitle("Warning");
-                    alert.setHeaderText("No job selected");
-                    alert.setContentText("Please select the job to delete first");
-                    alert.showAndWait();
-                }
-            });
-            
-            // Create VBox containing table and button
-            javafx.scene.layout.VBox dialogContent = new javafx.scene.layout.VBox(10);
-            dialogContent.setPadding(new javafx.geometry.Insets(10));
-            dialogContent.getChildren().addAll(jobTable, deleteBtn);
-            
-            // Set dialog content
-            deleteJobDialog.getDialogPane().setContent(dialogContent);
-            
-            // Add confirm button
-            deleteJobDialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
-            
-            // Show dialog
-            deleteJobDialog.showAndWait();
-        });
-        
-        // Add buttons to VBox
-        vbox.getChildren().addAll(viewJobsBtn, reviewJobsBtn, editJobBtn, disableJobBtn, deleteJobBtn);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminJobManagement.fxml"));
+            Parent root = loader.load();
+            AdminJobManagementController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
 
-        // Set dialog content
-        dialog.getDialogPane().setContent(vbox);
-
-        // Add confirm button
-        dialog.getDialogPane().getButtonTypes().add(javafx.scene.control.ButtonType.OK);
-
-        // Show dialog
-        dialog.showAndWait();
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Job Management");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open job management", ToastService.ToastType.ERROR);
+        }
     }
+
+
 
     // 处理系统配置按钮点击
     @FXML

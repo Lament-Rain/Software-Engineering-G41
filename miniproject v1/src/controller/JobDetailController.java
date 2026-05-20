@@ -16,6 +16,9 @@ import model.TA;
 import model.UserRole;
 import service.ApplicationService;
 import service.JobService;
+import service.WorkloadService;
+import service.AdminConfigService;
+import model.AdminConfig;
 
 import java.util.List;
 
@@ -124,31 +127,6 @@ public class JobDetailController {
                 applyButton.setVisible(true);
                 applyButton.setDisable(false);
                 applyButton.setText("Apply");
-                if (currentUser instanceof TA) {
-                    TA ta = (TA) currentUser;
-                    List<Application> applications = ApplicationService.getApplicationsByTA(ta.getId());
-                    Application latestApplication = applications.stream()
-                            .filter(app -> app.getJobId().equals(currentJob.getId()))
-                            .max(java.util.Comparator.comparing(Application::getCreatedAt, java.util.Comparator.nullsLast(String::compareTo)))
-                            .orElse(null);
-                    if (latestApplication != null) {
-                        if (latestApplication.getStatus() == model.ApplicationStatus.WITHDRAWN ||
-                                latestApplication.getStatus() == model.ApplicationStatus.REJECTED) {
-                            applyButton.setText("Apply Again");
-                        } else {
-                            applyButton.setText("Applied");
-                            applyButton.setDisable(true);
-                        }
-                    }
-                    if (ApplicationService.isDeadlinePassed(currentJob.getDeadline())) {
-                        applyButton.setText("Closed");
-                        applyButton.setDisable(true);
-                    }
-                    if (ta.getProfileStatus() != ProfileStatus.APPROVED) {
-                        applyButton.setText("Profile Pending Approval");
-                        applyButton.setDisable(true);
-                    }
-                }
                 break;
             case MO:
             case ADMIN:
@@ -167,6 +145,30 @@ public class JobDetailController {
         TA ta = (TA) currentUser;
         if (ta.getProfileStatus() != ProfileStatus.APPROVED) {
             showAlert("Notice", "Your profile has not been approved yet, so you cannot apply for jobs", Alert.AlertType.INFORMATION);
+            return;
+        }
+
+        if (ApplicationService.isDeadlinePassed(currentJob.getDeadline())) {
+            showAlert("Notice", "This job is closed because the deadline has passed.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        List<Application> applications = ApplicationService.getApplicationsByTA(ta.getId());
+        Application latestApplication = applications.stream()
+                .filter(app -> app.getJobId().equals(currentJob.getId()))
+                .max(java.util.Comparator.comparing(Application::getCreatedAt, java.util.Comparator.nullsLast(String::compareTo)))
+                .orElse(null);
+        if (latestApplication != null && latestApplication.getStatus() != model.ApplicationStatus.WITHDRAWN
+                && latestApplication.getStatus() != model.ApplicationStatus.REJECTED) {
+            showAlert("Notice", "You already have an active application for this job.", Alert.AlertType.WARNING);
+            return;
+        }
+
+        AdminConfig config = AdminConfigService.loadConfig();
+        int workload = WorkloadService.getCurrentWorkload(ta);
+        int jobWorkload = parseWorkHours(currentJob.getWorkTime());
+        if (workload + jobWorkload > config.getMaxThreshold()) {
+            showAlert("Notice", "Application not allowed: current workload (" + workload + "h) + this job (" + jobWorkload + "h) exceeds the maximum (" + config.getMaxThreshold() + "h).", Alert.AlertType.WARNING);
             return;
         }
 
@@ -212,7 +214,14 @@ public class JobDetailController {
     @FXML
     private void handleBack() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/JobList.fxml"));
+            String boardFxml = "/fxml/JobList.fxml";
+            if (userRole == UserRole.TA) {
+                boardFxml = "/fxml/TAJobBoard.fxml";
+            } else if (userRole == UserRole.MO) {
+                boardFxml = "/fxml/MOJobBoard.fxml";
+            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(boardFxml));
             Parent root = loader.load();
             JobListController controller = loader.getController();
 
@@ -222,10 +231,9 @@ public class JobDetailController {
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-                
-                // Force layout update to ensure components resize properly
-                root.requestLayout();
-                stage.sizeToScene();
+
+            root.requestLayout();
+            stage.sizeToScene();
             stage.setTitle("BUPT International School TA Recruitment System - Job Directory");
         } catch (Exception e) {
             e.printStackTrace();
@@ -275,6 +283,21 @@ public class JobDetailController {
             e.printStackTrace();
             showAlert("Error", "Logout failed: " + e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+
+    private int parseWorkHours(String workTime) {
+        if (workTime == null || workTime.isBlank()) {
+            return 0;
+        }
+        java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("(\\d+)").matcher(workTime);
+        if (matcher.find()) {
+            try {
+                return Integer.parseInt(matcher.group(1));
+            } catch (NumberFormatException ignored) {
+                return 0;
+            }
+        }
+        return 0;
     }
 
     private void showAlert(String title, String content, Alert.AlertType type) {

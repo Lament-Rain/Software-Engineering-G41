@@ -12,24 +12,21 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
     <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <VBox alignment="CENTER" spacing="32" style="-fx-background-color: transparent; -fx-padding: 48px;">
             <VBox style="-fx-background-color: #ffffff; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 10, 0.2, 0.0, 0.0); -fx-padding: 32px; -fx-max-width: 600px; -fx-pref-width: 600px; -fx-min-height: 800px;">
-                <VBox alignment="CENTER" spacing="8" style="-fx-padding: 0 20px; -fx-margin-bottom: 24px;">
+                <VBox alignment="CENTER" spacing="8" style="-fx-padding: 48px 20px 0 20px; -fx-margin-bottom: 24px;">
                     <Label text="BUPT International School" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 24px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
                     <Label text="TA Recruitment System" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 24px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
                     <Label text="Please log in to access the system" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 16px; -fx-text-fill: #4b5563;" />
                 </VBox>
 
-                <VBox alignment="CENTER" spacing="16" style="-fx-padding: 0 20px; -fx-margin-bottom: 24px;">
-                    <Circle radius="48.0" fill="#f3f4f6" stroke="#e5e7eb" strokeWidth="2" />
-                    <Label text="🎓" style="-fx-font-size: 32px;" />
+                <VBox alignment="CENTER" spacing="0" style="-fx-padding: 20px 20px 20px 20px;">
+                    <Label text="🎓" style="-fx-font-size: 28px;" />
                 </VBox>
 
-                <!-- 修复1：添加 fillWidth="true" -->
                 <VBox spacing="24" style="-fx-pref-width: 100%; -fx-padding: 0 20px; -fx-margin-bottom: 32px;" fillWidth="true">
                     <VBox spacing="4" style="-fx-pref-width: 100%;">
                         <Label text="Username" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
@@ -41,11 +38,9 @@
                         <PasswordField fx:id="passwordField" promptText="Please enter password" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-pref-width: 100%; -fx-min-height: 44px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-border-radius: 8px;" />
                         <Label fx:id="passwordError" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-text-fill: #ef4444;" visible="false" managed="false" />
                     </VBox>
-                    <!-- 修复2：添加 fillWidth="true" -->
                     <VBox spacing="4" style="-fx-pref-width: 100%;" fillWidth="true">
                         <Label text="Role" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
-                        <!-- 修复3：添加 -fx-max-width: Infinity; -->
-                        <ComboBox fx:id="roleComboBox" promptText="Please select your role" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-pref-width: 100%; -fx-max-width: Infinity; -fx-min-height: 44px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-border-radius: 8px;" />
+                        <ComboBox fx:id="roleComboBox" promptText="Please select your role" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-pref-width: 100%; -fx-max-width: Infinity; -fx-min-width: 0; -fx-min-height: 44px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-text-fill: #1f2937; -fx-prompt-text-fill: #9ca3af;" />
                         <Label fx:id="roleError" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-text-fill: #ef4444;" visible="false" managed="false" />
                     </VBox>
 

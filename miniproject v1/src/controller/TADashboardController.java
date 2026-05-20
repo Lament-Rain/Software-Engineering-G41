@@ -9,6 +9,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -18,6 +19,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Region;
+import javafx.scene.input.MouseButton;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import model.TA;
@@ -26,20 +38,27 @@ import model.ProfileStatus;
 import model.Job;
 import model.ApplicationStatus;
 import model.Application;
+import model.UserRole;
 import service.ApplicationService;
 import service.JobService;
 import service.PDFResumeParserService;
 import service.AIService;
-import service.UserService;
-import controller.AIJobMatchingController;
+import service.WorkloadNotificationService;
 import controller.SkillGapAnalysisController;
 import service.SkillGapAnalysisService;
 import service.SkillGapAnalysisService.*;
+import service.WorkloadService;
+import service.AdminConfigService;
+import service.UserService;
+import model.AdminConfig;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
+import java.util.Optional;
 
 public class TADashboardController {
     @FXML
@@ -48,20 +67,44 @@ public class TADashboardController {
     private Label myApplicationsLabel;
     @FXML
     private Label pendingActionsLabel;
+    @FXML
+    private Label workloadLabel;
+    @FXML
+    private Label workloadBandLabel;
+    @FXML
+    private GridPane scheduleGrid;
+    @FXML
+    private VBox pendingTaskListContainer;
     
     private TA user;
     private boolean showWelcomeGuideOnInit = false;
     private Stage stage;
+
+    private static final String STATUS_FREE = "free";
+    private static final String STATUS_OCCUPIED = "occupied";
+    private static final String STATUS_BUSY = "busy";
+    private static final String AVAILABLE_TIME_PREFIX = "SCHEDULE_V1|";
+    private static final String TASK_PREFIX = "TASKS_V1|";
+    private static final String SYSTEM_PROFILE = "Complete Personal Profile";
+    private static final String SYSTEM_RESUME = "Upload Resume";
+    private static final String SYSTEM_SKILL = "Complete Skill Assessment";
+
+    private Region[][] scheduleCells;
+    private String[][] scheduleStatuses;
+    private final Set<Region> selectedCells = new HashSet<>();
+    private final List<TaskItem> dashboardTasks = new ArrayList<>();
     
     public void setUser(TA user) {
         this.user = user;
         initializeDashboard();
+        showPendingWorkloadNotifications();
     }
     
     public void setUser(TA user, boolean showWelcomeGuide) {
         this.user = user;
         this.showWelcomeGuideOnInit = showWelcomeGuide;
         initializeDashboard();
+        showPendingWorkloadNotifications();
     }
     
     public void setStage(Stage stage) {
@@ -83,6 +126,9 @@ public class TADashboardController {
             
             // Load pending tasks
             loadPendingTasks();
+
+            // Initialize 7*14 timetable
+            initializeScheduleGrid();
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR);
@@ -107,31 +153,422 @@ public class TADashboardController {
         // Simplified handling here; actual implementation should calculate based on the user's pending tasks
         int pendingTasksCount = 2; // Mock data
         pendingActionsLabel.setText(String.valueOf(pendingTasksCount));
+
+        int workload = WorkloadService.getCurrentWorkload(user);
+        AdminConfig cfg = AdminConfigService.loadConfig();
+        workloadLabel.setText(String.valueOf(workload));
+        if (workload < cfg.getMidThreshold()) {
+            workloadLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: 700; -fx-text-fill: #16a34a;");
+            workloadBandLabel.setText("Your current workload looks healthy and manageable.");
+            workloadBandLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #16a34a;");
+        } else if (workload < cfg.getHighThreshold()) {
+            workloadLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: 700; -fx-text-fill: #eab308;");
+            workloadBandLabel.setText("Your workload is moderate—plan your tasks carefully.");
+            workloadBandLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #eab308;");
+        } else {
+            workloadLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: 700; -fx-text-fill: #dc2626;");
+            workloadBandLabel.setText("Your workload is high. Consider reducing commitments.");
+            workloadBandLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #dc2626;");
+        }
     }
     
     private void loadPendingTasks() {
-        // Get pending tasks from database or service
-        // For demonstration, we use mock data
-        ObservableList<model.Task> tasks = FXCollections.observableArrayList();
-        
-        // Check user profile status, add complete profile task if not completed
-        if (user.getProfileStatus() == ProfileStatus.DRAFT) {
-            tasks.add(new model.Task("Complete Personal Profile", "2026-03-30", "Pending"));
+        dashboardTasks.clear();
+
+        if (user == null) {
+            pendingActionsLabel.setText("0");
+            renderPendingTasks();
+            return;
         }
-        
-        // Check if user has uploaded resume, add upload resume task if not
+
+        // System tasks (cannot be manually toggled)
+        if (user.getProfileStatus() == ProfileStatus.DRAFT || user.getProfileStatus() == ProfileStatus.PENDING) {
+            String profileTaskTitle = user.getProfileStatus() == ProfileStatus.PENDING
+                    ? "Profile Under Review"
+                    : SYSTEM_PROFILE;
+            dashboardTasks.add(new TaskItem(profileTaskTitle, "2026-04-30", true, false));
+        }
         if (user.getResumePath() == null || user.getResumePath().isEmpty()) {
-            tasks.add(new model.Task("Upload Resume", "2026-03-25", "Pending"));
+            dashboardTasks.add(new TaskItem(SYSTEM_RESUME, "2026-04-25", true, false));
         }
-        
-        // Mock other tasks
-        tasks.add(new model.Task("Apply for Position", "2026-03-28", "Approved"));
-        
-        // Update pending tasks count
-        int pendingTasksCount = tasks.size();
-        pendingActionsLabel.setText(String.valueOf(pendingTasksCount));
+
+        boolean hasSkillInfo = user.getSkills() != null && !user.getSkills().isEmpty()
+                && user.getExperience() != null && !user.getExperience().trim().isEmpty();
+        if (!hasSkillInfo) {
+            dashboardTasks.add(new TaskItem(SYSTEM_SKILL, "2026-05-05", true, false));
+        }
+
+        // User custom tasks
+        dashboardTasks.addAll(loadCustomTasksFromAvailableTime());
+
+        // Remove completed tasks from visible list
+        dashboardTasks.removeIf(TaskItem::isCompleted);
+
+        pendingActionsLabel.setText(String.valueOf(dashboardTasks.size()));
+        renderPendingTasks();
+    }
+
+    private void renderPendingTasks() {
+        if (pendingTaskListContainer == null) {
+            return;
+        }
+
+        pendingTaskListContainer.getChildren().clear();
+        if (dashboardTasks.isEmpty()) {
+            Label empty = new Label("No pending tasks. Great job!");
+            empty.setStyle("-fx-font-size: 13px; -fx-text-fill: #6b7280; -fx-padding: 8 4;");
+            pendingTaskListContainer.getChildren().add(empty);
+            return;
+        }
+
+        for (TaskItem task : dashboardTasks) {
+            HBox row = new HBox();
+            row.setSpacing(12);
+            row.setStyle("-fx-padding: 10px 12px; -fx-background-color: #f8f9fa; -fx-background-radius: 8px;");
+
+            VBox info = new VBox();
+            info.setSpacing(3);
+            Label title = new Label(task.getTitle());
+            title.setStyle("-fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #333333;");
+            Label due = new Label("Due: " + task.getDueDate());
+            due.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
+            info.getChildren().addAll(title, due);
+            HBox.setHgrow(info, javafx.scene.layout.Priority.ALWAYS);
+
+            if (task.isSystemTask()) {
+                Label tag = new Label("PENDING");
+                tag.setStyle("-fx-font-size: 12px; -fx-font-weight: 500; -fx-text-fill: #ff9f43; -fx-background-color: rgba(255, 159, 67, 0.1); -fx-padding: 4 8; -fx-background-radius: 12px;");
+                row.getChildren().addAll(info, tag);
+
+                row.setOnMouseClicked(e -> {
+                    if (e.getClickCount() == 2) {
+                        jumpToTask(task.getTitle());
+                    }
+                });
+            } else {
+                CheckBox done = new CheckBox();
+                done.setStyle("-fx-font-size: 14px;");
+                done.setOnAction(e -> {
+                    task.setCompleted(done.isSelected());
+                    saveCustomTasksToAvailableTime();
+                    loadPendingTasks();
+                });
+                row.getChildren().addAll(info, done);
+            }
+
+            pendingTaskListContainer.getChildren().add(row);
+        }
+    }
+
+    private void jumpToTask(String title) {
+        if (SYSTEM_PROFILE.equals(title) || SYSTEM_SKILL.equals(title) || "Profile Under Review".equals(title)) {
+            handleUpdateProfile(new ActionEvent());
+            return;
+        }
+        if (SYSTEM_RESUME.equals(title)) {
+            handleUploadResume(new ActionEvent());
+        }
+    }
+
+    private List<TaskItem> loadCustomTasksFromAvailableTime() {
+        List<TaskItem> customTasks = new ArrayList<>();
+        String available = user.getAvailableTime();
+        if (available == null || !available.contains(TASK_PREFIX)) {
+            return customTasks;
+        }
+
+        int idx = available.indexOf(TASK_PREFIX);
+        String payload = available.substring(idx + TASK_PREFIX.length());
+        if (payload.trim().isEmpty()) {
+            return customTasks;
+        }
+
+        String[] items = payload.split(";;");
+        for (String item : items) {
+            if (item.trim().isEmpty()) continue;
+            String[] parts = item.split("\\|", 3);
+            if (parts.length < 3) continue;
+            boolean completed = "1".equals(parts[2]);
+            customTasks.add(new TaskItem(parts[0], parts[1], false, completed));
+        }
+        return customTasks;
+    }
+
+    private void saveCustomTasksToAvailableTime() {
+        if (user == null) return;
+
+        List<TaskItem> custom = new ArrayList<>();
+        for (TaskItem t : dashboardTasks) {
+            if (!t.isSystemTask()) {
+                custom.add(t);
+            }
+        }
+
+        StringBuilder taskPart = new StringBuilder(TASK_PREFIX);
+        for (int i = 0; i < custom.size(); i++) {
+            TaskItem t = custom.get(i);
+            taskPart.append(t.getTitle()).append("|").append(t.getDueDate()).append("|").append(t.isCompleted() ? "1" : "0");
+            if (i < custom.size() - 1) taskPart.append(";;");
+        }
+
+        String available = user.getAvailableTime() == null ? "" : user.getAvailableTime();
+        String schedulePart = available;
+        int taskIdx = schedulePart.indexOf(TASK_PREFIX);
+        if (taskIdx >= 0) {
+            schedulePart = schedulePart.substring(0, taskIdx);
+        }
+
+        user.setAvailableTime(schedulePart + taskPart);
+        UserService.updateTAProfile(user);
+    }
+
+
+    private void initializeScheduleGrid() {
+        if (scheduleGrid == null) {
+            return;
+        }
+
+        scheduleGrid.getChildren().clear();
+
+        String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+        String[] periodTimes = {
+                "08:00-08:45", "08:50-09:35", "09:50-10:35", "10:40-11:25",
+                "11:30-12:15", "13:00-13:45", "13:50-14:35", "14:45-15:30",
+                "15:40-16:25", "16:35-17:20", "18:00-18:45", "18:50-19:35",
+                "19:40-20:25", "20:30-21:15"
+        };
+
+        for (int col = 0; col < 7; col++) {
+            Label dayLabel = new Label(days[col]);
+            dayLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #475569;");
+            dayLabel.setMaxWidth(Double.MAX_VALUE);
+            dayLabel.setAlignment(Pos.CENTER);
+            scheduleGrid.add(dayLabel, col + 1, 0);
+        }
+
+        for (int row = 0; row < 14; row++) {
+            Label periodLabel = new Label((row + 1) + "\n" + periodTimes[row]);
+            periodLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #64748b;");
+            periodLabel.setAlignment(Pos.CENTER_RIGHT);
+            periodLabel.setPrefWidth(68);
+            scheduleGrid.add(periodLabel, 0, row + 1);
+        }
+
+        scheduleCells = new Region[14][7];
+        scheduleStatuses = new String[14][7];
+
+        for (int row = 0; row < 14; row++) {
+            for (int col = 0; col < 7; col++) {
+                Region cell = new Region();
+                cell.setMinSize(52, 24);
+                cell.setPrefSize(52, 24);
+
+                final int r = row;
+                final int c = col;
+                scheduleStatuses[row][col] = STATUS_FREE;
+                applyStatusToCell(cell, STATUS_FREE);
+
+                cell.setOnMouseClicked(event -> {
+                    if (event.getButton() != MouseButton.PRIMARY) {
+                        return;
+                    }
+                    handleScheduleCellClick(r, c, event.isControlDown());
+                });
+
+                scheduleCells[row][col] = cell;
+                scheduleGrid.add(cell, col + 1, row + 1);
+            }
+        }
+
+        loadScheduleFromUserAvailableTime();
+    }
+
+    private void handleScheduleCellClick(int row, int col, boolean controlDown) {
+        Region cell = scheduleCells[row][col];
+        if (cell == null) {
+            return;
+        }
+
+        if (controlDown) {
+            toggleCellSelection(cell);
+            return;
+        }
+
+        List<String> options = List.of(STATUS_FREE, STATUS_OCCUPIED, STATUS_BUSY);
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(scheduleStatuses[row][col], options);
+        dialog.setTitle("Set Slot Status");
+        dialog.setHeaderText(selectedCells.isEmpty()
+                ? "Select status for this class slot"
+                : "Select status for selected class slots");
+        dialog.setContentText("Status:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(status -> {
+            if (selectedCells.isEmpty()) {
+                applyStatusByCoordinates(row, col, status);
+            } else {
+                applyStatusToSelectedCells(status);
+            }
+            saveScheduleToUserAvailableTime();
+        });
+    }
+
+    private void toggleCellSelection(Region cell) {
+        if (selectedCells.contains(cell)) {
+            selectedCells.remove(cell);
+            updateCellVisual(cell);
+        } else {
+            selectedCells.add(cell);
+            String originalStyle = cell.getStyle();
+            cell.setStyle(originalStyle + " -fx-border-width: 2; -fx-border-color: #1d4ed8;");
+        }
+    }
+
+    private void applyStatusToSelectedCells(String status) {
+        for (int row = 0; row < 14; row++) {
+            for (int col = 0; col < 7; col++) {
+                Region cell = scheduleCells[row][col];
+                if (selectedCells.contains(cell)) {
+                    applyStatusByCoordinates(row, col, status);
+                }
+            }
+        }
+        clearSelection();
+    }
+
+    private void clearSelection() {
+        for (Region cell : selectedCells) {
+            updateCellVisual(cell);
+        }
+        selectedCells.clear();
+    }
+
+    private void applyStatusByCoordinates(int row, int col, String status) {
+        String normalized = normalizeStatus(status);
+        scheduleStatuses[row][col] = normalized;
+        applyStatusToCell(scheduleCells[row][col], normalized);
+    }
+
+    private void applyStatusToCell(Region cell, String status) {
+        String normalized = normalizeStatus(status);
+        cell.setStyle(styleForStatus(normalized));
+
+        String tooltipText;
+        switch (normalized) {
+            case STATUS_OCCUPIED:
+                tooltipText = "Occupied";
+                break;
+            case STATUS_BUSY:
+                tooltipText = "Busy";
+                break;
+            case STATUS_FREE:
+            default:
+                tooltipText = "Free";
+                break;
+        }
+        Tooltip.install(cell, new Tooltip(tooltipText));
+    }
+
+    private void updateCellVisual(Region cell) {
+        for (int row = 0; row < 14; row++) {
+            for (int col = 0; col < 7; col++) {
+                if (scheduleCells[row][col] == cell) {
+                    applyStatusToCell(cell, scheduleStatuses[row][col]);
+                    return;
+                }
+            }
+        }
+    }
+
+    private String normalizeStatus(String status) {
+        if (status == null) {
+            return STATUS_FREE;
+        }
+        String normalized = status.toLowerCase();
+        if (!STATUS_OCCUPIED.equals(normalized) && !STATUS_BUSY.equals(normalized) && !STATUS_FREE.equals(normalized)) {
+            return STATUS_FREE;
+        }
+        return normalized;
+    }
+
+    private void saveScheduleToUserAvailableTime() {
+        if (user == null || scheduleStatuses == null) {
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder(AVAILABLE_TIME_PREFIX);
+        for (int row = 0; row < 14; row++) {
+            for (int col = 0; col < 7; col++) {
+                sb.append(scheduleStatuses[row][col]);
+                if (!(row == 13 && col == 6)) {
+                    sb.append(',');
+                }
+            }
+        }
+
+        user.setAvailableTime(sb.toString());
+        UserService.updateTAProfile(user);
+    }
+
+    private void loadScheduleFromUserAvailableTime() {
+        if (user == null || user.getAvailableTime() == null || !user.getAvailableTime().startsWith(AVAILABLE_TIME_PREFIX)) {
+            return;
+        }
+
+        String payload = user.getAvailableTime().substring(AVAILABLE_TIME_PREFIX.length());
+        String[] parts = payload.split(",");
+        if (parts.length != 98) {
+            return;
+        }
+
+        int idx = 0;
+        for (int row = 0; row < 14; row++) {
+            for (int col = 0; col < 7; col++) {
+                String status = normalizeStatus(parts[idx++]);
+                scheduleStatuses[row][col] = status;
+                applyStatusToCell(scheduleCells[row][col], status);
+            }
+        }
+    }
+
+    private String styleForStatus(String status) {
+        switch (status) {
+            case STATUS_OCCUPIED:
+                return "-fx-background-color: #fde68a; -fx-background-radius: 4; -fx-border-color: #f59e0b; -fx-border-radius: 4;";
+            case STATUS_BUSY:
+                return "-fx-background-color: #fecaca; -fx-background-radius: 4; -fx-border-color: #ef4444; -fx-border-radius: 4;";
+            case STATUS_FREE:
+            default:
+                return "-fx-background-color: #dbeafe; -fx-background-radius: 4; -fx-border-color: #93c5fd; -fx-border-radius: 4;";
+        }
     }
     
+    private void showPendingWorkloadNotifications() {
+        if (user == null) {
+            return;
+        }
+
+        java.util.List<String> messages = WorkloadNotificationService.consumeNotifications(user.getId());
+        if (messages == null || messages.isEmpty()) {
+            return;
+        }
+
+        StringBuilder content = new StringBuilder();
+        for (int i = 0; i < messages.size(); i++) {
+            content.append(i + 1).append(") ").append(messages.get(i)).append("\n\n");
+        }
+
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Workload Notice");
+        alert.setHeaderText("Message from Admin");
+        alert.setContentText(content.toString().trim());
+        alert.initModality(Modality.APPLICATION_MODAL);
+        if (stage != null) {
+            alert.initOwner(stage);
+        }
+        alert.showAndWait();
+    }
+
     // AI Job Matching
     @FXML
     private void handleAIJobMatching(ActionEvent event) {
@@ -148,21 +585,20 @@ public class TADashboardController {
         
         // Create a non-closeable progress dialog
         Stage progressStage = new Stage();
-        progressStage.setTitle("AI岗位匹配");
+        progressStage.setTitle("AI Job Matching");
         progressStage.initModality(Modality.APPLICATION_MODAL);
         if (stage != null) {
             progressStage.initOwner(stage);
         }
         progressStage.setResizable(false);
         
-        // Disable close button
-        progressStage.setOnCloseRequest(e -> e.consume());
+        // Allow user to close this progress window if needed
         
         VBox vbox = new VBox(20);
         vbox.setPadding(new Insets(30));
         vbox.setAlignment(Pos.CENTER);
         
-        Label progressLabel = new Label("正在分析您的个人信息、技能和简历...");
+        Label progressLabel = new Label("Analyzing your profile, skills, and resume...");
         progressLabel.setAlignment(Pos.CENTER);
         
         ProgressIndicator progressIndicator = new ProgressIndicator();
@@ -193,7 +629,6 @@ public class TADashboardController {
                     applicantInfo.append("Grade: " ).append(user.getGrade()).append("\n");
                     applicantInfo.append("Skills: " ).append(user.getSkills() != null ? String.join(", ", user.getSkills()) : "None").append("\n");
                     applicantInfo.append("Experience: " ).append(user.getExperience() != null ? user.getExperience() : "None").append("\n");
-                    applicantInfo.append("Language Skills: " ).append(user.getLanguageSkills() != null ? user.getLanguageSkills() : "None").append("\n");
                     applicantInfo.append("Other Skills: " ).append(user.getOtherSkills() != null ? user.getOtherSkills() : "None").append("\n");
                     applicantInfo.append("Available Time: " ).append(user.getAvailableTime() != null ? user.getAvailableTime() : "None").append("\n");
                     
@@ -240,12 +675,12 @@ public class TADashboardController {
                     String output = rawOutputHolder[0];
                     
                     // Build recommendation message
-                    message.append("=== AI岗位匹配结果 ===\n\n");
-                    message.append("基于您的个人资料、技能和简历（如有提供），我们已分析您与可用职位的匹配度。\n\n");
+                    message.append("=== AI Job Matching Results ===\n\n");
+                    message.append("Based on your profile, skills, and resume (if provided), we analyzed your fit against available positions.\n\n");
                     
                     // 解析新API返回的结果
                     try {
-                        // 打印API返回的原始内容，以便调试
+                        // Explicitly include AI score in output for MO ranking view
                         System.out.println("API Output: " + output);
                         
                         // 直接尝试解析原始output作为JSON
@@ -319,17 +754,17 @@ public class TADashboardController {
                                     double totalScore = 0.0;
                                     if (result.has("total_score")) {
                                         totalScore = result.get("total_score").getAsDouble();
-                                        matchResult.append("   匹配总分: ").append(String.format("%.2f", totalScore)).append(" 分\n");
+                                        matchResult.append("   Overall Score: ").append(String.format("%.2f", totalScore)).append(" pts\n");
                                     } else if (result.has("score")) {
                                         totalScore = result.get("score").getAsDouble();
-                                        matchResult.append("   匹配分数: ").append(String.format("%.2f", totalScore)).append(" 分\n");
+                                        matchResult.append("   Match Score: ").append(String.format("%.2f", totalScore)).append(" pts\n");
                                     }
                                     
                                     // 提取相似度分数
                                     double similarityScore = 0.0;
                                     if (result.has("similarity_score")) {
                                         similarityScore = result.get("similarity_score").getAsDouble();
-                                        matchResult.append("   相似度: ").append(String.format("%.2f%%", similarityScore * 100)).append("\n");
+                                        matchResult.append("   Similarity: ").append(String.format("%.2f%%", similarityScore * 100)).append("\n");
                                     }
                                     
                                     // 显示详细的匹配维度分数（时间、技能、经验）
@@ -341,19 +776,19 @@ public class TADashboardController {
                                         double timeMatchScore = result.get("time_match_score").getAsDouble();
                                         if (timeMatchScore > 0) {
                                             if (!hasDetailScores) {
-                                                detailScores.append("   详细匹配分数:\n");
+                                                detailScores.append("   Detailed Scoring:\n");
                                                 hasDetailScores = true;
                                             }
-                                            detailScores.append("     时间匹配: ").append(String.format("%.2f", timeMatchScore)).append(" 分\n");
+                                            detailScores.append("     Time Match: ").append(String.format("%.2f", timeMatchScore)).append(" pts\n");
                                         }
                                     } else if (result.has("time_score")) {
                                         double timeMatchScore = result.get("time_score").getAsDouble();
                                         if (timeMatchScore > 0) {
                                             if (!hasDetailScores) {
-                                                detailScores.append("   详细匹配分数:\n");
+                                                detailScores.append("   Detailed Scoring:\n");
                                                 hasDetailScores = true;
                                             }
-                                            detailScores.append("     时间匹配: ").append(String.format("%.2f", timeMatchScore)).append(" 分\n");
+                                            detailScores.append("     Time Match: ").append(String.format("%.2f", timeMatchScore)).append(" pts\n");
                                         }
                                     }
                                     
@@ -362,19 +797,19 @@ public class TADashboardController {
                                         double skillMatchScore = result.get("skill_match_score").getAsDouble();
                                         if (skillMatchScore > 0) {
                                             if (!hasDetailScores) {
-                                                detailScores.append("   详细匹配分数:\n");
+                                                detailScores.append("   Detailed Scoring:\n");
                                                 hasDetailScores = true;
                                             }
-                                            detailScores.append("     技能匹配: ").append(String.format("%.2f", skillMatchScore)).append(" 分\n");
+                                            detailScores.append("     Skill Match: ").append(String.format("%.2f", skillMatchScore)).append(" pts\n");
                                         }
                                     } else if (result.has("skill_score")) {
                                         double skillMatchScore = result.get("skill_score").getAsDouble();
                                         if (skillMatchScore > 0) {
                                             if (!hasDetailScores) {
-                                                detailScores.append("   详细匹配分数:\n");
+                                                detailScores.append("   Detailed Scoring:\n");
                                                 hasDetailScores = true;
                                             }
-                                            detailScores.append("     技能匹配: ").append(String.format("%.2f", skillMatchScore)).append(" 分\n");
+                                            detailScores.append("     Skill Match: ").append(String.format("%.2f", skillMatchScore)).append(" pts\n");
                                         }
                                     }
                                     
@@ -383,19 +818,19 @@ public class TADashboardController {
                                         double experienceMatchScore = result.get("experience_match_score").getAsDouble();
                                         if (experienceMatchScore > 0) {
                                             if (!hasDetailScores) {
-                                                detailScores.append("   详细匹配分数:\n");
+                                                detailScores.append("   Detailed Scoring:\n");
                                                 hasDetailScores = true;
                                             }
-                                            detailScores.append("     经验匹配: ").append(String.format("%.2f", experienceMatchScore)).append(" 分\n");
+                                            detailScores.append("     Experience Match: ").append(String.format("%.2f", experienceMatchScore)).append(" pts\n");
                                         }
                                     } else if (result.has("experience_score")) {
                                         double experienceMatchScore = result.get("experience_score").getAsDouble();
                                         if (experienceMatchScore > 0) {
                                             if (!hasDetailScores) {
-                                                detailScores.append("   详细匹配分数:\n");
+                                                detailScores.append("   Detailed Scoring:\n");
                                                 hasDetailScores = true;
                                             }
-                                            detailScores.append("     经验匹配: ").append(String.format("%.2f", experienceMatchScore)).append(" 分\n");
+                                            detailScores.append("     Experience Match: ").append(String.format("%.2f", experienceMatchScore)).append(" pts\n");
                                         }
                                     }
                                     
@@ -404,7 +839,7 @@ public class TADashboardController {
                                     }
                                     
                                     // 提取匹配理由/分析
-                                    String reason = "无";
+                                    String reason = "N/A";
                                     if (result.has("reason")) {
                                         reason = result.get("reason").getAsString();
                                     } else if (result.has("matching_reason")) {
@@ -414,7 +849,7 @@ public class TADashboardController {
                                     } else if (result.has("description")) {
                                         reason = result.get("description").getAsString();
                                     }
-                                    matchResult.append("   分析依据: ").append(reason).append("\n\n");
+                                    matchResult.append("   Rationale: ").append(reason).append("\n\n");
                                     
                                     message.append(matchResult);
                                 }
@@ -426,22 +861,22 @@ public class TADashboardController {
                                 hasOverallSummary = true;
                                 String overallSummary = jsonObject.get("overall_summary").getAsString();
                                 System.out.println("Overall Summary: " + overallSummary);
-                                message.append("=== 综合推荐 ===\n");
+                                message.append("=== Overall Recommendation ===\n");
                                 message.append(overallSummary).append("\n");
                             } else if (jsonObject.has("summary")) {
                                 hasOverallSummary = true;
                                 String summary = jsonObject.get("summary").getAsString();
-                                message.append("=== 综合推荐 ===\n");
+                                message.append("=== Overall Recommendation ===\n");
                                 message.append(summary).append("\n");
                             } else if (jsonObject.has("recommendation")) {
                                 hasOverallSummary = true;
                                 String recommendation = jsonObject.get("recommendation").getAsString();
-                                message.append("=== 综合推荐 ===\n");
+                                message.append("=== Overall Recommendation ===\n");
                                 message.append(recommendation).append("\n");
                             } else {
                                 System.out.println("No overall_summary field found in JSON");
                                 // 如果没有整体总结，使用默认文本
-                                message.append("=== 综合推荐 ===\n");
+                                message.append("=== Overall Recommendation ===\n");
                                 message.append("基于您的个人资料、技能和简历（如有提供），我们已分析您与可用职位的匹配度。\n");
                             }
                             
@@ -480,7 +915,7 @@ public class TADashboardController {
                             // 检查是否有content字段（可能是备用结构）
                             if (jsonObject.has("content")) {
                                 String content = jsonObject.get("content").getAsString();
-                                message.append("\n=== 补充内容 ===\n");
+                                message.append("\n=== Additional Content ===\n");
                                 message.append(content).append("\n");
                             }
                             
@@ -491,19 +926,19 @@ public class TADashboardController {
                                     com.google.gson.JsonElement resultsElem = jsonObject.get("results");
                                     if (resultsElem.isJsonArray()) {
                                         com.google.gson.JsonArray resultsArray = resultsElem.getAsJsonArray();
-                                        message.append("\n=== 推荐结果 ===\n");
+                                        message.append("\n=== Recommended Results ===\n");
                                         for (int i = 0; i < resultsArray.size(); i++) {
                                             message.append(resultsArray.get(i).toString()).append("\n");
                                         }
                                     } else {
-                                        message.append("\n=== 推荐结果 ===\n");
+                                        message.append("\n=== Recommended Results ===\n");
                                         message.append(resultsElem.toString()).append("\n");
                                     }
                                 }
                                 // 尝试raw_response字段
                                 else if (jsonObject.has("raw_response")) {
                                     String rawResp = jsonObject.get("raw_response").getAsString();
-                                    message.append("\n=== 原始结果 ===\n");
+                                    message.append("\n=== Raw Result ===\n");
                                     message.append(rawResp).append("\n");
                                 }
                             }
@@ -529,7 +964,7 @@ public class TADashboardController {
                                             
                                             int rank = result.has("rank") ? result.get("rank").getAsInt() : (i + 1);
                                             String jobId = result.has("job_id") ? result.get("job_id").getAsString() : (result.has("id") ? result.get("id").getAsString() : "");
-                                            String jobTitle = result.has("job_title") ? result.get("job_title").getAsString() : (result.has("title") ? result.get("title").getAsString() : "未知岗位");
+                                            String jobTitle = result.has("job_title") ? result.get("job_title").getAsString() : (result.has("title") ? result.get("title").getAsString() : "Unknown Position");
                                             double totalScore = result.has("total_score") ? result.get("total_score").getAsDouble() : (result.has("score") ? result.get("score").getAsDouble() : 0.0);
                                             double similarityScore = result.has("similarity_score") ? result.get("similarity_score").getAsDouble() : 0.0;
                                             String reason = result.has("reason") ? result.get("reason").getAsString() : 
@@ -543,7 +978,7 @@ public class TADashboardController {
                                             }
                                             message.append("\n");
                                             if (!jobId.isEmpty()) {
-                                                message.append("   岗位编号: ").append(jobId).append("\n");
+                                                message.append("   Job ID: ").append(jobId).append("\n");
                                             }
                                             message.append("   匹配总分: ").append(String.format("%.2f", totalScore)).append(" 分\n");
                                             if (similarityScore > 0) {
@@ -556,14 +991,14 @@ public class TADashboardController {
                                     
                                     // 获取整体总结
                                     if (jsonObject.has("overall_summary")) {
-                                        message.append("=== 综合推荐 ===\n");
+                                        message.append("=== Overall Recommendation ===\n");
                                         message.append(jsonObject.get("overall_summary").getAsString()).append("\n");
                                     } else if (jsonObject.has("summary")) {
-                                        message.append("=== 综合推荐 ===\n");
+                                        message.append("=== Overall Recommendation ===\n");
                                         message.append(jsonObject.get("summary").getAsString()).append("\n");
                                     } else {
-                                        message.append("=== 综合推荐 ===\n");
-                                        message.append("基于您的个人资料、技能和简历（如有提供），我们已分析您与可用职位的匹配度。\n");
+                                        message.append("=== Overall Recommendation ===\n");
+                                        message.append("Based on your profile, skills, and resume (if provided), we analyzed your fit against available positions.\n");
                                     }
                                 } catch (Exception innerE) {
                                     throw e; // 抛出异常，使用备用方法
@@ -576,7 +1011,7 @@ public class TADashboardController {
                         // 打印异常信息，以便调试
                         e.printStackTrace();
                         // 如果解析失败，使用旧方法作为备用
-                        message.append("无法解析AI结果，使用备用方法。\n\n");
+                        message.append("Unable to parse AI output. Fallback ranking is used.\n\n");
                         
                         // Get top 3 jobs (or fewer if less than 3)
                         List<Job> recommendedJobs = AIService.recommendJobsForTA(user, 3);
@@ -586,29 +1021,29 @@ public class TADashboardController {
                             Job job = recommendedJobs.get(i);
                             double matchScore = AIService.calculateSkillMatch(user, job);
                             message.append((i + 1)).append(". " ).append(job.getTitle()).append(" (" ).append(job.getType()).append(")\n" );
-                            message.append("   部门: " ).append(job.getDepartment()).append("\n" );
-                            message.append("   工作时间: " ).append(job.getWorkTime()).append("\n" );
-                            message.append("   截止日期: " ).append(job.getDeadline()).append("\n" );
-                            message.append("   匹配分数: " ).append(String.format("%.2f%%", matchScore)).append("\n" );
+                            message.append("   Department: ").append(job.getDepartment()).append("\n" );
+                            message.append("   Work Time: ").append(job.getWorkTime()).append("\n" );
+                            message.append("   Deadline: ").append(job.getDeadline()).append("\n" );
+                            message.append("   Match Score: ").append(String.format("%.2f%%", matchScore)).append("\n" );
                             
                             // Add brief analysis
-                            message.append("   分析: ");
+                            message.append("   Analysis: ");
                             if (matchScore >= 90) {
-                                message.append("完美匹配！您的技能和经验与该岗位完全契合。");
+                                message.append("Excellent match! Your skills and experience align very well with this role.");
                             } else if (matchScore >= 70) {
-                                message.append("良好匹配。您具备大部分所需技能和经验。");
+                                message.append("Good match. You meet most of the required skills and experience.");
                             } else if (matchScore >= 50) {
-                                message.append("中等匹配。您具备部分所需技能，但还有提升空间。");
+                                message.append("Moderate match. You meet part of the requirements, with room to improve.");
                             } else {
-                                message.append("匹配度有限。建议您获取更多相关技能和经验。");
+                                message.append("Limited match. Consider improving relevant skills and experience.");
                             }
                             message.append("\n\n");
                         }
                         
                         // Add overall recommendation
                         message.append("=== 综合推荐 ===\n");
-                        message.append("基于您的个人资料，我们推荐您申请上述职位。\n");
-                        message.append("如果您上传了简历，我们也会在分析中考虑其内容。\n");
+                        message.append("Based on your profile, we recommend applying to the positions above.\n");
+                        message.append("If you uploaded a resume, its content is also considered in the analysis.\n");
                     }
                     
                     hasJobs[0] = true;
@@ -621,7 +1056,7 @@ public class TADashboardController {
                     if (hasJobs[0]) {
                         // Create a resizable results window
                         Stage resultsStage = new Stage();
-                        resultsStage.setTitle("AI岗位匹配结果");
+                        resultsStage.setTitle("AI Job Matching Results");
                         resultsStage.initModality(Modality.APPLICATION_MODAL);
                         if (stage != null) {
                             resultsStage.initOwner(stage);
@@ -642,11 +1077,11 @@ public class TADashboardController {
                         buttonBox.setAlignment(Pos.CENTER);
                         
                         // 查看原始JSON按钮
-                        Button showRawJsonButton = new Button("查看原始JSON");
+                        Button showRawJsonButton = new Button("View Raw JSON");
                         showRawJsonButton.setOnAction(e -> {
                             // 创建显示原始JSON的窗口
                             Stage rawJsonStage = new Stage();
-                            rawJsonStage.setTitle("原始API响应JSON");
+                            rawJsonStage.setTitle("Raw API Response JSON");
                             rawJsonStage.initModality(Modality.APPLICATION_MODAL);
                             if (stage != null) {
                                 rawJsonStage.initOwner(stage);
@@ -661,11 +1096,11 @@ public class TADashboardController {
                             rawJsonTextArea.setWrapText(true);
                             rawJsonTextArea.setPrefSize(750, 500);
                             
-                            Button rawJsonCloseButton = new Button("关闭");
+                            Button rawJsonCloseButton = new Button("Close");
                             rawJsonCloseButton.setOnAction(ev -> rawJsonStage.close());
                             
                             // 添加复制JSON按钮
-                            Button copyJsonButton = new Button("复制JSON");
+                            Button copyJsonButton = new Button("Copy JSON");
                             copyJsonButton.setOnAction(ev -> {
                                 javafx.scene.input.Clipboard clipboard = javafx.scene.input.Clipboard.getSystemClipboard();
                                 javafx.scene.input.ClipboardContent content = new javafx.scene.input.ClipboardContent();
@@ -674,9 +1109,9 @@ public class TADashboardController {
                                 
                                 // 显示复制成功的提示
                                 Alert copyAlert = new Alert(AlertType.INFORMATION);
-                                copyAlert.setTitle("提示");
+                                copyAlert.setTitle("Notice");
                                 copyAlert.setHeaderText(null);
-                                copyAlert.setContentText("JSON已复制到剪贴板！");
+                                copyAlert.setContentText("JSON has been copied to clipboard.");
                                 copyAlert.initModality(Modality.APPLICATION_MODAL);
                                 copyAlert.showAndWait();
                             });
@@ -686,7 +1121,7 @@ public class TADashboardController {
                             rawJsonButtonBox.getChildren().addAll(copyJsonButton, rawJsonCloseButton);
                             
                             rawJsonVbox.getChildren().addAll(
-                                new Label("API返回的原始JSON响应："),
+                                new Label("Raw JSON response from API:"),
                                 rawJsonTextArea,
                                 rawJsonButtonBox
                             );
@@ -698,7 +1133,7 @@ public class TADashboardController {
                         });
                         
                         // 关闭按钮
-                        Button closeButton = new Button("关闭");
+                        Button closeButton = new Button("Close");
                         closeButton.setOnAction(e -> resultsStage.close());
                         
                         buttonBox.getChildren().addAll(showRawJsonButton, closeButton);
@@ -711,9 +1146,9 @@ public class TADashboardController {
                         resultsStage.show();
                     } else {
                         Alert alert3 = new Alert(AlertType.INFORMATION);
-                        alert3.setTitle("信息");
-                        alert3.setHeaderText("AI岗位匹配");
-                        alert3.setContentText("没有可用的职位推荐！");
+                        alert3.setTitle("Information");
+                        alert3.setHeaderText("AI Job Matching");
+                        alert3.setContentText("No available job recommendations.");
                         alert3.initModality(Modality.APPLICATION_MODAL);
                         alert3.showAndWait();
                     }
@@ -724,9 +1159,9 @@ public class TADashboardController {
                 javafx.application.Platform.runLater(() -> {
                     progressStage.close();
                     Alert alert5 = new Alert(Alert.AlertType.ERROR);
-                    alert5.setTitle("错误");
-                    alert5.setHeaderText("AI岗位匹配失败");
-                    alert5.setContentText("执行AI岗位匹配失败: " + e.getMessage());
+                    alert5.setTitle("Error");
+                    alert5.setHeaderText("AI Job Matching Failed");
+                    alert5.setContentText("AI job matching failed: " + e.getMessage());
                     alert5.initModality(Modality.APPLICATION_MODAL);
                     alert5.showAndWait();
                 });
@@ -1284,6 +1719,16 @@ public class TADashboardController {
             if (stage == null && event.getSource() instanceof Button) {
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             }
+            if (stage == null) {
+                if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
+                    stage = (Stage) pendingTaskListContainer.getScene().getWindow();
+                } else if (openPositionsLabel != null && openPositionsLabel.getScene() != null) {
+                    stage = (Stage) openPositionsLabel.getScene().getWindow();
+                }
+            }
+            if (stage == null) {
+                throw new IllegalStateException("Stage is not available.");
+            }
             
             controller.setStage(stage);
             
@@ -1318,6 +1763,16 @@ public class TADashboardController {
             Stage stage = this.stage;
             if (stage == null && event.getSource() instanceof Button) {
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            }
+            if (stage == null) {
+                if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
+                    stage = (Stage) pendingTaskListContainer.getScene().getWindow();
+                } else if (openPositionsLabel != null && openPositionsLabel.getScene() != null) {
+                    stage = (Stage) openPositionsLabel.getScene().getWindow();
+                }
+            }
+            if (stage == null) {
+                throw new IllegalStateException("Stage is not available.");
             }
             
             controller.setStage(stage);
@@ -1383,11 +1838,51 @@ public class TADashboardController {
         }
     }
     
+    // Handle jobs card click
+    @FXML
+    private void handleJobsCardClick(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAJobBoard.fxml"));
+            Parent root = loader.load();
+            JobListController controller = loader.getController();
+            controller.setUser(user, UserRole.TA);
+
+            Stage currentStage = this.stage;
+            if (currentStage == null && event != null && event.getSource() instanceof javafx.scene.Node) {
+                currentStage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            }
+            if (currentStage == null) {
+                throw new IllegalStateException("Stage is not available for navigation.");
+            }
+
+            controller.setStage(currentStage);
+            Scene scene = new Scene(root, currentStage.getWidth(), currentStage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            currentStage.setScene(scene);
+            currentStage.setTitle("BUPT International School TA Recruitment System - Job Board");
+            currentStage.centerOnScreen();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Page Loading Failed");
+            alert.setContentText("Failed to load job board page, please try again later.");
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        }
+    }
+
+    // Handle user card click
+    @FXML
+    private void handleUserCardClick(MouseEvent event) {
+        handleMyApplicationsClick(event);
+    }
+
     // Handle open positions card click
     @FXML
     private void handleOpenPositionsClick(MouseEvent event) {
-        // Show job list
-        handleViewJobs(new ActionEvent());
+        // Keep legacy behavior for compatibility
+        handleJobsCardClick(event);
     }
     
     // Handle my applications card click
@@ -1445,15 +1940,43 @@ public class TADashboardController {
     // Handle application management button click
     @FXML
     private void handleApplicationManagement(ActionEvent event) {
-        // Show my applications
-        handleMyApplicationsClick(new MouseEvent(null, 0, 0, 0, 0, null, 0, false, false, false, false, false, false, false, false, false, false, null));
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
+            Parent root = loader.load();
+            TAApplicationHistoryController controller = loader.getController();
+            controller.setUser(user);
+
+            Stage currentStage = this.stage;
+            if (currentStage == null && event.getSource() instanceof javafx.scene.Node) {
+                currentStage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            }
+            if (currentStage == null) {
+                throw new IllegalStateException("Stage is not available for navigation.");
+            }
+
+            controller.setStage(currentStage);
+
+            Scene scene = new Scene(root, currentStage.getWidth(), currentStage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            currentStage.setScene(scene);
+            currentStage.setTitle("BUPT International School TA Recruitment System - Application History");
+            currentStage.centerOnScreen();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Page Loading Failed");
+            alert.setContentText("Failed to load application history page, please try again later.");
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        }
     }
 
     // Handle job requirements button click
     @FXML
     private void handleJobRequirements(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/JobList.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAJobBoard.fxml"));
             Parent root = loader.load();
             JobListController controller = loader.getController();
 
@@ -1463,6 +1986,16 @@ public class TADashboardController {
             Stage stage = this.stage;
             if (stage == null && event.getSource() instanceof Button) {
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            }
+            if (stage == null) {
+                if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
+                    stage = (Stage) pendingTaskListContainer.getScene().getWindow();
+                } else if (openPositionsLabel != null && openPositionsLabel.getScene() != null) {
+                    stage = (Stage) openPositionsLabel.getScene().getWindow();
+                }
+            }
+            if (stage == null) {
+                throw new IllegalStateException("Stage is not available.");
             }
 
             controller.setStage(stage);
@@ -1497,6 +2030,16 @@ public class TADashboardController {
             if (stage == null && event.getSource() instanceof Button) {
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             }
+            if (stage == null) {
+                if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
+                    stage = (Stage) pendingTaskListContainer.getScene().getWindow();
+                } else if (openPositionsLabel != null && openPositionsLabel.getScene() != null) {
+                    stage = (Stage) openPositionsLabel.getScene().getWindow();
+                }
+            }
+            if (stage == null) {
+                throw new IllegalStateException("Stage is not available.");
+            }
             
             controller.setStage(stage);
             
@@ -1521,12 +2064,51 @@ public class TADashboardController {
     // Handle add task button click
     @FXML
     private void handleAddTask(ActionEvent event) {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Add Task");
-        alert.setHeaderText("Task Management");
-        alert.setContentText("Task addition functionality is under development. Please check back later.");
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.showAndWait();
+        if (user == null) {
+            return;
+        }
+
+        Dialog<TaskItem> dialog = new Dialog<>();
+        dialog.setTitle("Add Task");
+        dialog.setHeaderText("Create a custom task");
+
+        ButtonType saveType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(saveType, ButtonType.CANCEL);
+
+        GridPane pane = new GridPane();
+        pane.setHgap(10);
+        pane.setVgap(10);
+        pane.setPadding(new Insets(10));
+
+        TextField titleField = new TextField();
+        titleField.setPromptText("Task title");
+        DatePicker duePicker = new DatePicker();
+        CheckBox completedBox = new CheckBox("Completed");
+
+        pane.add(new Label("Title:"), 0, 0);
+        pane.add(titleField, 1, 0);
+        pane.add(new Label("Due date:"), 0, 1);
+        pane.add(duePicker, 1, 1);
+        pane.add(completedBox, 1, 2);
+
+        dialog.getDialogPane().setContent(pane);
+        dialog.setResultConverter(btn -> {
+            if (btn == saveType) {
+                String title = titleField.getText() == null ? "" : titleField.getText().trim();
+                if (title.isEmpty() || duePicker.getValue() == null) {
+                    return null;
+                }
+                return new TaskItem(title, duePicker.getValue().toString(), false, completedBox.isSelected());
+            }
+            return null;
+        });
+
+        Optional<TaskItem> result = dialog.showAndWait();
+        result.ifPresent(item -> {
+            dashboardTasks.add(item);
+            saveCustomTasksToAvailableTime();
+            loadPendingTasks();
+        });
     }
     
     // 从输出中提取JSON部分
@@ -1555,5 +2137,25 @@ public class TADashboardController {
         } else {
             return output; // 没有找到完整的JSON，返回原始输出
         }
+    }
+
+    private static class TaskItem {
+        private final String title;
+        private final String dueDate;
+        private final boolean systemTask;
+        private boolean completed;
+
+        TaskItem(String title, String dueDate, boolean systemTask, boolean completed) {
+            this.title = title;
+            this.dueDate = dueDate;
+            this.systemTask = systemTask;
+            this.completed = completed;
+        }
+
+        public String getTitle() { return title; }
+        public String getDueDate() { return dueDate; }
+        public boolean isSystemTask() { return systemTask; }
+        public boolean isCompleted() { return completed; }
+        public void setCompleted(boolean completed) { this.completed = completed; }
     }
 }

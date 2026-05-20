@@ -41,8 +41,13 @@ import javafx.event.ActionEvent;
 
 public class MOApplicationReviewController {
 
+    private static final String SORT_AI = "AI Ranking (Recommendation Score)";
+    private static final String SORT_TIME = "Application Time (Newest First)";
+
     @FXML
     private ComboBox<MOJobReviewViewModel> jobSelector;
+    @FXML
+    private ComboBox<String> sortModeSelector;
     @FXML
     private Label applicantCountLabel;
     @FXML
@@ -119,6 +124,14 @@ public class MOApplicationReviewController {
                 loadApplicants();
             }
         });
+
+        sortModeSelector.setItems(FXCollections.observableArrayList(SORT_AI, SORT_TIME));
+        sortModeSelector.getSelectionModel().select(SORT_AI);
+        sortModeSelector.getSelectionModel().selectedItemProperty().addListener((obs, oldMode, newMode) -> {
+            if (newMode != null && selectedJob != null) {
+                loadApplicants();
+            }
+        });
     }
 
     public void setUser(MO user) {
@@ -154,6 +167,7 @@ public class MOApplicationReviewController {
             features.add(new SearchBarController.Feature("Application Review", () -> handleBackAction()));
             features.add(new SearchBarController.Feature("My Jobs", () -> handleViewMyJobs(new ActionEvent())));
             features.add(new SearchBarController.Feature("Job List", () -> handleViewAllJobs(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Personal Center", () -> handlePersonalCenter(new ActionEvent())));
 
             // Load search bar
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SearchBar.fxml"));
@@ -281,7 +295,7 @@ public class MOApplicationReviewController {
     @FXML
     private void handleViewAllJobs(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/JobList.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOJobBoard.fxml"));
             Parent root = loader.load();
             JobListController controller = loader.getController();
             controller.setUser(user, model.UserRole.MO);
@@ -379,7 +393,7 @@ public class MOApplicationReviewController {
                                     ta.getDepartment() != null ? ta.getDepartment() : "-",
                                     formatDate(app.getCreatedAt()),
                                     app.getStatus() != null ? app.getStatus().name() : "-",
-                                    String.format("%.2f%%", app.getMatchScore()),
+                                    String.format("%.2f%%", ApplicationService.calculateMatchScoreForReview(app.getTaId(), app.getJobId())),
                                     ta.getResumePath() != null && !ta.getResumePath().isEmpty() ? "Uploaded" : "Not uploaded",
                                     ta.getExperience() != null ? ta.getExperience() : "",
                                     app.getCoverLetter() != null ? app.getCoverLetter() : "",
@@ -391,7 +405,7 @@ public class MOApplicationReviewController {
 
                 javafx.application.Platform.runLater(() -> {
                     allApplicants.clear();
-                    allApplicants.addAll(rows);
+                    allApplicants.addAll(sortApplicants(rows));
 
                     applicantsTable.setItems(FXCollections.observableArrayList(allApplicants));
                     selectedJobLabel.setText(selectedJob.getTitle());
@@ -651,37 +665,121 @@ public class MOApplicationReviewController {
         handleBackAction();
     }
 
-    private void handleBackAction() {
-        // If we can go back, do so; otherwise, go to dashboard
-        if (service.NavigationHistory.getInstance().canGoBack()) {
-            service.NavigationHistory.getInstance().goBack();
-        } else {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
-                Parent root = loader.load();
-                MODashboardController controller = loader.getController();
-                controller.setUser(user);
+    @FXML
+    private void handlePersonalCenter(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOProfileView.fxml"));
+            Parent root = loader.load();
+            MOProfileViewController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
 
-                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                stage.setScene(scene);
-                    
-                    // Force layout update to ensure components resize properly
-                    root.requestLayout();
-                    stage.sizeToScene();
-                stage.setTitle("BUPT International School TA Recruitment System - MO Dashboard");
-            } catch (Exception e) {
-                e.printStackTrace();
-                ToastService.showToast(stage, "Failed to go back: " + e.getMessage(), ToastService.ToastType.ERROR);
-            }
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - MO Personal Center");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to load personal center page", ToastService.ToastType.ERROR);
         }
     }
 
+    private void handleBackAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
+            Parent root = loader.load();
+            MODashboardController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            root.requestLayout();
+            stage.sizeToScene();
+            stage.setTitle("BUPT International School TA Recruitment System - MO Dashboard");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to go back: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            Parent root = loader.load();
+            LoginController controller = loader.getController();
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Logout failed: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+    private List<ApplicantReviewViewModel> sortApplicants(List<ApplicantReviewViewModel> rows) {
+        if (rows == null || rows.isEmpty()) {
+            return rows;
+        }
+
+        String mode = sortModeSelector == null ? SORT_AI : sortModeSelector.getValue();
+        java.util.Comparator<ApplicantReviewViewModel> comparator;
+
+        if (SORT_TIME.equals(mode)) {
+            comparator = java.util.Comparator.comparing(
+                    (ApplicantReviewViewModel v) -> parseSubmittedAt(v.getSubmittedAt()),
+                    java.util.Comparator.nullsLast(java.util.Comparator.naturalOrder())
+            ).reversed();
+        } else {
+            comparator = java.util.Comparator.comparingDouble(this::parseMatchScore).reversed();
+        }
+
+        return rows.stream().sorted(comparator).collect(Collectors.toList());
+    }
+
+    private double parseMatchScore(ApplicantReviewViewModel applicant) {
+        if (applicant == null || applicant.getMatchScore() == null) {
+            return -1.0;
+        }
+        String raw = applicant.getMatchScore().replace("%", "").trim();
+        try {
+            return Double.parseDouble(raw);
+        } catch (NumberFormatException e) {
+            return -1.0;
+        }
+    }
+
+    private java.time.LocalDateTime parseSubmittedAt(String submittedAt) {
+        if (submittedAt == null || submittedAt.isBlank() || "-".equals(submittedAt)) {
+            return null;
+        }
+        String normalized = submittedAt.trim().replace('T', ' ');
+        try {
+            return java.time.LocalDateTime.parse(normalized.replace(' ', 'T'));
+        } catch (Exception ignored) {
+        }
+        try {
+            return java.time.LocalDate.parse(normalized).atStartOfDay();
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
     private String formatDate(String value) {
-        if (value == null || value.isEmpty()) {
+        if (value == null || value.isEmpty() || "null".equalsIgnoreCase(value)) {
             return "-";
         }
-        return value.replace('T', ' ');
+        String normalized = value.replace('T', ' ').trim();
+        int dotIndex = normalized.indexOf('.');
+        if (dotIndex > 0) {
+            normalized = normalized.substring(0, dotIndex);
+        }
+        return normalized;
     }
 
     private void showAlert(Alert.AlertType type, String title, String content) {

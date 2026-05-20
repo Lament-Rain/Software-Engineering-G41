@@ -166,14 +166,20 @@ public class RegisterController {
     }
 
     private boolean validatePhoneField() {
-        FormValidationService.ValidationResult result = FormValidationService.validateRequired(phoneField.getText(), "Phone number");
-        if (!result.isValid()) {
-            FormValidationService.showError(phoneField, phoneError, result.getErrorMessage());
+        String phone = phoneField.getText();
+        FormValidationService.ValidationResult required = FormValidationService.validateRequired(phone, "Phone number");
+        if (!required.isValid()) {
+            FormValidationService.showError(phoneField, phoneError, required.getErrorMessage());
             return false;
-        } else {
-            FormValidationService.clearError(phoneField, phoneError);
-            return true;
         }
+
+        if (!phone.matches("^1\\d{10}$")) {
+            FormValidationService.showError(phoneField, phoneError, "Phone number must be 11 digits and start with 1");
+            return false;
+        }
+
+        FormValidationService.clearError(phoneField, phoneError);
+        return true;
     }
 
     private boolean validateDepartmentField() {
@@ -316,32 +322,26 @@ public class RegisterController {
             LoginController controller = loader.getController();
             controller.setStage(stage);
 
-            // Save current window state
             boolean isFullScreen = stage.isFullScreen();
             double currentWidth = stage.getWidth();
             double currentHeight = stage.getHeight();
-            
-            // Create new scene without hardcoded size
+
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            
-            // Apply saved window state first
+
             if (isFullScreen) {
                 stage.setFullScreen(true);
             } else if (currentWidth > 0 && currentHeight > 0) {
                 stage.setWidth(currentWidth);
                 stage.setHeight(currentHeight);
             } else {
-                // Default size if no previous size
                 stage.setWidth(800);
                 stage.setHeight(600);
             }
-            
-            // Set scene first
+
             stage.setScene(scene);
             stage.setTitle("BUPT International School TA Recruitment System - Login");
-                
-            // Force layout update to ensure components resize properly
+
             root.requestLayout();
             stage.sizeToScene();
         } catch (Exception e) {

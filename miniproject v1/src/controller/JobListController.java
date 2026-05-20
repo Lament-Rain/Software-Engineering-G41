@@ -13,8 +13,10 @@ import model.MO;
 import model.Admin;
 import model.TA;
 import model.UserRole;
+import model.User;
 import service.JobService;
 import service.ApplicationService;
+import service.UserService;
 import service.KeyboardShortcutService;
 import service.ToastService;
 import javafx.collections.FXCollections;
@@ -73,6 +75,7 @@ public class JobListController {
         typeFilter.setValue("All");
 
         setupTableColumns();
+        jobsTable.setFixedCellSize(36);
 
         searchField.setOnAction(event -> handleSearchAction());
         departmentFilter.setOnAction(event -> handleSearchAction());
@@ -234,6 +237,7 @@ public class JobListController {
                         e.printStackTrace();
                     }
                 }));
+                features.add(new SearchBarController.Feature("Personal Center", this::handlePersonalCenter));
                 features.add(new SearchBarController.Feature("Job List", () -> handleBack()));
             } else if (userRole == UserRole.ADMIN) {
                 features.add(new SearchBarController.Feature("User Management", () -> {
@@ -351,38 +355,52 @@ public class JobListController {
     private void setupTableColumns() {
         TableColumn<JobListViewModel, String> titleCol = new TableColumn<>("Job Title");
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
-        titleCol.setPrefWidth(200);
+        titleCol.setPrefWidth(180);
 
         TableColumn<JobListViewModel, String> departmentCol = new TableColumn<>("Department");
         departmentCol.setCellValueFactory(new PropertyValueFactory<>("department"));
-        departmentCol.setPrefWidth(120);
+        departmentCol.setPrefWidth(140);
+
+        TableColumn<JobListViewModel, String> moCol = new TableColumn<>("MO");
+        moCol.setCellValueFactory(new PropertyValueFactory<>("publisher"));
+        moCol.setPrefWidth(130);
 
         TableColumn<JobListViewModel, String> typeCol = new TableColumn<>("Job Type");
         typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
-        typeCol.setPrefWidth(120);
+        typeCol.setPrefWidth(130);
 
         TableColumn<JobListViewModel, String> requirementsCol = new TableColumn<>("Requirements");
         requirementsCol.setCellValueFactory(new PropertyValueFactory<>("requirements"));
-        requirementsCol.setPrefWidth(250);
-
-        TableColumn<JobListViewModel, String> publishDateCol = new TableColumn<>("Published Date");
-        publishDateCol.setCellValueFactory(new PropertyValueFactory<>("publishDate"));
-        publishDateCol.setPrefWidth(120);
+        requirementsCol.setPrefWidth(760);
+        requirementsCol.setCellFactory(col -> new TableCell<JobListViewModel, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
+                    setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
+                    setTooltip(null);
+                }
+            }
+        });
 
         TableColumn<JobListViewModel, String> deadlineCol = new TableColumn<>("Deadline");
         deadlineCol.setCellValueFactory(new PropertyValueFactory<>("deadline"));
         deadlineCol.setPrefWidth(120);
 
-        TableColumn<JobListViewModel, String> publisherCol = new TableColumn<>("Publisher");
-        publisherCol.setCellValueFactory(new PropertyValueFactory<>("publisher"));
-        publisherCol.setPrefWidth(100);
-
         TableColumn<JobListViewModel, String> statusCol = new TableColumn<>("Status");
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-        statusCol.setPrefWidth(80);
+        statusCol.setPrefWidth(100);
+
+        TableColumn<JobListViewModel, String> headcountCol = new TableColumn<>("Headcount");
+        headcountCol.setCellValueFactory(new PropertyValueFactory<>("headcount"));
+        headcountCol.setPrefWidth(110);
 
         jobsTable.getColumns().clear();
-        jobsTable.getColumns().addAll(titleCol, departmentCol, typeCol, requirementsCol, publishDateCol, deadlineCol, publisherCol, statusCol);
+        jobsTable.getColumns().addAll(titleCol, departmentCol, moCol, typeCol, requirementsCol, deadlineCol, statusCol, headcountCol);
+        jobsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void initializeView() {
@@ -419,24 +437,15 @@ public class JobListController {
         ObservableList<JobListViewModel> jobList = FXCollections.observableArrayList();
 
         for (Job job : jobs) {
-            String publisher = job.getPublisherName();
-            if (publisher == null || publisher.isEmpty()) {
-                if ("ADMIN".equals(job.getPublisherType())) {
-                    publisher = "Administrator";
-                } else {
-                    publisher = "Module Organizer";
-                }
-            }
+            String publisher = resolveMoAccount(job);
 
             String publishDate = formatDisplayDate(job.getCreatedAt());
             String deadline = formatDisplayDate(job.getDeadline());
 
             String requirements = job.getDescription();
-            if (requirements != null && requirements.length() > 50) {
-                requirements = requirements.substring(0, 50) + "...";
-            }
 
             String status = job.getStatus() != null ? job.getStatus().toString() : "UNKNOWN";
+            String headcount = job.getCurrentNum() + " / " + job.getRecruitNum();
 
             jobList.add(new JobListViewModel(
                 job.getId(),
@@ -448,12 +457,14 @@ public class JobListController {
                 deadline,
                 publisher,
                 status,
+                headcount,
                 job
             ));
         }
 
         allJobs.setAll(jobList);
         jobsTable.setItems(FXCollections.observableArrayList(allJobs));
+        jobsTable.refresh();
         updateResultCount(jobList.size());
 
         ToastService.showToast(stage, "Loaded " + jobList.size() + " job(s)", ToastService.ToastType.INFO);
@@ -489,6 +500,7 @@ public class JobListController {
         }
 
         jobsTable.setItems(filteredList);
+        jobsTable.refresh();
         updateResultCount(filteredList.size());
 
         if (filteredList.isEmpty()) {
@@ -580,6 +592,109 @@ public class JobListController {
     }
 
     @FXML
+    private void handleJobRequirements() {
+        // Already on TA job requirements page
+    }
+
+    @FXML
+    private void handleApplicationManagement() {
+        if (!(currentUser instanceof TA)) {
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
+            Parent root = loader.load();
+            TAApplicationHistoryController controller = loader.getController();
+            controller.setUser((TA) currentUser);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Application History");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open application management: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handlePersonalCenter() {
+        try {
+            if (currentUser instanceof TA) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAProfileView.fxml"));
+                Parent root = loader.load();
+                TAProfileViewController controller = loader.getController();
+                controller.setUser((TA) currentUser);
+                controller.setStage(stage);
+
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - Personal Center");
+            } else if (currentUser instanceof MO) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOProfileView.fxml"));
+                Parent root = loader.load();
+                MOProfileViewController controller = loader.getController();
+                controller.setUser((MO) currentUser);
+                controller.setStage(stage);
+
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - MO Personal Center");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open personal center: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handleReviewApplications() {
+        if (!(currentUser instanceof MO)) {
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOApplicationReview.fxml"));
+            Parent root = loader.load();
+            MOApplicationReviewController controller = loader.getController();
+            controller.setUser((MO) currentUser);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Application Review");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open application review: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handleMyJobs() {
+        if (!(currentUser instanceof MO)) {
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOMyJobs.fxml"));
+            Parent root = loader.load();
+            MOMyJobsController controller = loader.getController();
+            controller.setUser((MO) currentUser);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - My Jobs");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open my jobs: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+    @FXML
     private void handleBack() {
         try {
             String fxmlPath;
@@ -639,6 +754,32 @@ public class JobListController {
             e.printStackTrace();
             ToastService.showToast(stage, "Failed to go back: " + e.getMessage(), ToastService.ToastType.ERROR);
         }
+    }
+
+    private String resolveMoAccount(Job job) {
+        if (job == null) {
+            return "-";
+        }
+
+        String moId = job.getMoId();
+        if ((moId == null || moId.isBlank()) && job.getPublisherId() != null && !job.getPublisherId().isBlank()) {
+            moId = job.getPublisherId();
+        }
+
+        if (moId != null && !moId.isBlank()) {
+            List<User> moUsers = UserService.getUsersByRole(UserRole.MO);
+            for (User u : moUsers) {
+                if (moId.equals(u.getId())) {
+                    return u.getUsername() != null && !u.getUsername().isBlank() ? u.getUsername() : "-";
+                }
+            }
+        }
+
+        if (job.getPublisherName() != null && !job.getPublisherName().isBlank()) {
+            return job.getPublisherName();
+        }
+
+        return "-";
     }
 
     private void showJobDetail(String jobId) {
@@ -776,11 +917,12 @@ public class JobListController {
         private String deadline;
         private String publisher;
         private String status;
+        private String headcount;
         private Job job;
 
         public JobListViewModel(String jobId, String title, String department, String type,
                                 String requirements, String publishDate, String deadline,
-                                String publisher, String status, Job job) {
+                                String publisher, String status, String headcount, Job job) {
             this.jobId = jobId;
             this.title = title;
             this.department = department;
@@ -790,6 +932,7 @@ public class JobListController {
             this.deadline = deadline;
             this.publisher = publisher;
             this.status = status;
+            this.headcount = headcount;
             this.job = job;
         }
 
@@ -802,6 +945,7 @@ public class JobListController {
         public String getDeadline() { return deadline; }
         public String getPublisher() { return publisher; }
         public String getStatus() { return status; }
+        public String getHeadcount() { return headcount; }
         public Job getJob() { return job; }
     }
 }

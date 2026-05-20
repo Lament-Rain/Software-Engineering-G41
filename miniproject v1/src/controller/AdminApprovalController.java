@@ -208,6 +208,24 @@ public class AdminApprovalController {
         handleHome(new ActionEvent());
     }
 
+    @FXML
+    private void handleLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            Parent root = loader.load();
+            LoginController controller = loader.getController();
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to logout: " + e.getMessage());
+        }
+    }
+
     private void setupTables() {
         pendingUsernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         pendingNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -296,12 +314,53 @@ public class AdminApprovalController {
 
     @FXML
     private void handleUserManagement(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminUserManagement.fxml"));
+            Parent root = loader.load();
+            AdminUserManagementController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - User Management");
+        } catch (Exception e) {
+            showError("Failed to open user management");
+        }
+    }
+
+    @FXML
+    private void handleJobManagement(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminJobManagement.fxml"));
+            Parent root = loader.load();
+            AdminJobManagementController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Job Management");
+        } catch (Exception e) {
+            showError("Failed to open job management");
+        }
+    }
+
+    @FXML
+    private void handleSystemSettings(ActionEvent event) {
         openAdminDashboard();
     }
 
     @FXML
     private void handleApprovalCenter(ActionEvent event) {
         refreshTables();
+    }
+
+    @FXML
+    private void handleAnalytics(ActionEvent event) {
+        openAdminDashboard();
     }
 
     @FXML
@@ -386,24 +445,20 @@ public class AdminApprovalController {
     }
 
     private void openAdminDashboard() {
-        // If we can go back, do so; otherwise, go to dashboard
-        if (NavigationHistory.getInstance().canGoBack()) {
-            NavigationHistory.getInstance().goBack();
-        } else {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
-                Parent root = loader.load();
-                AdminDashboardController controller = loader.getController();
-                controller.setUser(user);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
+            Parent root = loader.load();
+            AdminDashboardController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
 
-                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                stage.setScene(scene);
-                stage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
-            } catch (Exception e) {
-                e.printStackTrace();
-                showError("Unable to load admin home page");
-            }
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Unable to load admin home page");
         }
     }
 

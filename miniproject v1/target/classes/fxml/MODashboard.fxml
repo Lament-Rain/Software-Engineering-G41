@@ -6,73 +6,68 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="moDashboardPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MODashboardController">
-    <!-- 导航栏 -->
-    <VBox style="-fx-background-color: rgba(255, 255, 255, 0.85); -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 0 24 0 24; -fx-pref-height: 72px; -fx-border-bottom: 1px solid rgba(0, 51, 102, 0.1);" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <HBox style="-fx-pref-height: 72px; -fx-alignment: center; -fx-spacing: 24; -fx-fill-width: true;">
-            <!-- 品牌名称 -->
-            <Label text="BUPT TA System" style="-fx-font-size: 18px; -fx-font-weight: 700; -fx-text-fill: #003366;" />
-            
-            <!-- 导航菜单 -->
-            <HBox style="-fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;">
-                <Button text="Home" style="-fx-padding: 8 16 8 16; -fx-background-radius: 8px; -fx-font-size: 14px; -fx-font-weight: 500; -fx-background-color: #003366; -fx-text-fill: #ffffff;" onAction="#handleHome" accessibleText="Go to home page" />
-                <Button text="Job Board" style="-fx-padding: 8 16 8 16; -fx-background-radius: 8px; -fx-font-size: 14px; -fx-font-weight: 500; -fx-background-color: transparent; -fx-text-fill: #4b5563;" onAction="#handleJobManagement" accessibleText="Browse job board" />
-                <Button text="Application Review" style="-fx-padding: 8 16 8 16; -fx-background-radius: 8px; -fx-font-size: 14px; -fx-font-weight: 500; -fx-background-color: transparent; -fx-text-fill: #4b5563;" onAction="#handleApplicationManagement" accessibleText="Review applications" />
-            </HBox>
-            
-            <!-- 用户信息 -->
-            <HBox style="-fx-spacing: 16; -fx-alignment: center;">
-                <!-- 用户头像 -->
-                <StackPane style="-fx-pref-width: 36px; -fx-pref-height: 36px; -fx-background-radius: 50%; -fx-background-color: linear-gradient(135deg, #7a67ee, #ff9f43); -fx-alignment: center; -fx-effect: dropshadow(one-pass-box, rgba(0, 51, 102, 0.05), 2, 0, 0, 1); -fx-border-width: 2px; -fx-border-color: #ffffff;">
+    <!-- ????-->    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true; -fx-min-height: 64px;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
+                <StackPane style="-fx-background-radius: 50%; -fx-background-color: #003366; -fx-pref-width: 36px; -fx-pref-height: 36px; -fx-alignment: center;">
                     <Label text="MO" style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #ffffff;" />
                 </StackPane>
-                <!-- 欢迎信息 -->
                 <Label text="Welcome, Module Organizer" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
-                <!-- 退出按钮 -->
-                <Button text="Logout" style="-fx-background-color: transparent; -fx-border-width: 0; -fx-font-size: 14px; -fx-text-fill: #4b5563; -fx-padding: 8 16 8 16; -fx-background-radius: 8px;" onAction="#handleLogout" accessibleText="Log out of the system" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu active" onAction="#handleHome" accessibleText="Go to home page" />
+                <Button text="Job Board" styleClass="navbar-menu" onAction="#handleJobManagement" accessibleText="Browse job board" />
+                <Button text="My Jobs" styleClass="navbar-menu" onAction="#handleViewMyJobs" accessibleText="View my jobs" />
+                <Button text="Application Review" styleClass="navbar-menu" onAction="#handleApplicationManagement" accessibleText="Review applications" />
+                <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
+                <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" accessibleText="Log out of the system" />
             </HBox>
         </HBox>
     </VBox>
 
-    <!-- 主内容区 -->
-    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
+    <!-- ???? -->
+    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="64.0">
         <VBox style="-fx-padding: 48px 24px 48px 24px; -fx-spacing: 48px; -fx-fill-width: true; -fx-background-color: #f9fafb; -fx-alignment: center; -fx-pref-width: 1240px;">
-            <!-- 页面标题 -->
+            <!-- ???? -->
             <VBox style="-fx-spacing: 8; -fx-alignment: center-left; -fx-fill-width: true;">
-                <Label text="Module Organizer Dashboard" style="-fx-font-size: 32px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
-                <Label text="Manage job postings and review applications" style="-fx-font-size: 16px; -fx-text-fill: #4b5563;" />
+                <Label text="Module Organizer Dashboard" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                <Label text="Manage job postings and review applications" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
             </VBox>
             
-            <!-- 统计卡片 -->
+            <!-- ???? -->
             <HBox style="-fx-spacing: 24; -fx-fill-width: true; -fx-alignment: center;">
-                <!-- 我的工作 -->
-                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 24px; -fx-spacing: 12; -fx-alignment: center; -fx-min-width: 200px; -fx-pref-width: 1fr;" accessibleText="Number of published jobs">
+                <!-- ???? -->
+                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 24px; -fx-spacing: 12; -fx-alignment: center; -fx-min-width: 200px; -fx-pref-width: 240px;" accessibleText="Number of published jobs">
                     <Label text="File" style="-fx-font-size: 24px; -fx-text-fill: #7a67ee;" />
                     <Label fx:id="publishedJobsLabel" text="8" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
                     <Label text="My Jobs" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
                 </VBox>
-                <!-- 总申请数 -->
-                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 24px; -fx-spacing: 12; -fx-alignment: center; -fx-min-width: 200px; -fx-pref-width: 1fr;" accessibleText="Total number of applications">
+                <!-- ???? -->
+                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 24px; -fx-spacing: 12; -fx-alignment: center; -fx-min-width: 200px; -fx-pref-width: 240px;" accessibleText="Total number of applications">
                     <Label text="Users" style="-fx-font-size: 24px; -fx-text-fill: #7a67ee;" />
                     <Label fx:id="totalApplicationsLabel" text="42" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
                     <Label text="Total Applications" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
                 </VBox>
-                <!-- 已接受申请数 -->
-                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 24px; -fx-spacing: 12; -fx-alignment: center; -fx-min-width: 200px; -fx-pref-width: 1fr;" accessibleText="Number of accepted applicants">
+                <!-- ?????? -->
+                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 24px; -fx-spacing: 12; -fx-alignment: center; -fx-min-width: 200px; -fx-pref-width: 240px;" accessibleText="Number of accepted applicants">
                     <Label text="Check" style="-fx-font-size: 24px; -fx-text-fill: #7a67ee;" />
                     <Label fx:id="acceptedApplicationsLabel" text="15" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
                     <Label text="Accepted Applicants" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
                 </VBox>
             </HBox>
             
-            <!-- 已发布的工作 -->
-            <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 32px; -fx-spacing: 16; -fx-fill-width: true;">
-                <VBox style="-fx-spacing: 8; -fx-fill-width: true;">
-                    <Label text="My Posted Jobs" style="-fx-font-size: 20px; -fx-font-weight: 600; -fx-text-fill: #1f2937;" />
-                    <Label text="Review every position you created. Click a row to open job details." style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
-                </VBox>
-                
-                <!-- 表格 -->
-                <TableView fx:id="jobsTable" style="-fx-fill-width: true; -fx-background-radius: 8px; -fx-overflow: hidden;" accessibleText="List of your posted jobs">
+            <!-- ?????? -->
+            <VBox styleClass="card-gradient" maxWidth="Infinity" style="-fx-padding: 16px; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 8, 0, 0, 4); -fx-background-color: white;">
+                <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true; -fx-padding: 0 0 16 0;">
+                    <VBox style="-fx-spacing: 4; -fx-fill-width: true;">
+                        <Label text="My Posted Jobs" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #333333;" />
+                        <Label text="Review every position you created. Click a row to open job details." style="-fx-font-size: 12px; -fx-text-fill: #666666;" />
+                    </VBox>
+                </HBox>
+
+                <TableView fx:id="jobsTable" styleClass="job-list-table" style="-fx-pref-height: 360px; -fx-fixed-cell-size: 52px; -fx-font-size: 12px; -fx-background-color: transparent; -fx-border-color: transparent;" accessibleText="List of your posted jobs">
                     <columns>
                         <TableColumn text="Title" prefWidth="300">
                             <cellValueFactory>
@@ -101,7 +96,7 @@
                         </TableColumn>
                     </columns>
                     <placeholder>
-                        <VBox alignment="CENTER" style="-fx-spacing: 8; -fx-padding: 30px;">
+                        <VBox alignment="CENTER" style="-fx-spacing: 10; -fx-padding: 32px;">
                             <Label text="No jobs created yet" style="-fx-font-size: 16px; -fx-font-weight: 700; -fx-text-fill: #5c6b7a;" />
                             <Label text="Use Create Job below to publish your first opening" style="-fx-font-size: 12px; -fx-text-fill: #8b97a3;" />
                         </VBox>
@@ -109,7 +104,7 @@
                 </TableView>
             </VBox>
             
-            <!-- 快速操作 -->
+            <!-- ?????-->
             <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 32px; -fx-spacing: 16; -fx-fill-width: true;">
                 <Label text="Quick Actions" style="-fx-font-size: 20px; -fx-font-weight: 600; -fx-text-fill: #1f2937;" />
                 <HBox style="-fx-spacing: 16; -fx-alignment: center-left; -fx-fill-width: true;">
@@ -120,7 +115,7 @@
                 </HBox>
             </VBox>
             
-            <!-- 键盘快捷键 -->
+            <!-- ??????-->
             <HBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.05), 2, 0.0, 0, 1); -fx-padding: 24px; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
                 <Label text="Keyboard shortcuts:" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
                 <Label text="Ctrl+N" style="-fx-padding: 4 8 4 8; -fx-background-color: #f3f4f6; -fx-border-width: 1px; -fx-border-color: #d1d5db; -fx-background-radius: 6px; -fx-font-family: 'Inter', monospace; -fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
@@ -135,3 +130,4 @@
         </VBox>
     </ScrollPane>
 </AnchorPane>
+

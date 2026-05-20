@@ -48,15 +48,11 @@ public class TAProfileEditController {
     @FXML
     private TextField studentIdField;
     @FXML
-    private TextArea availableTimeField;
-    @FXML
     private TextField skillsField;
     @FXML
     private TextArea experienceField;
     @FXML
     private TextArea awardsField;
-    @FXML
-    private TextField languageSkillsField;
     @FXML
     private TextArea otherSkillsField;
     @FXML
@@ -108,7 +104,6 @@ public class TAProfileEditController {
         departmentField.textProperty().addListener(textChangeListener);
         gradeField.textProperty().addListener(textChangeListener);
         studentIdField.textProperty().addListener(textChangeListener);
-        availableTimeField.textProperty().addListener(textChangeListener);
         skillsField.textProperty().addListener(textChangeListener);
         experienceField.textProperty().addListener(textChangeListener);
         
@@ -163,7 +158,6 @@ public class TAProfileEditController {
         if (!departmentField.getText().trim().isEmpty()) completed++;
         if (!gradeField.getText().trim().isEmpty()) completed++;
         if (!studentIdField.getText().trim().isEmpty()) completed++;
-        if (!availableTimeField.getText().trim().isEmpty()) completed++;
         if (!skillsField.getText().trim().isEmpty()) completed++;
         if (!experienceField.getText().trim().isEmpty()) completed++;
         
@@ -203,6 +197,7 @@ public class TAProfileEditController {
         }
     }
     
+    @FXML
     private void handleHome() {
         // If we can go back, do so; otherwise, go to dashboard
         if (service.NavigationHistory.getInstance().canGoBack()) {
@@ -370,6 +365,7 @@ public class TAProfileEditController {
         }
     }
 
+    @FXML
     private void handlePersonalCenter(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAProfileView.fxml"));
@@ -452,6 +448,24 @@ public class TAProfileEditController {
         }
     }
     
+    @FXML
+    private void handleLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            Parent root = loader.load();
+            LoginController controller = loader.getController();
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to logout");
+        }
+    }
+
     public void setUser(TA user) {
         this.user = user;
         loadUserData();
@@ -482,7 +496,6 @@ public class TAProfileEditController {
             departmentField.setText(user.getDepartment() != null ? user.getDepartment() : "");
             gradeField.setText(user.getGrade() != null ? user.getGrade() : "");
             studentIdField.setText(user.getStudentId() != null ? user.getStudentId() : "");
-            availableTimeField.setText(user.getAvailableTime() != null ? user.getAvailableTime() : "");
             
             // Convert skills list to string
             if (user.getSkills() != null && !user.getSkills().isEmpty()) {
@@ -495,7 +508,6 @@ public class TAProfileEditController {
             
             experienceField.setText(user.getExperience() != null ? user.getExperience() : "");
             awardsField.setText(user.getAwards() != null ? user.getAwards() : "");
-            languageSkillsField.setText(user.getLanguageSkills() != null ? user.getLanguageSkills() : "");
             otherSkillsField.setText(user.getOtherSkills() != null ? user.getOtherSkills() : "");
         }
     }
@@ -528,11 +540,9 @@ public class TAProfileEditController {
         String department = departmentField.getText().trim();
         String grade = gradeField.getText().trim();
         String studentId = studentIdField.getText().trim();
-        String availableTime = availableTimeField.getText().trim();
         String skillsStr = skillsField.getText().trim();
         String experience = experienceField.getText().trim();
         String awards = awardsField.getText().trim();
-        String languageSkills = languageSkillsField.getText().trim();
         String otherSkills = otherSkillsField.getText().trim();
         
         // Validate input
@@ -559,11 +569,6 @@ public class TAProfileEditController {
         if (studentId.isEmpty()) {
             showError("Please enter student ID");
             javafx.application.Platform.runLater(() -> studentIdField.requestFocus());
-            return;
-        }
-        if (availableTime.isEmpty()) {
-            showError("Please enter available work time");
-            javafx.application.Platform.runLater(() -> availableTimeField.requestFocus());
             return;
         }
         if (skillsStr.isEmpty()) {
@@ -605,11 +610,9 @@ public class TAProfileEditController {
         user.setDepartment(department);
         user.setGrade(grade);
         user.setStudentId(studentId);
-        user.setAvailableTime(availableTime);
         user.setSkills(skills);
         user.setExperience(experience);
         user.setAwards(awards);
-        user.setLanguageSkills(languageSkills);
         user.setOtherSkills(otherSkills);
         if (status == ProfileStatus.PENDING) {
             user.setProfileStatus(ProfileStatus.PENDING);
@@ -647,11 +650,9 @@ public class TAProfileEditController {
         departmentField.clear();
         gradeField.clear();
         studentIdField.clear();
-        availableTimeField.clear();
         skillsField.clear();
         experienceField.clear();
         awardsField.clear();
-        languageSkillsField.clear();
         otherSkillsField.clear();
         messageLabel.setText("");
     }

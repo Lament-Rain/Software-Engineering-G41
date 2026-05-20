@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -120,6 +121,14 @@ public class MODashboardController {
         jobsTable.setItems(jobs);
         jobsTable.setRowFactory(table -> {
             TableRow<JobViewModel> row = new TableRow<>();
+            row.setStyle("-fx-background-color: transparent; -fx-padding: 4 0 4 0;");
+            row.itemProperty().addListener((obs, oldItem, newItem) -> {
+                if (newItem == null || row.isEmpty()) {
+                    row.setStyle("-fx-background-color: transparent; -fx-padding: 4 0 4 0;");
+                } else {
+                    row.setStyle("-fx-background-color: #f8f9fa; -fx-background-radius: 10px; -fx-border-radius: 10px; -fx-border-color: #eef2f7; -fx-border-width: 1; -fx-padding: 6 8 6 8;");
+                }
+            });
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && !row.isEmpty()) {
                     openMyJobsPage(row.getItem().getJobId());
@@ -127,7 +136,19 @@ public class MODashboardController {
             });
             return row;
         });
+
+        hideTableHeader();
         jobsTable.refresh();
+    }
+
+    private void hideTableHeader() {
+        Platform.runLater(() -> {
+            javafx.scene.Node header = jobsTable.lookup("TableHeaderRow");
+            if (header != null) {
+                header.setVisible(false);
+                header.setManaged(false);
+            }
+        });
     }
 
     @FXML
@@ -229,7 +250,7 @@ public class MODashboardController {
             }
         }
 
-        String filePath = "src/data/mo_export_" + user.getUsername() + "_" + java.time.LocalDateTime.now().toString().replace(":", "-") + ".csv";
+        String filePath = new java.io.File(service.DataStorage.getDataDirectory(), "mo_export_" + user.getUsername() + "_" + java.time.LocalDateTime.now().toString().replace(":", "-") + ".csv").getAbsolutePath();
         try (java.io.FileWriter writer = new java.io.FileWriter(filePath)) {
             writer.write(content.toString());
             showAlert(Alert.AlertType.INFORMATION, "Export Successful", "Exported " + exportedRows + " application records to:\n" + filePath);
@@ -251,36 +272,15 @@ public class MODashboardController {
             Stage stage = getStage(event);
             controller.setStage(stage);
 
-            // Save current window state
             boolean isFullScreen = stage.isFullScreen();
             double currentWidth = stage.getWidth();
             double currentHeight = stage.getHeight();
-            
-            // Create new scene without hardcoded size
-            Scene scene = new Scene(root);
+
+            Scene scene = new Scene(root, currentWidth, currentHeight);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            
-            // Apply saved window state
             stage.setScene(scene);
-                
-                // Force layout update to ensure components resize properly
-                root.requestLayout();
-                stage.sizeToScene();
-            if (isFullScreen) {
-                stage.setFullScreen(true);
-            } else if (currentWidth > 0 && currentHeight > 0) {
-                stage.setWidth(currentWidth);
-                stage.setHeight(currentHeight);
-            } else {
-                // Default size if no previous size
-                stage.setWidth(800);
-                stage.setHeight(600);
-            }
             stage.setTitle("BUPT International School TA Recruitment System - Login");
-                
-                // Force layout update to ensure components resize properly
-                root.requestLayout();
-                stage.sizeToScene();
+            stage.setFullScreen(isFullScreen);
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login page. Please try again later.");
@@ -313,9 +313,29 @@ public class MODashboardController {
     }
 
     @FXML
+    private void handlePersonalCenter(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOProfileView.fxml"));
+            Parent root = loader.load();
+            MOProfileViewController controller = loader.getController();
+            controller.setUser(user);
+            Stage currentStage = getStage(event);
+            controller.setStage(currentStage);
+
+            Scene scene = new Scene(root, currentStage.getWidth(), currentStage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            currentStage.setScene(scene);
+            currentStage.setTitle("BUPT International School TA Recruitment System - MO Personal Center");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load personal center. Please try again later.");
+        }
+    }
+
+    @FXML
     private void handleViewAllJobs(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/JobList.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOJobBoard.fxml"));
             Parent root = loader.load();
             JobListController controller = loader.getController();
             controller.setUser(user, model.UserRole.MO);
@@ -525,6 +545,7 @@ public class MODashboardController {
             features.add(new SearchBarController.Feature("Application Review", () -> openApplicationReview(new ActionEvent())));
             features.add(new SearchBarController.Feature("My Jobs", () -> handleViewMyJobs(new ActionEvent())));
             features.add(new SearchBarController.Feature("Job List", () -> handleViewAllJobs(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Personal Center", () -> handlePersonalCenter(new ActionEvent())));
 
             // Load search bar
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SearchBar.fxml"));

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
+<ScrollPane fx:id="registerScrollPane" onScroll="#handleScrollFast" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
     <stylesheets>
         <URL value="@../css/register.css" />
     </stylesheets>
@@ -33,9 +33,9 @@
                     <VBox spacing="16" style="-fx-pref-width: 100%;">
                         <Label text="Select Role" style="-fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
                         <HBox spacing="16" alignment="CENTER" style="-fx-pref-width: 100%;">
-                            <ToggleButton fx:id="taToggle" text="TA Applicant" toggleGroup="$roleToggleGroup" selected="true" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-text-fill: #374151;" accessibleText="Register as Teaching Assistant applicant" />
-                            <ToggleButton fx:id="moToggle" text="Module Organizer" toggleGroup="$roleToggleGroup" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-text-fill: #374151;" accessibleText="Register as Module Organizer" />
-                            <ToggleButton fx:id="adminToggle" text="System Admin" toggleGroup="$roleToggleGroup" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-text-fill: #374151;" accessibleText="Register as System Administrator" />
+                            <ToggleButton fx:id="taToggle" text="TA Applicant" toggleGroup="$roleToggleGroup" selected="true" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500;" accessibleText="Register as Teaching Assistant applicant" />
+                            <ToggleButton fx:id="moToggle" text="Module Organizer" toggleGroup="$roleToggleGroup" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500;" accessibleText="Register as Module Organizer" />
+                            <ToggleButton fx:id="adminToggle" text="System Admin" toggleGroup="$roleToggleGroup" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500;" accessibleText="Register as System Administrator" />
                         </HBox>
                     </VBox>
 

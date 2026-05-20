@@ -7,13 +7,15 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TAApplicationHistoryController">
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
-            <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
-            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;" />
-            <HBox style="-fx-spacing: 16; -fx-alignment: center;">
-                <Button text="Back to TA Dashboard" styleClass="navbar-menu" onAction="#handleBack" accessibleText="Return to TA dashboard" />
-                <Separator orientation="VERTICAL" styleClass="navbar-separator" />
-                <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" accessibleText="Log out of the system" />
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu" onAction="#handleBack" accessibleText="Go to home page" />
+                <Button text="Job Requirements" styleClass="navbar-menu" onAction="#handleJobRequirements" accessibleText="View job requirements" />
+                <Button text="Application Management" styleClass="navbar-menu active" onAction="#handleApplicationManagement" accessibleText="Manage your applications" />
+                <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
+                <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" accessibleText="Log out" />
             </HBox>
         </HBox>
     </VBox>
@@ -99,3 +101,5 @@
         </VBox>
     </ScrollPane>
 </AnchorPane>
+
+

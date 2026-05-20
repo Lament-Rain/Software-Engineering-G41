@@ -37,7 +37,7 @@ public class AIService {
 
         // Language skill matching
         if (ta.getLanguageSkills() != null && !ta.getLanguageSkills().isEmpty()) {
-            score += 10; // Add 10 points for language skills
+            score += 0; // Language skills are not used in scoring
         }
 
         // Other skill matching
@@ -134,9 +134,12 @@ public class AIService {
         List<Job> availableJobs = JobService.getAvailableJobs();
         List<Job> recommendedJobs = new ArrayList<>();
 
-        // Calculate the match score for each job
+        // Calculate the match score for each non-conflicting job
         Map<Job, Double> jobMatchScores = new HashMap<>();
         for (Job job : availableJobs) {
+            if (hasTimeConflict(ta, job)) {
+                continue;
+            }
             double matchScore = calculateSkillMatch(ta, job);
             jobMatchScores.put(job, matchScore);
         }
@@ -151,6 +154,56 @@ public class AIService {
         }
 
         return recommendedJobs;
+    }
+
+    private static boolean hasTimeConflict(TA ta, Job job) {
+        if (ta == null || job == null || ta.getAvailableTime() == null || job.getWorkTime() == null) {
+            return false;
+        }
+        if (!ta.getAvailableTime().startsWith("SCHEDULE_V1|") || !job.getWorkTime().startsWith("PERIODS|")) {
+            return false;
+        }
+
+        String[] schedule = ta.getAvailableTime().substring("SCHEDULE_V1|".length()).split(",");
+        if (schedule.length != 98) {
+            return false;
+        }
+
+        String[] entries = job.getWorkTime().substring("PERIODS|".length()).split(";");
+        for (String e : entries) {
+            if (e == null || e.trim().isEmpty() || !e.contains(":")) continue;
+            String[] kv = e.split(":", 2);
+            int day = dayIndex(kv[0].trim());
+            if (day < 0) continue;
+
+            String[] periods = kv[1].split(",");
+            for (String p : periods) {
+                String t = p.trim();
+                if (!t.matches("^\\d+$")) continue;
+                int period = Integer.parseInt(t);
+                if (period < 1 || period > 14) continue;
+                int idx = (period - 1) * 7 + day;
+                String status = schedule[idx].trim().toLowerCase();
+                if ("occupied".equals(status) || "busy".equals(status)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static int dayIndex(String day) {
+        switch (day) {
+            case "Sun": return 0;
+            case "Mon": return 1;
+            case "Tue": return 2;
+            case "Wed": return 3;
+            case "Thu": return 4;
+            case "Fri": return 5;
+            case "Sat": return 6;
+            default: return -1;
+        }
     }
 
     // Recommend TAs for job
@@ -190,7 +243,11 @@ public class AIService {
     private static String apiKey = "";
     private static String currentModel = "";
     private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/responses";
-    private static final String API_KEYS_FILE = "api_keys.txt";
+    private static final String API_KEYS_FILE = "data/api_keys.txt";
+    private static final String LEGACY_API_KEYS_FILE = "api_keys.txt";
+    private static final String RELEASE_API_KEYS_FILE = "release/data/api_keys.txt";
+    private static final int DEFAULT_CONNECT_TIMEOUT_MS = 20000;
+    private static final int DEFAULT_READ_TIMEOUT_MS = 120000;
 
     // 静态初始化，加载保存的API密钥和模型
     static {
@@ -216,6 +273,22 @@ public class AIService {
         return currentModel;
     }
 
+    private static java.io.File resolveWritableApiConfigFile() {
+        java.io.File primary = new java.io.File(API_KEYS_FILE);
+        java.io.File parent = primary.getParentFile();
+        if (parent != null && (parent.exists() || parent.mkdirs())) {
+            return primary;
+        }
+
+        java.io.File release = new java.io.File(RELEASE_API_KEYS_FILE);
+        java.io.File releaseParent = release.getParentFile();
+        if (releaseParent != null && (releaseParent.exists() || releaseParent.mkdirs())) {
+            return release;
+        }
+
+        return new java.io.File(LEGACY_API_KEYS_FILE);
+    }
+
     // 保存API配置到文件
     public static void saveApiConfig(String key, String model) throws IOException {
         // 检查API配置是否已存在
@@ -225,8 +298,13 @@ public class AIService {
                 throw new IllegalArgumentException("该API配置已存在！");
             }
         }
-        
-        java.io.File file = new java.io.File(API_KEYS_FILE);
+
+        java.io.File file = resolveWritableApiConfigFile();
+        java.io.File parent = file.getParentFile();
+        if (parent != null && !parent.exists()) {
+            parent.mkdirs();
+        }
+
         java.io.FileWriter writer = new java.io.FileWriter(file, true); // 追加模式
         writer.write(key + "," + model + "\n");
         writer.close();
@@ -237,47 +315,79 @@ public class AIService {
     // 加载所有保存的API配置
     public static java.util.List<java.util.Map<String, String>> loadApiConfigs() {
         java.util.List<java.util.Map<String, String>> apiConfigs = new java.util.ArrayList<>();
-        java.io.File file = new java.io.File(API_KEYS_FILE);
-        if (file.exists()) {
-            try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(file))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    line = line.trim();
-                    if (!line.isEmpty()) {
-                        String[] parts = line.split(",");
-                        if (parts.length == 2) {
-                            java.util.Map<String, String> config = new java.util.HashMap<>();
-                            config.put("apiKey", parts[0]);
-                            config.put("model", parts[1]);
-                            apiConfigs.add(config);
-                        }
+
+        java.io.File primaryFile = new java.io.File(API_KEYS_FILE);
+        java.io.File legacyFile = new java.io.File(LEGACY_API_KEYS_FILE);
+        java.io.File releaseFile = new java.io.File(RELEASE_API_KEYS_FILE);
+
+        // 先读 data/api_keys.txt，再回退 api_keys.txt，最后尝试 release/data/api_keys.txt
+        if (primaryFile.exists()) {
+            readApiConfigFile(primaryFile, apiConfigs);
+        }
+        if (apiConfigs.isEmpty() && legacyFile.exists()) {
+            readApiConfigFile(legacyFile, apiConfigs);
+        }
+        if (apiConfigs.isEmpty() && releaseFile.exists()) {
+            readApiConfigFile(releaseFile, apiConfigs);
+        }
+
+        // 如果有API配置，默认使用第一个
+        if (!apiConfigs.isEmpty() && apiKey.isEmpty()) {
+            java.util.Map<String, String> firstConfig = apiConfigs.get(0);
+            apiKey = firstConfig.get("apiKey");
+            currentModel = firstConfig.get("model");
+        }
+
+        return apiConfigs;
+    }
+
+    private static void readApiConfigFile(java.io.File file, java.util.List<java.util.Map<String, String>> apiConfigs) {
+        try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (!line.isEmpty()) {
+                    String[] parts = line.split(",", 2);
+                    if (parts.length == 2) {
+                        java.util.Map<String, String> config = new java.util.HashMap<>();
+                        config.put("apiKey", parts[0].trim());
+                        config.put("model", parts[1].trim());
+                        apiConfigs.add(config);
                     }
                 }
-                // 如果有API配置，默认使用第一个
-                if (!apiConfigs.isEmpty() && apiKey.isEmpty()) {
-                    java.util.Map<String, String> firstConfig = apiConfigs.get(0);
-                    apiKey = firstConfig.get("apiKey");
-                    currentModel = firstConfig.get("model");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return apiConfigs;
     }
 
     // 清除所有保存的API配置
     public static void clearApiConfigs() throws IOException {
-        java.io.File file = new java.io.File(API_KEYS_FILE);
-        if (file.exists()) {
-            file.delete();
+        java.io.File primaryFile = new java.io.File(API_KEYS_FILE);
+        java.io.File legacyFile = new java.io.File(LEGACY_API_KEYS_FILE);
+        java.io.File releaseFile = new java.io.File(RELEASE_API_KEYS_FILE);
+
+        if (primaryFile.exists()) {
+            primaryFile.delete();
         }
+        if (legacyFile.exists()) {
+            legacyFile.delete();
+        }
+        if (releaseFile.exists()) {
+            releaseFile.delete();
+        }
+
         apiKey = "";
         currentModel = "";
     }
 
     // 调用深度思考API
     public static String callDoubaoDeepThinking(String input) throws IOException {
+        return callDoubaoDeepThinking(input, true);
+    }
+
+    // 调用API（可选择是否启用thinking）
+    public static String callDoubaoDeepThinking(String input, boolean enableThinking) throws IOException {
         if (apiKey.isEmpty()) {
             throw new IllegalArgumentException("API key is not set");
         }
@@ -288,18 +398,20 @@ public class AIService {
         connection.setRequestProperty("Content-Type", "application/json");
         connection.setRequestProperty("Authorization", "Bearer " + apiKey);
         connection.setDoOutput(true);
-        connection.setConnectTimeout(10000); // 10秒超时
-        connection.setReadTimeout(30000); // 30秒读取超时
+        connection.setConnectTimeout(DEFAULT_CONNECT_TIMEOUT_MS);
+        connection.setReadTimeout(DEFAULT_READ_TIMEOUT_MS);
 
         // 构建请求体
         JsonObject requestBody = new JsonObject();
         requestBody.addProperty("model", currentModel);
         requestBody.addProperty("input", input);
-        
-        JsonObject thinking = new JsonObject();
-        thinking.addProperty("type", "enabled");
-        requestBody.add("thinking", thinking);
-        
+
+        if (enableThinking) {
+            JsonObject thinking = new JsonObject();
+            thinking.addProperty("type", "enabled");
+            requestBody.add("thinking", thinking);
+        }
+
         requestBody.addProperty("stream", false);
 
         // 发送请求
@@ -311,7 +423,7 @@ public class AIService {
         // 读取响应
         StringBuilder response = new StringBuilder();
         int responseCode = connection.getResponseCode();
-        
+
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try (BufferedReader br = new BufferedReader(
                     new InputStreamReader(connection.getInputStream(), "utf-8"))) {

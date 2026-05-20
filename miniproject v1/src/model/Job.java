@@ -11,14 +11,15 @@ public class Job {
     private List<String> skills;
     private String workTime;
     private int recruitNum;
+    private int currentNum;
     private String deadline;
     private String salary;
     private String location;
     private String extraRequirements;
-    private String moId; 
-    private String publisherId; 
-    private String publisherType; 
-    private String publisherName; 
+    private String moId;
+    private String publisherId;
+    private String publisherType;
+    private String publisherName;
     private JobStatus status;
     private String createdAt;
     private String updatedAt;
@@ -28,8 +29,8 @@ public class Job {
 
     public Job() {}
 
-    public Job(String id, String title, JobType type, String department, String description, 
-               List<String> skills, String workTime, int recruitNum, String deadline, 
+    public Job(String id, String title, JobType type, String department, String description,
+               List<String> skills, String workTime, int recruitNum, String deadline,
                String moId) {
         this.id = id;
         this.title = title;
@@ -39,6 +40,7 @@ public class Job {
         this.skills = skills;
         this.workTime = workTime;
         this.recruitNum = recruitNum;
+        this.currentNum = 0;
         this.deadline = deadline;
         this.moId = moId;
         this.status = JobStatus.DRAFT;
@@ -49,37 +51,40 @@ public class Job {
     // Getters and Setters
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
-    
+
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
-    
+
     public JobType getType() { return type; }
     public void setType(JobType type) { this.type = type; }
-    
+
     public String getDepartment() { return department; }
     public void setDepartment(String department) { this.department = department; }
-    
+
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-    
+
     public List<String> getSkills() { return skills; }
     public void setSkills(List<String> skills) { this.skills = skills; }
-    
+
     public String getWorkTime() { return workTime; }
     public void setWorkTime(String workTime) { this.workTime = workTime; }
-    
+
     public int getRecruitNum() { return recruitNum; }
     public void setRecruitNum(int recruitNum) { this.recruitNum = recruitNum; }
-    
+
+    public int getCurrentNum() { return currentNum; }
+    public void setCurrentNum(int currentNum) { this.currentNum = currentNum; }
+
     public String getDeadline() { return deadline; }
     public void setDeadline(String deadline) { this.deadline = deadline; }
-    
+
     public String getSalary() { return salary; }
     public void setSalary(String salary) { this.salary = salary; }
-    
+
     public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
-    
+
     public String getExtraRequirements() { return extraRequirements; }
     public void setExtraRequirements(String extraRequirements) { this.extraRequirements = extraRequirements; }
 
@@ -97,19 +102,19 @@ public class Job {
 
     public JobStatus getStatus() { return status; }
     public void setStatus(JobStatus status) { this.status = status; }
-    
+
     public String getCreatedAt() { return createdAt; }
     public void setCreatedAt(String createdAt) { this.createdAt = createdAt; }
-    
+
     public String getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(String updatedAt) { this.updatedAt = updatedAt; }
-    
+
     public String getReviewedBy() { return reviewedBy; }
     public void setReviewedBy(String reviewedBy) { this.reviewedBy = reviewedBy; }
-    
+
     public String getReviewTime() { return reviewTime; }
     public void setReviewTime(String reviewTime) { this.reviewTime = reviewTime; }
-    
+
     public String getReviewComment() { return reviewComment; }
     public void setReviewComment(String reviewComment) { this.reviewComment = reviewComment; }
 
@@ -124,6 +129,7 @@ public class Job {
                 ", skills=" + skills +
                 ", workTime='" + workTime + '\'' +
                 ", recruitNum=" + recruitNum +
+                ", currentNum=" + currentNum +
                 ", deadline='" + deadline + '\'' +
                 ", salary='" + salary + '\'' +
                 ", location='" + location + '\'' +
@@ -141,4 +147,3 @@ public class Job {
                 '}';
     }
 }
-

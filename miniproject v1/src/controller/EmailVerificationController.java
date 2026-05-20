@@ -48,6 +48,7 @@ public class EmailVerificationController {
     private RegisterController registerController;
     private Timeline resendTimerTimeline;
     private int resendTimeLeft = 60;
+    private EmailInputController.FlowMode flowMode = EmailInputController.FlowMode.REGISTER;
 
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -65,6 +66,10 @@ public class EmailVerificationController {
         this.registerController = registerController;
     }
 
+    public void setFlowMode(EmailInputController.FlowMode flowMode) {
+        this.flowMode = flowMode == null ? EmailInputController.FlowMode.REGISTER : flowMode;
+    }
+
     private void initializeCodeFields() {
         TextField[] codeFields = {codeField1, codeField2, codeField3, codeField4, codeField5, codeField6};
         for (int i = 0; i < codeFields.length; i++) {
@@ -73,10 +78,8 @@ public class EmailVerificationController {
                 if (newValue.length() > 1) {
                     codeFields[index].setText(newValue.substring(0, 1));
                 }
-                if (newValue.length() > 0) {
-                    if (index < codeFields.length - 1) {
-                        codeFields[index + 1].requestFocus();
-                    }
+                if (newValue.length() > 0 && index < codeFields.length - 1) {
+                    codeFields[index + 1].requestFocus();
                 }
             });
             codeFields[i].setOnKeyPressed(event -> {
@@ -120,32 +123,44 @@ public class EmailVerificationController {
             return;
         }
 
-        if (EmailVerificationService.verifyCode(email, code)) {
-            // Code is valid, proceed with registration
-            try {
+        if (!EmailVerificationService.verifyCode(email, code)) {
+            errorMessage.setText("Invalid or expired verification code");
+            return;
+        }
+
+        try {
+            if (flowMode == EmailInputController.FlowMode.RESET_PASSWORD) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ResetPassword.fxml"));
+                Parent root = loader.load();
+                ResetPasswordController controller = loader.getController();
+                controller.setStage(stage);
+                controller.setEmail(email);
+
+                double width = stage.getWidth();
+                double height = stage.getHeight();
+                Scene scene = new Scene(root, width, height);
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - Reset Password");
+                ToastService.showToast(stage, "Email verified. Please reset your password.", ToastService.ToastType.SUCCESS);
+            } else {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Register.fxml"));
                 Parent root = loader.load();
                 RegisterController controller = loader.getController();
                 controller.setStage(stage);
                 controller.setEmail(email);
 
-                // Get current window size
                 double width = stage.getWidth();
                 double height = stage.getHeight();
-                
                 Scene scene = new Scene(root, width, height);
                 scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
                 stage.setScene(scene);
                 stage.setTitle("BUPT International School TA Recruitment System - Register");
-                
-                // Show success message and complete registration
                 ToastService.showToast(stage, "Email verified successfully! Please complete your registration.", ToastService.ToastType.SUCCESS);
-            } catch (Exception e) {
-                e.printStackTrace();
-                ToastService.showToast(stage, "Failed to load register page: " + e.getMessage(), ToastService.ToastType.ERROR);
             }
-        } else {
-            errorMessage.setText("Invalid or expired verification code");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to load next page: " + e.getMessage(), ToastService.ToastType.ERROR);
         }
     }
 
@@ -157,11 +172,11 @@ public class EmailVerificationController {
             EmailInputController controller = loader.getController();
             controller.setStage(stage);
             controller.setRegisterController(registerController);
+            controller.setFlowMode(flowMode);
 
-            // Get current window size
             double width = stage.getWidth();
             double height = stage.getHeight();
-            
+
             Scene scene = new Scene(root, width, height);
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
@@ -180,7 +195,7 @@ public class EmailVerificationController {
     }
 
     private String getEnteredCode() {
-        return codeField1.getText() + codeField2.getText() + codeField3.getText() + 
+        return codeField1.getText() + codeField2.getText() + codeField3.getText() +
                codeField4.getText() + codeField5.getText() + codeField6.getText();
     }
 }
