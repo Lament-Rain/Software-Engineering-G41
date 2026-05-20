@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
+<<<<<<< Updated upstream
 <AnchorPane fx:id="registerPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
     <VBox alignment="CENTER" spacing="0" styleClass="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <HBox prefHeight="8">
@@ -14,6 +15,23 @@
             <Region styleClass="bg-accent" style="-fx-pref-width: 25%;" />
             <Region styleClass="bg-success" style="-fx-pref-width: 25%;" />
         </HBox>
+=======
+<ScrollPane fx:id="registerScrollPane" onScroll="#handleScrollFast" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
+    <stylesheets>
+        <URL value="@../css/register.css" />
+    </stylesheets>
+    <StackPane style="-fx-background-color: #f9fafb;">
+        <VBox alignment="TOP_CENTER" spacing="0" style="-fx-background-color: #f9fafb;">
+            <fx:define>
+                <ToggleGroup fx:id="roleToggleGroup" />
+            </fx:define>
+            <HBox prefHeight="8">
+                <Region style="-fx-pref-width: 25%; -fx-background-color: #003366;" />
+                <Region style="-fx-pref-width: 25%; -fx-background-color: #7a67ee;" />
+                <Region style="-fx-pref-width: 25%; -fx-background-color: #ff9f43;" />
+                <Region style="-fx-pref-width: 25%; -fx-background-color: #10b981;" />
+            </HBox>
+>>>>>>> Stashed changes
 
         <ScrollPane style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="8.0">
             <VBox alignment="CENTER" spacing="64" style="-fx-padding: 48px; -fx-fill-width: true; -fx-background-color: #f8f9fa; -fx-alignment: center; -fx-pref-width: 1200px;">
@@ -26,9 +44,15 @@
                     <VBox spacing="16" style="-fx-padding: 16px 32px 0 32px; -fx-pref-width: 100%;">
                         <Label text="Select Role" styleClass="form-label" />
                         <HBox spacing="16" alignment="CENTER" style="-fx-pref-width: 100%;">
+<<<<<<< Updated upstream
                             <ToggleButton fx:id="taToggle" text="TA Applicant" styleClass="btn btn-secondary" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
                             <ToggleButton fx:id="moToggle" text="Module Organizer" styleClass="btn btn-secondary" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
                             <ToggleButton fx:id="adminToggle" text="System Admin" styleClass="btn btn-secondary" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
+=======
+                            <ToggleButton fx:id="taToggle" text="TA Applicant" toggleGroup="$roleToggleGroup" selected="true" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500;" accessibleText="Register as Teaching Assistant applicant" />
+                            <ToggleButton fx:id="moToggle" text="Module Organizer" toggleGroup="$roleToggleGroup" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500;" accessibleText="Register as Module Organizer" />
+                            <ToggleButton fx:id="adminToggle" text="System Admin" toggleGroup="$roleToggleGroup" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500;" accessibleText="Register as System Administrator" />
+>>>>>>> Stashed changes
                         </HBox>
                     </VBox>
 

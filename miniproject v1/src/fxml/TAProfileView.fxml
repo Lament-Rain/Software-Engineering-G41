@@ -9,19 +9,21 @@
 <AnchorPane fx:id="profileViewPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TAProfileViewController">
     <!-- Navigation Bar -->
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
-            <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
-            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
+                <StackPane style="-fx-background-radius: 50%; -fx-background-color: #003366; -fx-pref-width: 36px; -fx-pref-height: 36px; -fx-alignment: center;">
+                    <Label text="TA" style="-fx-text-fill: white; -fx-font-weight: 600; -fx-font-size: 14px;" />
+                </StackPane>
+                <Label text="Welcome, TA Applicant" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
                 <Button text="Home" styleClass="navbar-menu" onAction="#handleHome" style="-fx-padding: 10px 24px; -fx-background-radius: 8px;" />
                 <Button text="Job Requirements" styleClass="navbar-menu" onAction="#handleJobRequirements" style="-fx-padding: 10px 24px; -fx-background-radius: 8px;" />
                 <Button text="Application Management" styleClass="navbar-menu" onAction="#handleApplicationManagement" style="-fx-padding: 10px 24px; -fx-background-radius: 8px;" />
                 <Button text="Personal Center" styleClass="navbar-menu active" onAction="#handlePersonalCenter" style="-fx-padding: 10px 24px; -fx-background-radius: 8px;" />
-            </HBox>
-            <HBox style="-fx-spacing: 16; -fx-alignment: center;">
-                <Label text="Welcome, TA Applicant" textFill="rgba(255,255,255,0.85)" style="-fx-font-size: 14px;" />
-                <Separator orientation="VERTICAL" styleClass="navbar-separator" />
-                <Button text="Back to TA Dashboard" styleClass="navbar-menu" onAction="#handleBack" style="-fx-padding: 10px 16px; -fx-background-radius: 8px;" />
-                <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" style="-fx-padding: 10px 16px; -fx-background-radius: 8px;" />
+                <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" style="-fx-pref-width: 150px; -fx-padding: 10px 16px; -fx-background-radius: 8px;" />
             </HBox>
         </HBox>
     </VBox>
@@ -77,8 +79,13 @@
                                 <ColumnConstraints minWidth="400" prefWidth="600" />
                             </columnConstraints>
                             
-                            <Label text="Available Work Time: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-                            <Label fx:id="availableTimeLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529; -fx-wrap-text: true;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                            <Label text="Specialized Subjects/Skills: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                            <Label fx:id="skillsLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529; -fx-wrap-text: true;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+                            <Label text="Current Workload: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                            <VBox spacing="6" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                                <AnchorPane fx:id="workloadGaugePane" prefHeight="48" minHeight="48" maxHeight="48" maxWidth="320" style="-fx-background-color: transparent;" />
+                            </VBox>
                         </GridPane>
                     </VBox>
                     
@@ -91,20 +98,14 @@
                                 <ColumnConstraints minWidth="400" prefWidth="600" />
                             </columnConstraints>
                             
-                            <Label text="Specialized Subjects/Skills: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-                            <Label fx:id="skillsLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529; -fx-wrap-text: true;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                            <Label text="Previous TA Experience: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                            <Label fx:id="experienceLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529; -fx-wrap-text: true;" GridPane.rowIndex="0" GridPane.columnIndex="1" />
                             
-                            <Label text="Previous TA Experience: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-                            <Label fx:id="experienceLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529; -fx-wrap-text: true;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                            <Label text="Awards: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                            <Label fx:id="awardsLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529; -fx-wrap-text: true;" GridPane.rowIndex="1" GridPane.columnIndex="1" />
                             
-                            <Label text="Awards: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-                            <Label fx:id="awardsLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529; -fx-wrap-text: true;" GridPane.rowIndex="2" GridPane.columnIndex="1" />
-                            
-                            <Label text="Language Skills: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="3" GridPane.columnIndex="0" />
-                            <Label fx:id="languageSkillsLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529; -fx-wrap-text: true;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
-                            
-                            <Label text="Other Special Skills: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="4" GridPane.columnIndex="0" />
-                            <Label fx:id="otherSkillsLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529; -fx-wrap-text: true;" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+                            <Label text="Other Special Skills: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                            <Label fx:id="otherSkillsLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529; -fx-wrap-text: true;" GridPane.rowIndex="2" GridPane.columnIndex="1" />
                         </GridPane>
                     </VBox>
                     
@@ -118,3 +119,4 @@
         </VBox>
     </ScrollPane>
 </AnchorPane>
+

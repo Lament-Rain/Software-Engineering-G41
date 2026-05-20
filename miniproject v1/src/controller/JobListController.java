@@ -13,8 +13,15 @@ import model.MO;
 import model.Admin;
 import model.TA;
 import model.UserRole;
+import model.User;
 import service.JobService;
 import service.ApplicationService;
+<<<<<<< Updated upstream
+=======
+import service.UserService;
+import service.KeyboardShortcutService;
+import service.ToastService;
+>>>>>>> Stashed changes
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -70,6 +77,7 @@ public class JobListController {
 
         // Set up table columns
         setupTableColumns();
+        jobsTable.setFixedCellSize(36);
 
         searchField.setOnAction(event -> handleSearch());
         departmentFilter.setOnAction(event -> handleSearch());
@@ -94,41 +102,311 @@ public class JobListController {
         });
     }
 
+<<<<<<< Updated upstream
+=======
+    private void setupKeyboardShortcuts() {
+        shortcutService = new KeyboardShortcutService(stage);
+        shortcutService.registerShortcut("ctrl+f", this::showSearchBar);
+        shortcutService.registerShortcut("escape", this::handleResetAction);
+
+        if (stage.getScene() != null) {
+            Parent root = stage.getScene().getRoot();
+            shortcutService.setupEnterKeyNavigation(root);
+        }
+    }
+
+    private void showSearchBar() {
+        try {
+            // Create list of features based on user role
+            List<SearchBarController.Feature> features = new java.util.ArrayList<>();
+            
+            if (userRole == UserRole.TA) {
+                features.add(new SearchBarController.Feature("Job Requirements", () -> {})); // 已在JobList页面，无需跳转
+                features.add(new SearchBarController.Feature("My Applications", () -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
+                        Parent root = loader.load();
+                        TAApplicationHistoryController controller = loader.getController();
+                        controller.setUser((TA) currentUser);
+                        controller.setStage(stage);
+                        Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                        stage.setScene(scene);
+                        stage.setTitle("BUPT International School TA Recruitment System - Application History");
+                        root.requestLayout();
+                        stage.sizeToScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+                features.add(new SearchBarController.Feature("Update Profile", () -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAProfileEdit.fxml"));
+                        Parent root = loader.load();
+                        TAProfileEditController controller = loader.getController();
+                        controller.setUser((TA) currentUser);
+                        controller.setStage(stage);
+                        Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                        stage.setScene(scene);
+                        stage.setTitle("BUPT International School TA Recruitment System - Update Profile");
+                        root.requestLayout();
+                        stage.sizeToScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+                features.add(new SearchBarController.Feature("Upload Resume", () -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAUploadResume.fxml"));
+                        Parent root = loader.load();
+                        TAUploadResumeController controller = loader.getController();
+                        controller.setUser((TA) currentUser);
+                        controller.setStage(stage);
+                        Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                        stage.setScene(scene);
+                        stage.setTitle("BUPT International School TA Recruitment System - Upload Resume");
+                        root.requestLayout();
+                        stage.sizeToScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+                features.add(new SearchBarController.Feature("Personal Center", () -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAProfileView.fxml"));
+                        Parent root = loader.load();
+                        TAProfileViewController controller = loader.getController();
+                        controller.setUser((TA) currentUser);
+                        controller.setStage(stage);
+                        Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                        stage.setScene(scene);
+                        stage.setTitle("BUPT International School TA Recruitment System - Personal Center");
+                        root.requestLayout();
+                        stage.sizeToScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+            } else if (userRole == UserRole.MO) {
+                features.add(new SearchBarController.Feature("Create Job", () -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOCreateJob.fxml"));
+                        Parent root = loader.load();
+                        MOCreateJobController controller = loader.getController();
+                        controller.setUser((MO) currentUser);
+                        controller.setStage(stage);
+                        Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                        stage.setScene(scene);
+                        stage.setTitle("BUPT International School TA Recruitment System - Create TA Position");
+                        root.requestLayout();
+                        stage.sizeToScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+                features.add(new SearchBarController.Feature("Application Review", () -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOApplicationReview.fxml"));
+                        Parent root = loader.load();
+                        MOApplicationReviewController controller = loader.getController();
+                        controller.setUser((MO) currentUser);
+                        controller.setStage(stage);
+                        Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                        stage.setScene(scene);
+                        stage.setTitle("BUPT International School TA Recruitment System - Application Review");
+                        root.requestLayout();
+                        stage.sizeToScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+                features.add(new SearchBarController.Feature("My Jobs", () -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOMyJobs.fxml"));
+                        Parent root = loader.load();
+                        MOMyJobsController controller = loader.getController();
+                        controller.setUser((MO) currentUser);
+                        controller.setStage(stage);
+                        Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                        stage.setScene(scene);
+                        stage.setTitle("BUPT International School TA Recruitment System - My Jobs");
+                        root.requestLayout();
+                        stage.sizeToScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+                features.add(new SearchBarController.Feature("Personal Center", this::handlePersonalCenter));
+                features.add(new SearchBarController.Feature("Job List", () -> handleBack()));
+            } else if (userRole == UserRole.ADMIN) {
+                features.add(new SearchBarController.Feature("User Management", () -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
+                        Parent root = loader.load();
+                        AdminDashboardController controller = loader.getController();
+                        controller.setUser((Admin) currentUser);
+                        controller.setStage(stage);
+                        Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                        stage.setScene(scene);
+                        stage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
+                        root.requestLayout();
+                        stage.sizeToScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+                features.add(new SearchBarController.Feature("Job Management", () -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
+                        Parent root = loader.load();
+                        AdminDashboardController controller = loader.getController();
+                        controller.setUser((Admin) currentUser);
+                        controller.setStage(stage);
+                        Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                        stage.setScene(scene);
+                        stage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
+                        root.requestLayout();
+                        stage.sizeToScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+                features.add(new SearchBarController.Feature("Application Management", () -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
+                        Parent root = loader.load();
+                        AdminDashboardController controller = loader.getController();
+                        controller.setUser((Admin) currentUser);
+                        controller.setStage(stage);
+                        Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                        stage.setScene(scene);
+                        stage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
+                        root.requestLayout();
+                        stage.sizeToScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+                features.add(new SearchBarController.Feature("System Settings", () -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
+                        Parent root = loader.load();
+                        AdminDashboardController controller = loader.getController();
+                        controller.setUser((Admin) currentUser);
+                        controller.setStage(stage);
+                        Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                        scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                        stage.setScene(scene);
+                        stage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
+                        root.requestLayout();
+                        stage.sizeToScene();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }));
+                features.add(new SearchBarController.Feature("Job List", () -> handleBack()));
+            }
+
+            // Load search bar
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SearchBar.fxml"));
+            Parent root = loader.load();
+            SearchBarController controller = loader.getController();
+
+            // Create stage for search bar
+            Stage searchStage = new Stage();
+            searchStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            searchStage.initOwner(stage);
+            searchStage.setTitle("Search Features");
+            // Set fixed size and disable maximize button
+            searchStage.setResizable(false);
+            searchStage.setWidth(600);
+            searchStage.setHeight(450);
+
+            // Set up controller
+            controller.setStage(searchStage);
+            controller.setFeatures(features);
+            controller.setOnFeatureSelected(featureName -> {
+                // Find and execute the selected feature
+                for (SearchBarController.Feature feature : features) {
+                    if (feature.getName().equals(featureName)) {
+                        feature.getAction().run();
+                        break;
+                    }
+                }
+            });
+
+            // Create scene
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            searchStage.setScene(scene);
+
+            // Show search bar
+            searchStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to load search bar: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+>>>>>>> Stashed changes
     private void setupTableColumns() {
         TableColumn<JobListViewModel, String> titleCol = new TableColumn<>("Job Title");
         titleCol.setCellValueFactory(new PropertyValueFactory<>("title"));
-        titleCol.setPrefWidth(200);
+        titleCol.setPrefWidth(180);
 
         TableColumn<JobListViewModel, String> departmentCol = new TableColumn<>("Department");
         departmentCol.setCellValueFactory(new PropertyValueFactory<>("department"));
-        departmentCol.setPrefWidth(120);
+        departmentCol.setPrefWidth(140);
+
+        TableColumn<JobListViewModel, String> moCol = new TableColumn<>("MO");
+        moCol.setCellValueFactory(new PropertyValueFactory<>("publisher"));
+        moCol.setPrefWidth(130);
 
         TableColumn<JobListViewModel, String> typeCol = new TableColumn<>("Job Type");
         typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
-        typeCol.setPrefWidth(120);
+        typeCol.setPrefWidth(130);
 
         TableColumn<JobListViewModel, String> requirementsCol = new TableColumn<>("Requirements");
         requirementsCol.setCellValueFactory(new PropertyValueFactory<>("requirements"));
-        requirementsCol.setPrefWidth(250);
-
-        TableColumn<JobListViewModel, String> publishDateCol = new TableColumn<>("Published Date");
-        publishDateCol.setCellValueFactory(new PropertyValueFactory<>("publishDate"));
-        publishDateCol.setPrefWidth(120);
+        requirementsCol.setPrefWidth(760);
+        requirementsCol.setCellFactory(col -> new TableCell<JobListViewModel, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
+                    setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
+                    setTooltip(null);
+                }
+            }
+        });
 
         TableColumn<JobListViewModel, String> deadlineCol = new TableColumn<>("Deadline");
         deadlineCol.setCellValueFactory(new PropertyValueFactory<>("deadline"));
         deadlineCol.setPrefWidth(120);
 
-        TableColumn<JobListViewModel, String> publisherCol = new TableColumn<>("Publisher");
-        publisherCol.setCellValueFactory(new PropertyValueFactory<>("publisher"));
-        publisherCol.setPrefWidth(100);
-
         TableColumn<JobListViewModel, String> statusCol = new TableColumn<>("Status");
         statusCol.setCellValueFactory(new PropertyValueFactory<>("status"));
-        statusCol.setPrefWidth(80);
+        statusCol.setPrefWidth(100);
+
+        TableColumn<JobListViewModel, String> headcountCol = new TableColumn<>("Headcount");
+        headcountCol.setCellValueFactory(new PropertyValueFactory<>("headcount"));
+        headcountCol.setPrefWidth(110);
 
         jobsTable.getColumns().clear();
-        jobsTable.getColumns().addAll(titleCol, departmentCol, typeCol, requirementsCol, publishDateCol, deadlineCol, publisherCol, statusCol);
+        jobsTable.getColumns().addAll(titleCol, departmentCol, moCol, typeCol, requirementsCol, deadlineCol, statusCol, headcountCol);
+        jobsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     private void initializeView() {
@@ -166,6 +444,7 @@ public class JobListController {
         ObservableList<JobListViewModel> jobList = FXCollections.observableArrayList();
 
         for (Job job : jobs) {
+<<<<<<< Updated upstream
             // Get publisher name
             String publisher = job.getPublisherName();
             if (publisher == null || publisher.isEmpty()) {
@@ -175,6 +454,9 @@ public class JobListController {
                     publisher = "Module Organizer";
                 }
             }
+=======
+            String publisher = resolveMoAccount(job);
+>>>>>>> Stashed changes
 
             // Format publish date
             String publishDate = formatDisplayDate(job.getCreatedAt());
@@ -184,12 +466,10 @@ public class JobListController {
 
             // Get job requirement summary
             String requirements = job.getDescription();
-            if (requirements != null && requirements.length() > 50) {
-                requirements = requirements.substring(0, 50) + "...";
-            }
 
             // Get status
             String status = job.getStatus() != null ? job.getStatus().toString() : "UNKNOWN";
+            String headcount = job.getCurrentNum() + " / " + job.getRecruitNum();
 
             jobList.add(new JobListViewModel(
                 job.getId(),
@@ -201,12 +481,14 @@ public class JobListController {
                 deadline,
                 publisher,
                 status,
+                headcount,
                 job
             ));
         }
 
         allJobs.setAll(jobList);
         jobsTable.setItems(FXCollections.observableArrayList(allJobs));
+        jobsTable.refresh();
         updateResultCount(jobList.size());
     }
 
@@ -236,6 +518,7 @@ public class JobListController {
         }
 
         jobsTable.setItems(filteredList);
+        jobsTable.refresh();
         updateResultCount(filteredList.size());
     }
 
@@ -275,6 +558,109 @@ public class JobListController {
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Failed to load page: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handleJobRequirements() {
+        // Already on TA job requirements page
+    }
+
+    @FXML
+    private void handleApplicationManagement() {
+        if (!(currentUser instanceof TA)) {
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
+            Parent root = loader.load();
+            TAApplicationHistoryController controller = loader.getController();
+            controller.setUser((TA) currentUser);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Application History");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open application management: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handlePersonalCenter() {
+        try {
+            if (currentUser instanceof TA) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAProfileView.fxml"));
+                Parent root = loader.load();
+                TAProfileViewController controller = loader.getController();
+                controller.setUser((TA) currentUser);
+                controller.setStage(stage);
+
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - Personal Center");
+            } else if (currentUser instanceof MO) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOProfileView.fxml"));
+                Parent root = loader.load();
+                MOProfileViewController controller = loader.getController();
+                controller.setUser((MO) currentUser);
+                controller.setStage(stage);
+
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - MO Personal Center");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open personal center: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handleReviewApplications() {
+        if (!(currentUser instanceof MO)) {
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOApplicationReview.fxml"));
+            Parent root = loader.load();
+            MOApplicationReviewController controller = loader.getController();
+            controller.setUser((MO) currentUser);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Application Review");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open application review: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handleMyJobs() {
+        if (!(currentUser instanceof MO)) {
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOMyJobs.fxml"));
+            Parent root = loader.load();
+            MOMyJobsController controller = loader.getController();
+            controller.setUser((MO) currentUser);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - My Jobs");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open my jobs: " + e.getMessage(), ToastService.ToastType.ERROR);
         }
     }
 
@@ -326,6 +712,32 @@ public class JobListController {
             e.printStackTrace();
             showAlert("Error", "Failed to go back: " + e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+
+    private String resolveMoAccount(Job job) {
+        if (job == null) {
+            return "-";
+        }
+
+        String moId = job.getMoId();
+        if ((moId == null || moId.isBlank()) && job.getPublisherId() != null && !job.getPublisherId().isBlank()) {
+            moId = job.getPublisherId();
+        }
+
+        if (moId != null && !moId.isBlank()) {
+            List<User> moUsers = UserService.getUsersByRole(UserRole.MO);
+            for (User u : moUsers) {
+                if (moId.equals(u.getId())) {
+                    return u.getUsername() != null && !u.getUsername().isBlank() ? u.getUsername() : "-";
+                }
+            }
+        }
+
+        if (job.getPublisherName() != null && !job.getPublisherName().isBlank()) {
+            return job.getPublisherName();
+        }
+
+        return "-";
     }
 
     private void showJobDetail(String jobId) {
@@ -432,11 +844,12 @@ public class JobListController {
         private String deadline;
         private String publisher;
         private String status;
+        private String headcount;
         private Job job;
 
         public JobListViewModel(String jobId, String title, String department, String type,
                                 String requirements, String publishDate, String deadline,
-                                String publisher, String status, Job job) {
+                                String publisher, String status, String headcount, Job job) {
             this.jobId = jobId;
             this.title = title;
             this.department = department;
@@ -446,6 +859,7 @@ public class JobListController {
             this.deadline = deadline;
             this.publisher = publisher;
             this.status = status;
+            this.headcount = headcount;
             this.job = job;
         }
 
@@ -458,6 +872,7 @@ public class JobListController {
         public String getDeadline() { return deadline; }
         public String getPublisher() { return publisher; }
         public String getStatus() { return status; }
+        public String getHeadcount() { return headcount; }
         public Job getJob() { return job; }
     }
 }

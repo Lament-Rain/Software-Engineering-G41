@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane fx:id="moDashboardPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MODashboardController">
+<<<<<<< Updated upstream
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
             <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
@@ -17,10 +18,30 @@
                 <Label text="Welcome, Module Organizer" textFill="rgba(255,255,255,0.85)" />
                 <Separator orientation="VERTICAL" styleClass="navbar-separator" />
                 <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" />
+=======
+    <!-- ????-->    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true; -fx-min-height: 64px;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
+                <StackPane style="-fx-background-radius: 50%; -fx-background-color: #003366; -fx-pref-width: 36px; -fx-pref-height: 36px; -fx-alignment: center;">
+                    <Label text="MO" style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #ffffff;" />
+                </StackPane>
+                <Label text="Welcome, Module Organizer" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu active" onAction="#handleHome" accessibleText="Go to home page" />
+                <Button text="Job Board" styleClass="navbar-menu" onAction="#handleJobManagement" accessibleText="Browse job board" />
+                <Button text="My Jobs" styleClass="navbar-menu" onAction="#handleViewMyJobs" accessibleText="View my jobs" />
+                <Button text="Application Review" styleClass="navbar-menu" onAction="#handleApplicationManagement" accessibleText="Review applications" />
+                <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
+                <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" accessibleText="Log out of the system" />
+>>>>>>> Stashed changes
             </HBox>
         </HBox>
     </VBox>
 
+<<<<<<< Updated upstream
     <ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
         <VBox style="-fx-padding: 32px; -fx-spacing: 32px; -fx-fill-width: true; -fx-background-color: #f8f9fa; -fx-alignment: center; -fx-pref-width: 1240px;">
             <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true;">
@@ -56,6 +77,49 @@
                     </VBox>
                 </HBox>
                 <TableView fx:id="jobsTable" style="-fx-pref-height: 250px; -fx-fixed-cell-size: 36px; -fx-font-size: 12px;">
+=======
+    <!-- ???? -->
+    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="64.0">
+        <VBox style="-fx-padding: 48px 24px 48px 24px; -fx-spacing: 48px; -fx-fill-width: true; -fx-background-color: #f9fafb; -fx-alignment: center; -fx-pref-width: 1240px;">
+            <!-- ???? -->
+            <VBox style="-fx-spacing: 8; -fx-alignment: center-left; -fx-fill-width: true;">
+                <Label text="Module Organizer Dashboard" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                <Label text="Manage job postings and review applications" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
+            </VBox>
+            
+            <!-- ???? -->
+            <HBox style="-fx-spacing: 24; -fx-fill-width: true; -fx-alignment: center;">
+                <!-- ???? -->
+                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 24px; -fx-spacing: 12; -fx-alignment: center; -fx-min-width: 200px; -fx-pref-width: 240px;" accessibleText="Number of published jobs">
+                    <Label text="File" style="-fx-font-size: 24px; -fx-text-fill: #7a67ee;" />
+                    <Label fx:id="publishedJobsLabel" text="8" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
+                    <Label text="My Jobs" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                </VBox>
+                <!-- ???? -->
+                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 24px; -fx-spacing: 12; -fx-alignment: center; -fx-min-width: 200px; -fx-pref-width: 240px;" accessibleText="Total number of applications">
+                    <Label text="Users" style="-fx-font-size: 24px; -fx-text-fill: #7a67ee;" />
+                    <Label fx:id="totalApplicationsLabel" text="42" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
+                    <Label text="Total Applications" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                </VBox>
+                <!-- ?????? -->
+                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 24px; -fx-spacing: 12; -fx-alignment: center; -fx-min-width: 200px; -fx-pref-width: 240px;" accessibleText="Number of accepted applicants">
+                    <Label text="Check" style="-fx-font-size: 24px; -fx-text-fill: #7a67ee;" />
+                    <Label fx:id="acceptedApplicationsLabel" text="15" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
+                    <Label text="Accepted Applicants" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                </VBox>
+            </HBox>
+            
+            <!-- ?????? -->
+            <VBox styleClass="card-gradient" maxWidth="Infinity" style="-fx-padding: 16px; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 8, 0, 0, 4); -fx-background-color: white;">
+                <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true; -fx-padding: 0 0 16 0;">
+                    <VBox style="-fx-spacing: 4; -fx-fill-width: true;">
+                        <Label text="My Posted Jobs" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #333333;" />
+                        <Label text="Review every position you created. Click a row to open job details." style="-fx-font-size: 12px; -fx-text-fill: #666666;" />
+                    </VBox>
+                </HBox>
+
+                <TableView fx:id="jobsTable" styleClass="job-list-table" style="-fx-pref-height: 360px; -fx-fixed-cell-size: 52px; -fx-font-size: 12px; -fx-background-color: transparent; -fx-border-color: transparent;" accessibleText="List of your posted jobs">
+>>>>>>> Stashed changes
                     <columns>
                         <TableColumn text="Title" prefWidth="280">
                             <cellValueFactory>
@@ -84,16 +148,23 @@
                         </TableColumn>
                     </columns>
                     <placeholder>
-                        <VBox alignment="CENTER" style="-fx-spacing: 8; -fx-padding: 30px;">
+                        <VBox alignment="CENTER" style="-fx-spacing: 10; -fx-padding: 32px;">
                             <Label text="No jobs created yet" style="-fx-font-size: 16px; -fx-font-weight: 700; -fx-text-fill: #5c6b7a;" />
                             <Label text="Use Create Job below to publish your first opening" style="-fx-font-size: 12px; -fx-text-fill: #8b97a3;" />
                         </VBox>
                     </placeholder>
                 </TableView>
             </VBox>
+<<<<<<< Updated upstream
 
             <VBox styleClass="card shadow-md" style="-fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px;">
                 <Label text="Quick Actions" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057; -fx-padding: 0 0 20 0;" />
+=======
+            
+            <!-- ?????-->
+            <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 6, 0.0, 0, 4); -fx-padding: 32px; -fx-spacing: 16; -fx-fill-width: true;">
+                <Label text="Quick Actions" style="-fx-font-size: 20px; -fx-font-weight: 600; -fx-text-fill: #1f2937;" />
+>>>>>>> Stashed changes
                 <HBox style="-fx-spacing: 16; -fx-alignment: center-left; -fx-fill-width: true;">
                     <Button text="Create Job" styleClass="btn btn-primary" onAction="#handleCreateJob" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
                     <Button text="My Jobs" styleClass="btn btn-primary" onAction="#handleViewMyJobs" style="-fx-pref-width: 180px; -fx-min-height: 40px;" />
@@ -101,6 +172,26 @@
                     <Button text="Export Application Data" styleClass="btn btn-secondary" onAction="#handleExportData" style="-fx-pref-width: 200px; -fx-min-height: 40px;" />
                 </HBox>
             </VBox>
+<<<<<<< Updated upstream
         </VBox>
     </ScrollPane>
 </AnchorPane>
+=======
+            
+            <!-- ??????-->
+            <HBox style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.05), 2, 0.0, 0, 1); -fx-padding: 24px; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
+                <Label text="Keyboard shortcuts:" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                <Label text="Ctrl+N" style="-fx-padding: 4 8 4 8; -fx-background-color: #f3f4f6; -fx-border-width: 1px; -fx-border-color: #d1d5db; -fx-background-radius: 6px; -fx-font-family: 'Inter', monospace; -fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
+                <Label text="to create job" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                <Region style="-fx-pref-width: 16px;" />
+                <Label text="Ctrl+F" style="-fx-padding: 4 8 4 8; -fx-background-color: #f3f4f6; -fx-border-width: 1px; -fx-border-color: #d1d5db; -fx-background-radius: 6px; -fx-font-family: 'Inter', monospace; -fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
+                <Label text="to search" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                <Region style="-fx-pref-width: 16px;" />
+                <Label text="Esc" style="-fx-padding: 4 8 4 8; -fx-background-color: #f3f4f6; -fx-border-width: 1px; -fx-border-color: #d1d5db; -fx-background-radius: 6px; -fx-font-family: 'Inter', monospace; -fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
+                <Label text="to go home" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>
+
+>>>>>>> Stashed changes

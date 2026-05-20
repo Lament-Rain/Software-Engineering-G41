@@ -47,15 +47,11 @@ public class TAProfileEditController {
     @FXML
     private TextField studentIdField;
     @FXML
-    private TextArea availableTimeField;
-    @FXML
     private TextField skillsField;
     @FXML
     private TextArea experienceField;
     @FXML
     private TextArea awardsField;
-    @FXML
-    private TextField languageSkillsField;
     @FXML
     private TextArea otherSkillsField;
     @FXML
@@ -106,7 +102,6 @@ public class TAProfileEditController {
         departmentField.textProperty().addListener(textChangeListener);
         gradeField.textProperty().addListener(textChangeListener);
         studentIdField.textProperty().addListener(textChangeListener);
-        availableTimeField.textProperty().addListener(textChangeListener);
         skillsField.textProperty().addListener(textChangeListener);
         experienceField.textProperty().addListener(textChangeListener);
         
@@ -161,7 +156,6 @@ public class TAProfileEditController {
         if (!departmentField.getText().trim().isEmpty()) completed++;
         if (!gradeField.getText().trim().isEmpty()) completed++;
         if (!studentIdField.getText().trim().isEmpty()) completed++;
-        if (!availableTimeField.getText().trim().isEmpty()) completed++;
         if (!skillsField.getText().trim().isEmpty()) completed++;
         if (!experienceField.getText().trim().isEmpty()) completed++;
         
@@ -187,8 +181,292 @@ public class TAProfileEditController {
     
     public void setStage(Stage stage) {
         this.stage = stage;
+<<<<<<< Updated upstream
+=======
+        setupKeyboardShortcuts();
     }
     
+    private void setupKeyboardShortcuts() {
+        shortcutService = new KeyboardShortcutService(stage);
+        shortcutService.registerShortcut("ctrl+f", this::handleSearchAction);
+        shortcutService.registerShortcut("escape", this::handleHome);
+
+        if (stage.getScene() != null) {
+            Parent root = stage.getScene().getRoot();
+            shortcutService.setupEnterKeyNavigation(root);
+        }
+    }
+    
+    @FXML
+    private void handleHome() {
+        // If we can go back, do so; otherwise, go to dashboard
+        if (service.NavigationHistory.getInstance().canGoBack()) {
+            service.NavigationHistory.getInstance().goBack();
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TADashboard.fxml"));
+                Parent root = loader.load();
+                TADashboardController controller = loader.getController();
+                // Returning from other pages, don't show welcome guide
+                controller.setUser(user, false);
+
+                // Keep current window size and add stylesheet
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                // Add stylesheet
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - TA Dashboard");
+            } catch (Exception e) {
+                e.printStackTrace();
+                showError("Failed to load page");
+            }
+        }
+    }
+    
+    private void handleSearchAction() {
+        showSearchBar();
+    }
+
+    private void showSearchBar() {
+        try {
+            // Create list of TA features
+            List<SearchBarController.Feature> features = new java.util.ArrayList<>();
+            features.add(new SearchBarController.Feature("Job Requirements", () -> handleJobRequirements(new ActionEvent())));
+            features.add(new SearchBarController.Feature("My Applications", this::openMyApplications));
+            features.add(new SearchBarController.Feature("Update Profile", () -> handleUpdateProfile(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Upload Resume", () -> handleUploadResume(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Personal Center", () -> handlePersonalCenter(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Job List", () -> handleViewJobs(new ActionEvent())));
+
+            // Load search bar
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SearchBar.fxml"));
+            Parent root = loader.load();
+            SearchBarController controller = loader.getController();
+
+            // Create stage for search bar
+            Stage searchStage = new Stage();
+            searchStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            searchStage.initOwner(stage);
+            searchStage.setTitle("Search Features");
+
+            // Set up controller
+            controller.setStage(searchStage);
+            controller.setFeatures(features);
+            controller.setOnFeatureSelected(featureName -> {
+                // Find and execute the selected feature
+                for (SearchBarController.Feature feature : features) {
+                    if (feature.getName().equals(featureName)) {
+                        feature.getAction().run();
+                        break;
+                    }
+                }
+            });
+
+            // Create scene
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            searchStage.setScene(scene);
+
+
+
+            // Show search bar
+            searchStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to load search bar");
+        }
+    }
+
+
+
+    private void openMyApplications() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
+            Parent root = loader.load();
+            TAApplicationHistoryController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            service.NavigationHistory.getInstance().addEntry("TAApplicationHistory", () -> {
+                try {
+                    FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/fxml/TAProfileEdit.fxml"));
+                    Parent profileRoot = profileLoader.load();
+                    TAProfileEditController profileController = profileLoader.getController();
+                    profileController.setUser(user);
+                    profileController.setStage(stage);
+                    
+                    Scene scene = new Scene(profileRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Update Profile");
+                    
+                    // Force layout update to ensure components resize properly
+                    profileRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showError("Failed to load profile page");
+                }
+            });
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Application History");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to load application history page");
+        }
+    }
+
+    private void handleUpdateProfile(ActionEvent event) {
+        // Already on profile edit page, no action needed
+    }
+
+    private void handleUploadResume(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAUploadResume.fxml"));
+            Parent root = loader.load();
+            TAUploadResumeController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            service.NavigationHistory.getInstance().addEntry("TAUploadResume", () -> {
+                try {
+                    FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/fxml/TAProfileEdit.fxml"));
+                    Parent profileRoot = profileLoader.load();
+                    TAProfileEditController profileController = profileLoader.getController();
+                    profileController.setUser(user);
+                    profileController.setStage(stage);
+                    
+                    Scene scene = new Scene(profileRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Update Profile");
+                    
+                    // Force layout update to ensure components resize properly
+                    profileRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showError("Failed to load profile page");
+                }
+            });
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Upload Resume");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to load upload resume page");
+        }
+    }
+
+    @FXML
+    private void handlePersonalCenter(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAProfileView.fxml"));
+            Parent root = loader.load();
+            TAProfileViewController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            service.NavigationHistory.getInstance().addEntry("TAProfileView", () -> {
+                try {
+                    FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/fxml/TAProfileEdit.fxml"));
+                    Parent profileRoot = profileLoader.load();
+                    TAProfileEditController profileController = profileLoader.getController();
+                    profileController.setUser(user);
+                    profileController.setStage(stage);
+                    
+                    Scene scene = new Scene(profileRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Update Profile");
+                    
+                    // Force layout update to ensure components resize properly
+                    profileRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showError("Failed to load profile page");
+                }
+            });
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Personal Center");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to load personal center page");
+        }
+    }
+
+    private void handleViewJobs(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/JobList.fxml"));
+            Parent root = loader.load();
+            JobListController controller = loader.getController();
+            controller.setUser(user, model.UserRole.TA);
+            controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            service.NavigationHistory.getInstance().addEntry("JobList", () -> {
+                try {
+                    FXMLLoader profileLoader = new FXMLLoader(getClass().getResource("/fxml/TAProfileEdit.fxml"));
+                    Parent profileRoot = profileLoader.load();
+                    TAProfileEditController profileController = profileLoader.getController();
+                    profileController.setUser(user);
+                    profileController.setStage(stage);
+                    
+                    Scene scene = new Scene(profileRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Update Profile");
+                    
+                    // Force layout update to ensure components resize properly
+                    profileRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showError("Failed to load profile page");
+                }
+            });
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Job Board");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to load job list page");
+        }
+>>>>>>> Stashed changes
+    }
+    
+    @FXML
+    private void handleLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            Parent root = loader.load();
+            LoginController controller = loader.getController();
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to logout");
+        }
+    }
+
     public void setUser(TA user) {
         this.user = user;
         loadUserData();
@@ -219,7 +497,6 @@ public class TAProfileEditController {
             departmentField.setText(user.getDepartment() != null ? user.getDepartment() : "");
             gradeField.setText(user.getGrade() != null ? user.getGrade() : "");
             studentIdField.setText(user.getStudentId() != null ? user.getStudentId() : "");
-            availableTimeField.setText(user.getAvailableTime() != null ? user.getAvailableTime() : "");
             
             // Convert skills list to string
             if (user.getSkills() != null && !user.getSkills().isEmpty()) {
@@ -232,7 +509,6 @@ public class TAProfileEditController {
             
             experienceField.setText(user.getExperience() != null ? user.getExperience() : "");
             awardsField.setText(user.getAwards() != null ? user.getAwards() : "");
-            languageSkillsField.setText(user.getLanguageSkills() != null ? user.getLanguageSkills() : "");
             otherSkillsField.setText(user.getOtherSkills() != null ? user.getOtherSkills() : "");
         }
     }
@@ -265,11 +541,9 @@ public class TAProfileEditController {
         String department = departmentField.getText().trim();
         String grade = gradeField.getText().trim();
         String studentId = studentIdField.getText().trim();
-        String availableTime = availableTimeField.getText().trim();
         String skillsStr = skillsField.getText().trim();
         String experience = experienceField.getText().trim();
         String awards = awardsField.getText().trim();
-        String languageSkills = languageSkillsField.getText().trim();
         String otherSkills = otherSkillsField.getText().trim();
         
         // Validate input
@@ -298,11 +572,14 @@ public class TAProfileEditController {
             studentIdField.requestFocus();
             return;
         }
+<<<<<<< Updated upstream
         if (availableTime.isEmpty()) {
             showError("Please enter available work time");
             availableTimeField.requestFocus();
             return;
         }
+=======
+>>>>>>> Stashed changes
         if (skillsStr.isEmpty()) {
             showError("Please enter specialized subjects/skills");
             skillsField.requestFocus();
@@ -342,11 +619,9 @@ public class TAProfileEditController {
         user.setDepartment(department);
         user.setGrade(grade);
         user.setStudentId(studentId);
-        user.setAvailableTime(availableTime);
         user.setSkills(skills);
         user.setExperience(experience);
         user.setAwards(awards);
-        user.setLanguageSkills(languageSkills);
         user.setOtherSkills(otherSkills);
         if (status == ProfileStatus.PENDING) {
             user.setProfileStatus(ProfileStatus.PENDING);
@@ -384,11 +659,9 @@ public class TAProfileEditController {
         departmentField.clear();
         gradeField.clear();
         studentIdField.clear();
-        availableTimeField.clear();
         skillsField.clear();
         experienceField.clear();
         awardsField.clear();
-        languageSkillsField.clear();
         otherSkillsField.clear();
         messageLabel.setText("");
     }

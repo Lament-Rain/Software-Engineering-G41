@@ -6,17 +6,37 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MOApplicationReviewController">
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<<<<<<< Updated upstream
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
             <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
             <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;" />
             <Button text="Back to MO Dashboard" styleClass="navbar-menu" onAction="#handleBack" />
+=======
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
+                <StackPane style="-fx-background-radius: 50%; -fx-background-color: #003366; -fx-pref-width: 36px; -fx-pref-height: 36px; -fx-alignment: center;">
+                    <Label text="MO" style="-fx-text-fill: white; -fx-font-weight: 600; -fx-font-size: 14px;" />
+                </StackPane>
+                <Label text="Welcome, Module Organizer" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu" onAction="#handleBack" accessibleText="Go to home page" />
+                <Button text="Job Board" styleClass="navbar-menu" onAction="#handleViewAllJobs" accessibleText="Browse jobs" />
+                <Button text="My Jobs" styleClass="navbar-menu" onAction="#handleViewMyJobs" accessibleText="My jobs" />
+                <Button text="Application Review" styleClass="navbar-menu active" onAction="#handleBack" accessibleText="Application review" />
+                <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
+                <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" accessibleText="Log out" />
+            </HBox>
+>>>>>>> Stashed changes
         </HBox>
     </VBox>
 
     <ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
         <VBox style="-fx-padding: 32px; -fx-spacing: 24px; -fx-background-color: #f8f9fa; -fx-pref-width: 1240px;">
             <VBox style="-fx-spacing: 8;">
-                <Label text="Applicant Review" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                <Label text="Application Review" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
                 <Label text="Choose one of your jobs to review applicants and mark them as screened, accepted, or rejected." textFill="#6c757d" style="-fx-font-size: 14px;" />
             </VBox>
 
@@ -42,8 +62,21 @@
 
             <HBox spacing="24" alignment="TOP_LEFT">
                 <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 16; -fx-pref-width: 770px;">
+<<<<<<< Updated upstream
                     <Label text="Applicant List" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
                     <TableView fx:id="applicantsTable" style="-fx-pref-height: 500px;">
+=======
+                    <HBox style="-fx-spacing: 12; -fx-alignment: center-left;">
+                    <Label text="Applicant List" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
+                    <Label text="Sort by" style="-fx-font-size: 13px; -fx-text-fill: #6c757d;" />
+                    <ComboBox fx:id="sortModeSelector" style="-fx-pref-width: 210px;" promptText="Select sort mode" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Label fx:id="selectedCountLabel" text="0 selected" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" visible="false" />
+                    <Button text="Previous" onAction="#handlePreviousPage" styleClass="btn btn-secondary" style="-fx-pref-width: 90px;" accessibleText="Show previous page" />
+                    <Button text="Next" onAction="#handleNextPage" styleClass="btn btn-secondary" style="-fx-pref-width: 90px;" accessibleText="Show next page" />
+                </HBox>
+                    <TableView fx:id="applicantsTable" style="-fx-pref-height: 500px;" accessibleText="List of applicants for selected job">
+>>>>>>> Stashed changes
                         <columns>
                             <TableColumn fx:id="nameColumn" text="Applicant" prefWidth="150" />
                             <TableColumn fx:id="departmentColumn" text="Department" prefWidth="120" />
@@ -80,3 +113,5 @@
         </VBox>
     </ScrollPane>
 </AnchorPane>
+
+

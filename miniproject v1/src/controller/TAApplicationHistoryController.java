@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -82,12 +83,38 @@ public class TAApplicationHistoryController {
         reviewCommentColumn.setCellValueFactory(new PropertyValueFactory<>("reviewComment"));
         matchScoreColumn.setCellValueFactory(new PropertyValueFactory<>("matchScore"));
 
+        jobTitleColumn.setCellFactory(col -> createAlignedTextCell());
+        departmentColumn.setCellFactory(col -> createAlignedTextCell());
+        appliedAtColumn.setCellFactory(col -> createAlignedTextCell());
+        statusColumn.setCellFactory(col -> createAlignedTextCell());
+        reviewTimeColumn.setCellFactory(col -> createAlignedTextCell());
+        reviewCommentColumn.setCellFactory(col -> createAlignedTextCell());
+        matchScoreColumn.setCellFactory(col -> createAlignedTextCell());
+
+        applicationsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
         statusFilter.getItems().addAll("ALL", "PENDING", "SCREENED", "ACCEPTED", "REJECTED", "WITHDRAWN");
         statusFilter.setValue("ALL");
         departmentFilter.getItems().add("ALL");
         departmentFilter.setValue("ALL");
 
         applicationsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> showDetails(newValue));
+    }
+
+    private TableCell<ApplicationHistoryViewModel, String> createAlignedTextCell() {
+        return new TableCell<ApplicationHistoryViewModel, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
+                    setTextOverrun(javafx.scene.control.OverrunStyle.ELLIPSIS);
+                }
+                setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+            }
+        };
     }
 
     public void setUser(TA user) {
@@ -97,6 +124,245 @@ public class TAApplicationHistoryController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+<<<<<<< Updated upstream
+=======
+        setupKeyboardShortcuts();
+    }
+    
+    private void setupKeyboardShortcuts() {
+        shortcutService = new KeyboardShortcutService(stage);
+        shortcutService.registerShortcut("ctrl+f", this::handleSearchAction);
+        shortcutService.registerShortcut("escape", this::handleBack);
+
+        if (stage.getScene() != null) {
+            Parent root = stage.getScene().getRoot();
+            shortcutService.setupEnterKeyNavigation(root);
+        }
+    }
+    
+    private void handleSearchAction() {
+        showSearchBar();
+    }
+
+    private void showSearchBar() {
+        try {
+            // Create list of TA features
+            List<SearchBarController.Feature> features = new java.util.ArrayList<>();
+            features.add(new SearchBarController.Feature("Job Requirements", () -> handleJobRequirements()));
+            features.add(new SearchBarController.Feature("My Applications", () -> handleApplicationManagement()));
+            features.add(new SearchBarController.Feature("Update Profile", () -> handleUpdateProfile()));
+            features.add(new SearchBarController.Feature("Upload Resume", () -> handleUploadResume()));
+            features.add(new SearchBarController.Feature("Personal Center", () -> handlePersonalCenter()));
+
+            // Load search bar
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SearchBar.fxml"));
+            Parent root = loader.load();
+            SearchBarController controller = loader.getController();
+
+            // Create stage for search bar
+            Stage searchStage = new Stage();
+            searchStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            searchStage.initOwner(stage);
+            searchStage.setTitle("Search Features");
+
+            // Set up controller
+            controller.setStage(searchStage);
+            controller.setFeatures(features);
+            controller.setOnFeatureSelected(featureName -> {
+                // Find and execute the selected feature
+                for (SearchBarController.Feature feature : features) {
+                    if (feature.getName().equals(featureName)) {
+                        feature.getAction().run();
+                        break;
+                    }
+                }
+            });
+
+            // Create scene
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            searchStage.setScene(scene);
+
+
+
+            // Show search bar
+            searchStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load search bar: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleJobRequirements() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAJobBoard.fxml"));
+            Parent root = loader.load();
+            JobListController controller = loader.getController();
+            controller.setUser(user, model.UserRole.TA);
+            controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("JobList", () -> {
+                try {
+                    FXMLLoader historyLoader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
+                    Parent historyRoot = historyLoader.load();
+                    TAApplicationHistoryController historyController = historyLoader.getController();
+                    historyController.setUser(user);
+                    historyController.setStage(stage);
+                    
+                    Scene scene = new Scene(historyRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Application History");
+                    
+                    // Force layout update to ensure components resize properly
+                    historyRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to load application history page: " + e.getMessage());
+                }
+            });
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Job Requirements");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load job list page: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleApplicationManagement() {
+        // Already on this page, do nothing
+    }
+
+    private void handleUpdateProfile() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAProfileEdit.fxml"));
+            Parent root = loader.load();
+            TAProfileEditController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("TAProfileEdit", () -> {
+                try {
+                    FXMLLoader historyLoader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
+                    Parent historyRoot = historyLoader.load();
+                    TAApplicationHistoryController historyController = historyLoader.getController();
+                    historyController.setUser(user);
+                    historyController.setStage(stage);
+                    
+                    Scene scene = new Scene(historyRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Application History");
+                    
+                    // Force layout update to ensure components resize properly
+                    historyRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to load application history page: " + e.getMessage());
+                }
+            });
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Update Profile");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load profile edit page: " + e.getMessage());
+        }
+    }
+
+    private void handleUploadResume() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAUploadResume.fxml"));
+            Parent root = loader.load();
+            TAUploadResumeController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("TAUploadResume", () -> {
+                try {
+                    FXMLLoader historyLoader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
+                    Parent historyRoot = historyLoader.load();
+                    TAApplicationHistoryController historyController = historyLoader.getController();
+                    historyController.setUser(user);
+                    historyController.setStage(stage);
+                    
+                    Scene scene = new Scene(historyRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Application History");
+                    
+                    // Force layout update to ensure components resize properly
+                    historyRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to load application history page: " + e.getMessage());
+                }
+            });
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Upload Resume");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load upload resume page: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handlePersonalCenter() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAProfileView.fxml"));
+            Parent root = loader.load();
+            TAProfileViewController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("TAProfileView", () -> {
+                try {
+                    FXMLLoader historyLoader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
+                    Parent historyRoot = historyLoader.load();
+                    TAApplicationHistoryController historyController = historyLoader.getController();
+                    historyController.setUser(user);
+                    historyController.setStage(stage);
+                    
+                    Scene scene = new Scene(historyRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Application History");
+                    
+                    // Force layout update to ensure components resize properly
+                    historyRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to load application history page: " + e.getMessage());
+                }
+            });
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Personal Center");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load personal center page: " + e.getMessage());
+        }
+>>>>>>> Stashed changes
     }
 
     private void refreshApplications() {
@@ -211,7 +477,13 @@ public class TAApplicationHistoryController {
         if (value == null || value.isEmpty() || "null".equalsIgnoreCase(value)) {
             return "-";
         }
-        return value.replace('T', ' ');
+
+        String normalized = value.replace('T', ' ').trim();
+        int dotIndex = normalized.indexOf('.');
+        if (dotIndex > 0) {
+            normalized = normalized.substring(0, dotIndex);
+        }
+        return normalized;
     }
 
     private String safeText(String value) {

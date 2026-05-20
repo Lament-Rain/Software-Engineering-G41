@@ -9,6 +9,7 @@
 <AnchorPane fx:id="uploadResumePane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TAUploadResumeController">
     <!-- Navigation Bar -->
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<<<<<<< Updated upstream
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
             <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
             <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;">
@@ -21,6 +22,17 @@
                 <Label text="Welcome, TA Applicant" textFill="rgba(255,255,255,0.85)" />
                 <Button text="Back to TA Dashboard" styleClass="navbar-menu" onAction="#handleBack" />
                 <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" />
+=======
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu" onAction="#handleHome" accessibleText="Go to home page" />
+                <Button text="Job Requirements" styleClass="navbar-menu" onAction="#handleJobRequirements" accessibleText="View job requirements" />
+                <Button text="Application Management" styleClass="navbar-menu" onAction="#handleApplicationManagement" accessibleText="Manage your applications" />
+                <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
+                <Button text="Back to Dashboard" styleClass="navbar-menu" onAction="#handleBack" accessibleText="Return to TA dashboard" />
+>>>>>>> Stashed changes
             </HBox>
         </HBox>
     </VBox>
@@ -48,4 +60,10 @@
             </VBox>
         </VBox>
     </VBox>
+<<<<<<< Updated upstream
 </AnchorPane>
+=======
+</AnchorPane>
+
+
+>>>>>>> Stashed changes

@@ -11,18 +11,24 @@ public class DataStorage {
     private static List<Application> applications = new ArrayList<>();
     private static List<Log> logs = new ArrayList<>();
 
-    private static final String USERS_FILE = "src/data/users.txt";
-    private static final String JOBS_FILE = "src/data/jobs.txt";
-    private static final String APPLICATIONS_FILE = "src/data/applications.txt";
-    private static final String LOGS_FILE = "src/data/logs.txt";
+    private static final File DATA_DIR = resolveDataDirectory();
+    private static final String USERS_FILE = new File(DATA_DIR, "users.txt").getAbsolutePath();
+    private static final String JOBS_FILE = new File(DATA_DIR, "jobs.txt").getAbsolutePath();
+    private static final String APPLICATIONS_FILE = new File(DATA_DIR, "applications.txt").getAbsolutePath();
+    private static final String LOGS_FILE = new File(DATA_DIR, "logs.txt").getAbsolutePath();
 
     // Initialize data storage
     public static void initialize() {
         try {
+<<<<<<< Updated upstream
             // Ensure the data directory exists
             File dataDir = new File("src/data");
             if (!dataDir.exists()) {
                 dataDir.mkdirs();
+=======
+            if (!DATA_DIR.exists()) {
+                DATA_DIR.mkdirs();
+>>>>>>> Stashed changes
             }
 
             // Load data
@@ -43,6 +49,23 @@ public class DataStorage {
     }
 
     // Load user data
+    public static File getDataDirectory() {
+        return DATA_DIR;
+    }
+
+    private static File resolveDataDirectory() {
+        String override = System.getProperty("app.data.dir");
+        if (override != null && !override.isBlank()) {
+            return new File(override);
+        }
+
+        File appData = new File("data");
+        if (appData.exists() || !new File("src/data").exists()) {
+            return appData;
+        }
+        return new File("src/data");
+    }
+
     private static void loadUsers() {
         try (BufferedReader reader = new BufferedReader(new FileReader(USERS_FILE))) {
             String line;
@@ -158,6 +181,7 @@ public class DataStorage {
                         // If parsing fails, set the default value
                         ta.setProfileStatus(model.ProfileStatus.DRAFT);
                     }
+<<<<<<< Updated upstream
                 }
                 if (line.contains("profileUpdatedAt='")) {
                     String profileUpdatedAt = line.split("profileUpdatedAt='")[1].split("'" )[0];
@@ -165,6 +189,78 @@ public class DataStorage {
                 }
                 
                 users.add(ta);
+=======
+                    if (line.contains("grade='")) {
+                        String grade = parseField(line, "grade='");
+                        ta.setGrade(grade);
+                    }
+                    if (line.contains("studentId='")) {
+                        String studentId = parseField(line, "studentId='");
+                        ta.setStudentId(studentId);
+                    }
+                    if (line.contains("availableTime='")) {
+                        String availableTime = parseField(line, "availableTime='");
+                        ta.setAvailableTime(availableTime);
+                    }
+                    if (line.contains("skills=")) {
+                        String skillsStr = parseField(line, "skills=", ",");
+                        // Simple handling, actual parsing would need to be more complex
+                        java.util.List<String> skills = new java.util.ArrayList<>();
+                        if (!skillsStr.equals("null")) {
+                            skillsStr = skillsStr.replaceAll("\\[|\\]", "");
+                            String[] skillArray = skillsStr.split(", ");
+                            for (String skill : skillArray) {
+                                skills.add(skill);
+                            }
+                        }
+                        ta.setSkills(skills);
+                    }
+                    if (line.contains("experience='")) {
+                        String experience = parseField(line, "experience='");
+                        ta.setExperience(experience);
+                    }
+                    if (line.contains("awards='")) {
+                        String awards = parseField(line, "awards='");
+                        ta.setAwards(awards);
+                    }
+                    if (line.contains("languageSkills='")) {
+                        String languageSkills = parseField(line, "languageSkills='");
+                        ta.setLanguageSkills(languageSkills);
+                    }
+                    if (line.contains("otherSkills='")) {
+                        String otherSkills = parseField(line, "otherSkills='");
+                        ta.setOtherSkills(otherSkills);
+                    }
+                    if (line.contains("resumePath='")) {
+                        String resumePath = parseField(line, "resumePath='");
+                        ta.setResumePath(resumePath);
+                    }
+                    if (line.contains("status=")) {
+                        String statusStr = parseField(line, "status=", ",");
+                        statusStr = statusStr.replaceAll("[^A-Z_]", "");
+                        try {
+                            ta.setStatus(model.UserStatus.valueOf(statusStr));
+                        } catch (IllegalArgumentException e) {
+                            ta.setStatus(model.UserStatus.ACTIVE);
+                        }
+                    }
+                    if (line.contains("profileStatus=")) {
+                        String profileStatusStr = parseField(line, "profileStatus=", ",");
+                        profileStatusStr = profileStatusStr.replaceAll("[}\\s]", "");
+                        try {
+                            model.ProfileStatus profileStatus = model.ProfileStatus.valueOf(profileStatusStr);
+                            ta.setProfileStatus(profileStatus);
+                        } catch (IllegalArgumentException e) {
+                            ta.setProfileStatus(model.ProfileStatus.DRAFT);
+                        }
+                    }
+                    if (line.contains("profileUpdatedAt='")) {
+                        String profileUpdatedAt = parseField(line, "profileUpdatedAt='");
+                        ta.setProfileUpdatedAt(profileUpdatedAt);
+                    }
+                    
+                    users.add(ta);
+>>>>>>> Stashed changes
                 } else if (line.startsWith("MO")) {
                     // Parse MO user
                     String id = line.split("id='")[1].split("'")[0];
@@ -530,3 +626,6 @@ public class DataStorage {
         return logs;
     }
 }
+
+
+

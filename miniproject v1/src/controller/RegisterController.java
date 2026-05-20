@@ -51,6 +51,152 @@ public class RegisterController {
         taToggle.setOnAction(e -> selectRole(UserRole.TA));
         moToggle.setOnAction(e -> selectRole(UserRole.MO));
         adminToggle.setOnAction(e -> selectRole(UserRole.ADMIN));
+<<<<<<< Updated upstream
+=======
+
+        setupFieldValidation();
+    }
+
+    private void setupFieldValidation() {
+        emailField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) validateEmailField();
+        });
+
+        passwordField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) validatePasswordField();
+        });
+
+        confirmPasswordField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) validateConfirmPasswordField();
+        });
+
+        usernameField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) validateUsernameField();
+        });
+
+        phoneField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) validatePhoneField();
+        });
+
+        departmentField.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) validateDepartmentField();
+        });
+    }
+
+    private void setupKeyboardShortcuts() {
+        shortcutService = new KeyboardShortcutService(stage);
+        shortcutService.registerShortcut("enter", this::handleRegisterAction);
+        shortcutService.registerShortcut("escape", this::handleBackAction);
+
+        if (stage.getScene() != null) {
+            Parent root = stage.getScene().getRoot();
+            shortcutService.setupEnterKeyNavigation(root);
+        }
+    }
+
+    private boolean validateEmailField() {
+        FormValidationService.ValidationResult result = FormValidationService.validateEmail(emailField.getText());
+        if (!result.isValid()) {
+            FormValidationService.showError(emailField, emailError, result.getErrorMessage());
+            return false;
+        } else {
+            FormValidationService.clearError(emailField, emailError);
+            return true;
+        }
+    }
+
+    private boolean validatePasswordField() {
+        FormValidationService.ValidationResult result = FormValidationService.validatePassword(passwordField.getText());
+        if (!result.isValid()) {
+            FormValidationService.showError(passwordField, passwordError, result.getErrorMessage());
+            return false;
+        } else {
+            FormValidationService.clearError(passwordField, passwordError);
+            return true;
+        }
+    }
+
+    private boolean validateConfirmPasswordField() {
+        String confirmPassword = confirmPasswordField.getText();
+        if (confirmPassword == null || confirmPassword.isEmpty()) {
+            FormValidationService.showError(confirmPasswordField, confirmPasswordError, "Please confirm your password");
+            return false;
+        }
+        if (!confirmPassword.equals(passwordField.getText())) {
+            FormValidationService.showError(confirmPasswordField, confirmPasswordError, "Passwords do not match");
+            return false;
+        } else {
+            FormValidationService.clearError(confirmPasswordField, confirmPasswordError);
+            return true;
+        }
+    }
+
+    private boolean validateUsernameField() {
+        FormValidationService.ValidationResult result = FormValidationService.validateUsername(usernameField.getText());
+        if (!result.isValid()) {
+            FormValidationService.showError(usernameField, usernameError, result.getErrorMessage());
+            return false;
+        } else {
+            FormValidationService.clearError(usernameField, usernameError);
+            return true;
+        }
+    }
+
+    private boolean validatePhoneField() {
+        String phone = phoneField.getText();
+        FormValidationService.ValidationResult required = FormValidationService.validateRequired(phone, "Phone number");
+        if (!required.isValid()) {
+            FormValidationService.showError(phoneField, phoneError, required.getErrorMessage());
+            return false;
+        }
+
+        if (!phone.matches("^1\\d{10}$")) {
+            FormValidationService.showError(phoneField, phoneError, "Phone number must be 11 digits and start with 1");
+            return false;
+        }
+
+        FormValidationService.clearError(phoneField, phoneError);
+        return true;
+    }
+
+    private boolean validateDepartmentField() {
+        if (selectedRole == UserRole.MO) {
+            FormValidationService.ValidationResult result = FormValidationService.validateRequired(departmentField.getText(), "Department");
+            if (!result.isValid()) {
+                FormValidationService.showError(departmentField, departmentError, result.getErrorMessage());
+                return false;
+            } else {
+                FormValidationService.clearError(departmentField, departmentError);
+                return true;
+            }
+        } else {
+            FormValidationService.clearError(departmentField, departmentError);
+            return true;
+        }
+    }
+
+    private boolean validateAllFields() {
+        boolean valid = true;
+
+        if (!validateEmailField()) valid = false;
+        if (!validatePasswordField()) valid = false;
+        if (!validateConfirmPasswordField()) valid = false;
+        if (!validateUsernameField()) valid = false;
+        if (!validatePhoneField()) valid = false;
+        if (!validateDepartmentField()) valid = false;
+
+        return valid;
+    }
+
+    private void clearAllErrors() {
+        FormValidationService.clearError(emailField, emailError);
+        FormValidationService.clearError(passwordField, passwordError);
+        FormValidationService.clearError(confirmPasswordField, confirmPasswordError);
+        FormValidationService.clearError(usernameField, usernameError);
+        FormValidationService.clearError(phoneField, phoneError);
+        FormValidationService.clearError(departmentField, departmentError);
+        errorMessage.setText("");
+>>>>>>> Stashed changes
     }
 
     private void selectRole(UserRole role) {
@@ -134,9 +280,34 @@ public class RegisterController {
             LoginController controller = loader.getController();
             controller.setStage(stage);
 
+<<<<<<< Updated upstream
             Scene scene = new Scene(root, 800, 600);
             stage.setScene(scene);
             stage.setTitle("BUPT International School TA Recruitment System - Login");
+=======
+            boolean isFullScreen = stage.isFullScreen();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+
+            if (isFullScreen) {
+                stage.setFullScreen(true);
+            } else if (currentWidth > 0 && currentHeight > 0) {
+                stage.setWidth(currentWidth);
+                stage.setHeight(currentHeight);
+            } else {
+                stage.setWidth(800);
+                stage.setHeight(600);
+            }
+
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
+
+            root.requestLayout();
+            stage.sizeToScene();
+>>>>>>> Stashed changes
         } catch (Exception e) {
             e.printStackTrace();
             errorMessage.setText("Failed to load the page.");
