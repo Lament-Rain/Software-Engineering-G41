@@ -231,18 +231,9 @@ public class JobDetailController {
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
 
             root.requestLayout();
             stage.sizeToScene();
->>>>>>> Stashed changes
-=======
-
-            root.requestLayout();
-            stage.sizeToScene();
->>>>>>> Stashed changes
             stage.setTitle("BUPT International School TA Recruitment System - Job Directory");
         } catch (Exception e) {
             e.printStackTrace();
@@ -258,9 +249,36 @@ public class JobDetailController {
             LoginController controller = loader.getController();
             controller.setStage(stage);
 
-            Scene scene = new Scene(root, 800, 600);
+            // Save current window state
+            boolean isFullScreen = stage.isFullScreen();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            // Create new scene without hardcoded size
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            
+            // Apply saved window state
             stage.setScene(scene);
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                stage.sizeToScene();
+            if (isFullScreen) {
+                stage.setFullScreen(true);
+            } else if (currentWidth > 0 && currentHeight > 0) {
+                stage.setWidth(currentWidth);
+                stage.setHeight(currentHeight);
+            } else {
+                // Default size if no previous size
+                stage.setWidth(800);
+                stage.setHeight(600);
+            }
             stage.setTitle("BUPT International School TA Recruitment System - Login");
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                stage.sizeToScene();
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Logout failed: " + e.getMessage(), Alert.AlertType.ERROR);

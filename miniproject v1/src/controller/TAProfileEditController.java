@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import model.TA;
 import model.ProfileStatus;
 import service.UserService;
+import service.KeyboardShortcutService;
 import java.util.Arrays;
 import java.util.List;
 import javafx.scene.control.TextFormatter;
@@ -79,6 +80,7 @@ public class TAProfileEditController {
     private TA user;
     private Timer autoSaveTimer;
     private static final int AUTO_SAVE_INTERVAL = 60000; // 1 minute
+    private KeyboardShortcutService shortcutService;
     
     public void initialize() {
         // Add age input filter
@@ -181,8 +183,6 @@ public class TAProfileEditController {
     
     public void setStage(Stage stage) {
         this.stage = stage;
-<<<<<<< Updated upstream
-=======
         setupKeyboardShortcuts();
     }
     
@@ -446,7 +446,6 @@ public class TAProfileEditController {
             e.printStackTrace();
             showError("Failed to load job list page");
         }
->>>>>>> Stashed changes
     }
     
     @FXML
@@ -476,7 +475,7 @@ public class TAProfileEditController {
         // Only allow numbers input
         UnaryOperator<TextFormatter.Change> filter = change -> {
             String newText = change.getControlNewText();
-            if (newText.matches("\\d{0,3}")) {
+            if (newText.matches("\\d{0,4}")) {
                 return change;
             }
             return null;
@@ -549,48 +548,37 @@ public class TAProfileEditController {
         // Validate input
         if (name.isEmpty()) {
             showError("Please enter name");
-            nameField.requestFocus();
+            javafx.application.Platform.runLater(() -> nameField.requestFocus());
             return;
         }
         if (gender.isEmpty()) {
             showError("Please select gender");
-            genderMaleRadio.requestFocus();
+            javafx.application.Platform.runLater(() -> genderMaleRadio.requestFocus());
             return;
         }
         if (department.isEmpty()) {
             showError("Please enter department");
-            departmentField.requestFocus();
+            javafx.application.Platform.runLater(() -> departmentField.requestFocus());
             return;
         }
         if (grade.isEmpty()) {
             showError("Please enter grade");
-            gradeField.requestFocus();
+            javafx.application.Platform.runLater(() -> gradeField.requestFocus());
             return;
         }
         if (studentId.isEmpty()) {
             showError("Please enter student ID");
-            studentIdField.requestFocus();
+            javafx.application.Platform.runLater(() -> studentIdField.requestFocus());
             return;
         }
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        if (availableTime.isEmpty()) {
-            showError("Please enter available work time");
-            availableTimeField.requestFocus();
-            return;
-        }
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         if (skillsStr.isEmpty()) {
             showError("Please enter specialized subjects/skills");
-            skillsField.requestFocus();
+            javafx.application.Platform.runLater(() -> skillsField.requestFocus());
             return;
         }
         if (experience.isEmpty()) {
             showError("Please enter previous TA experience");
-            experienceField.requestFocus();
+            javafx.application.Platform.runLater(() -> experienceField.requestFocus());
             return;
         }
         
@@ -602,12 +590,12 @@ public class TAProfileEditController {
                 int currentYear = java.time.Year.now().getValue();
                 if (birthYear < 1990 || birthYear > currentYear - 16) {
                     showError("Please enter a reasonable birth year");
-                    ageField.requestFocus();
+                    javafx.application.Platform.runLater(() -> ageField.requestFocus());
                     return;
                 }
             } catch (NumberFormatException e) {
                 showError("Birth year must be a number");
-                ageField.requestFocus();
+                javafx.application.Platform.runLater(() -> ageField.requestFocus());
                 return;
             }
         }
@@ -753,9 +741,32 @@ public class TAProfileEditController {
             
             controller.setStage(currentStage);
             
-            Scene scene = new Scene(root, 800, 600);
+            // Save current window state
+            boolean isFullScreen = currentStage.isFullScreen();
+            double currentWidth = currentStage.getWidth();
+            double currentHeight = currentStage.getHeight();
+            
+            // Create new scene without hardcoded size
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            
+            // Apply saved window state
             currentStage.setScene(scene);
+            if (isFullScreen) {
+                currentStage.setFullScreen(true);
+            } else if (currentWidth > 0 && currentHeight > 0) {
+                currentStage.setWidth(currentWidth);
+                currentStage.setHeight(currentHeight);
+            } else {
+                // Default size if no previous size
+                currentStage.setWidth(800);
+                currentStage.setHeight(600);
+            }
             currentStage.setTitle("BUPT International School TA Recruitment System - Login");
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                currentStage.sizeToScene();
         } catch (Exception e) {
             e.printStackTrace();
             showError("Failed to load page");
@@ -763,15 +774,19 @@ public class TAProfileEditController {
     }
     
     private void showError(String message) {
-        messageLabel.setText(message);
-        messageLabel.getStyleClass().removeAll("success-message");
-        messageLabel.getStyleClass().add("error-message");
+        javafx.application.Platform.runLater(() -> {
+            messageLabel.setText(message);
+            messageLabel.getStyleClass().removeAll("success-message");
+            messageLabel.getStyleClass().add("error-message");
+        });
     }
     
     private void showSuccess(String message) {
-        messageLabel.setText(message);
-        messageLabel.getStyleClass().removeAll("error-message");
-        messageLabel.getStyleClass().add("success-message");
+        javafx.application.Platform.runLater(() -> {
+            messageLabel.setText(message);
+            messageLabel.getStyleClass().removeAll("error-message");
+            messageLabel.getStyleClass().add("success-message");
+        });
     }
     
     private void updateButtonStyles(Button activeButton) {

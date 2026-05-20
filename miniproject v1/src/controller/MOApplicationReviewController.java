@@ -2,6 +2,7 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,6 +11,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -25,23 +27,23 @@ import model.MO;
 import model.MOJobReviewViewModel;
 import model.TA;
 import service.ApplicationService;
+import service.AsyncTaskService;
 import service.JobService;
+import service.KeyboardShortcutService;
+import service.PaginationUtil;
+import service.ToastService;
 import service.UserService;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import javafx.event.ActionEvent;
 
 public class MOApplicationReviewController {
-<<<<<<< Updated upstream
-=======
 
     private static final String SORT_AI = "AI Ranking (Recommendation Score)";
     private static final String SORT_TIME = "Application Time (Newest First)";
 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     @FXML
     private ComboBox<MOJobReviewViewModel> jobSelector;
     @FXML
@@ -86,10 +88,19 @@ public class MOApplicationReviewController {
     private Button acceptButton;
     @FXML
     private Button rejectButton;
+    @FXML
+    private ProgressIndicator loadingIndicator;
+    @FXML
+    private Label selectedCountLabel;
 
     private MO user;
     private Stage stage;
     private Job selectedJob;
+    private int currentPage = 0;
+    private int pageSize = 20;
+    private PaginationUtil.Page<Application> currentPageData;
+    private List<ApplicantReviewViewModel> allApplicants = FXCollections.observableArrayList();
+    private KeyboardShortcutService shortcutService;
 
     @FXML
     private void initialize() {
@@ -100,7 +111,13 @@ public class MOApplicationReviewController {
         matchScoreColumn.setCellValueFactory(new PropertyValueFactory<>("matchScore"));
         resumeStatusColumn.setCellValueFactory(new PropertyValueFactory<>("resumeStatus"));
 
-        applicantsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> showApplicantDetails(newVal));
+        applicantsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            showApplicantDetails(newVal);
+            updateSelectedCount();
+        });
+
+        applicantsTable.getSelectionModel().setSelectionMode(javafx.scene.control.SelectionMode.MULTIPLE);
+
         jobSelector.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 selectedJob = JobService.getJobById(newVal.getJobId());
@@ -124,8 +141,6 @@ public class MOApplicationReviewController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
-<<<<<<< Updated upstream
-=======
         setupKeyboardShortcuts();
     }
 
@@ -327,7 +342,6 @@ public class MOApplicationReviewController {
         } else {
             selectedCountLabel.setVisible(false);
         }
->>>>>>> Stashed changes
     }
 
     private void loadJobs() {
@@ -357,17 +371,10 @@ public class MOApplicationReviewController {
             return;
         }
 
-        List<Application> applications = ApplicationService.getApplicationsByJob(selectedJob.getId());
-        ObservableList<ApplicantReviewViewModel> rows = FXCollections.observableArrayList();
+        if (loadingIndicator != null) {
+            loadingIndicator.setVisible(true);
+        }
 
-<<<<<<< Updated upstream
-        int accepted = 0;
-        int pending = 0;
-        for (Application app : applications) {
-            TA ta = UserService.getTAProfile(app.getTaId());
-            if (ta == null) {
-                continue;
-=======
         Task<Void> loadTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -425,41 +432,132 @@ public class MOApplicationReviewController {
                 });
 
                 return null;
->>>>>>> Stashed changes
             }
-            if (app.getStatus() == ApplicationStatus.ACCEPTED) {
-                accepted++;
-            }
-            if (app.getStatus() == ApplicationStatus.PENDING || app.getStatus() == ApplicationStatus.SCREENED) {
-                pending++;
-            }
+        };
 
-            rows.add(new ApplicantReviewViewModel(
-                    app.getId(),
-                    ta.getId(),
-                    ta.getName() != null && !ta.getName().isEmpty() ? ta.getName() : ta.getUsername(),
-                    ta.getDepartment() != null ? ta.getDepartment() : "-",
-                    formatDate(app.getCreatedAt()),
-                    app.getStatus() != null ? app.getStatus().name() : "-",
-                    String.format("%.2f%%", app.getMatchScore()),
-                    ta.getResumePath() != null && !ta.getResumePath().isEmpty() ? "Uploaded" : "Not uploaded",
-                    ta.getExperience() != null ? ta.getExperience() : "",
-                    app.getCoverLetter() != null ? app.getCoverLetter() : "",
-                    app.getReviewComment() != null ? app.getReviewComment() : ""
-            ));
+        new Thread(loadTask).start();
+    }
+
+    @FXML
+    private void handleNextPage() {
+        if (currentPageData != null && currentPageData.hasNext()) {
+            currentPage++;
+            loadApplicants();
+        }
+    }
+
+    @FXML
+    private void handlePreviousPage() {
+        if (currentPage > 0) {
+            currentPage--;
+            loadApplicants();
+        }
+    }
+
+    @FXML
+    private void handleBatchScreen() {
+        List<ApplicantReviewViewModel> selected = applicantsTable.getSelectionModel().getSelectedItems();
+        if (selected == null || selected.isEmpty()) {
+            ToastService.showToast(stage, "Please select applicants to screen", ToastService.ToastType.WARNING);
+            return;
         }
 
-        applicantsTable.setItems(rows);
-        selectedJobLabel.setText(selectedJob.getTitle());
-        applicantCountLabel.setText(String.valueOf(rows.size()));
-        acceptedCountLabel.setText(String.valueOf(accepted));
-        pendingCountLabel.setText(String.valueOf(pending));
-
-        if (!rows.isEmpty()) {
-            applicantsTable.getSelectionModel().selectFirst();
-        } else {
-            showApplicantDetails(null);
+        String feedbackText = feedbackArea.getText() != null ? feedbackArea.getText().trim() : "";
+        if (feedbackText.isEmpty()) {
+            feedbackText = "Batch shortlisted by MO";
         }
+        final String feedback = feedbackText;
+
+        if (loadingIndicator != null) {
+            loadingIndicator.setVisible(true);
+        }
+
+        List<String> appIds = selected.stream()
+                .map(ApplicantReviewViewModel::getApplicationId)
+                .collect(Collectors.toList());
+
+        AsyncTaskService.submitAsync(() -> {
+            return ApplicationService.batchScreenApplications(appIds, ApplicationStatus.SCREENED, feedback, user.getId());
+        }, new AsyncTaskService.CompleteCallback<Integer>() {
+            @Override
+            public void onComplete(Integer result) {
+                javafx.application.Platform.runLater(() -> {
+                    if (loadingIndicator != null) {
+                        loadingIndicator.setVisible(false);
+                    }
+                    ToastService.showToast(stage, "Successfully screened " + result + " application(s)", ToastService.ToastType.SUCCESS);
+                    applicantsTable.getSelectionModel().clearSelection();
+                    currentPage = 0;
+                    loadApplicants();
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                javafx.application.Platform.runLater(() -> {
+                    if (loadingIndicator != null) {
+                        loadingIndicator.setVisible(false);
+                    }
+                    ToastService.showToast(stage, "Batch screen failed: " + e.getMessage(), ToastService.ToastType.ERROR);
+                });
+            }
+        });
+    }
+
+    @FXML
+    private void handleBatchReject() {
+        List<ApplicantReviewViewModel> selected = applicantsTable.getSelectionModel().getSelectedItems();
+        if (selected == null || selected.isEmpty()) {
+            ToastService.showToast(stage, "Please select applicants to reject", ToastService.ToastType.WARNING);
+            return;
+        }
+
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Batch Reject Applications");
+        dialog.setHeaderText("Enter rejection reason for all selected applications");
+        dialog.setContentText("Reason:");
+        Optional<String> input = dialog.showAndWait();
+        if (!input.isPresent() || input.get().trim().isEmpty()) {
+            ToastService.showToast(stage, "Please enter a rejection reason", ToastService.ToastType.WARNING);
+            return;
+        }
+
+        final String reason = input.get().trim();
+
+        if (loadingIndicator != null) {
+            loadingIndicator.setVisible(true);
+        }
+
+        List<String> appIds = selected.stream()
+                .map(ApplicantReviewViewModel::getApplicationId)
+                .collect(Collectors.toList());
+
+        AsyncTaskService.submitAsync(() -> {
+            return ApplicationService.batchRejectApplications(appIds, reason, user.getId());
+        }, new AsyncTaskService.CompleteCallback<Integer>() {
+            @Override
+            public void onComplete(Integer result) {
+                javafx.application.Platform.runLater(() -> {
+                    if (loadingIndicator != null) {
+                        loadingIndicator.setVisible(false);
+                    }
+                    ToastService.showToast(stage, "Successfully rejected " + result + " application(s)", ToastService.ToastType.SUCCESS);
+                    applicantsTable.getSelectionModel().clearSelection();
+                    currentPage = 0;
+                    loadApplicants();
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                javafx.application.Platform.runLater(() -> {
+                    if (loadingIndicator != null) {
+                        loadingIndicator.setVisible(false);
+                    }
+                    ToastService.showToast(stage, "Batch reject failed: " + e.getMessage(), ToastService.ToastType.ERROR);
+                });
+            }
+        });
     }
 
     private void showApplicantDetails(ApplicantReviewViewModel applicant) {
@@ -493,7 +591,7 @@ public class MOApplicationReviewController {
     private void handleScreenApplicant() {
         ApplicantReviewViewModel selected = applicantsTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert(Alert.AlertType.INFORMATION, "Notice", "Please select an applicant first.");
+            ToastService.showToast(stage, "Please select an applicant first", ToastService.ToastType.WARNING);
             return;
         }
 
@@ -504,11 +602,11 @@ public class MOApplicationReviewController {
 
         boolean success = ApplicationService.screenApplication(selected.getApplicationId(), ApplicationStatus.SCREENED, feedback, user.getId());
         if (!success) {
-            showAlert(Alert.AlertType.ERROR, "Action Failed", "Unable to mark this application as SCREENED.");
+            ToastService.showToast(stage, "Unable to mark this application as SCREENED", ToastService.ToastType.ERROR);
             return;
         }
 
-        showAlert(Alert.AlertType.INFORMATION, "Screened", "This application has been marked as SCREENED.");
+        ToastService.showToast(stage, "Application marked as SCREENED", ToastService.ToastType.SUCCESS);
         loadApplicants();
     }
 
@@ -516,17 +614,17 @@ public class MOApplicationReviewController {
     private void handleAcceptApplicant() {
         ApplicantReviewViewModel selected = applicantsTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert(Alert.AlertType.INFORMATION, "Notice", "Please select an applicant first.");
+            ToastService.showToast(stage, "Please select an applicant first", ToastService.ToastType.WARNING);
             return;
         }
 
         boolean success = ApplicationService.acceptApplication(selected.getApplicationId(), user.getId());
         if (!success) {
-            showAlert(Alert.AlertType.WARNING, "Acceptance Failed", "The position may have reached its acceptance limit, or the application status does not allow acceptance.");
+            ToastService.showToast(stage, "The position may have reached its acceptance limit", ToastService.ToastType.WARNING);
             return;
         }
 
-        showAlert(Alert.AlertType.INFORMATION, "Accepted", "This application has been updated to ACCEPTED.");
+        ToastService.showToast(stage, "Application updated to ACCEPTED", ToastService.ToastType.SUCCESS);
         loadApplicants();
     }
 
@@ -534,7 +632,7 @@ public class MOApplicationReviewController {
     private void handleRejectApplicant() {
         ApplicantReviewViewModel selected = applicantsTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
-            showAlert(Alert.AlertType.INFORMATION, "Notice", "Please select an applicant first.");
+            ToastService.showToast(stage, "Please select an applicant first", ToastService.ToastType.WARNING);
             return;
         }
 
@@ -546,7 +644,7 @@ public class MOApplicationReviewController {
             dialog.setContentText("Reason:");
             Optional<String> input = dialog.showAndWait();
             if (!input.isPresent() || input.get().trim().isEmpty()) {
-                showAlert(Alert.AlertType.INFORMATION, "Cancelled", "Please enter a rejection reason before continuing.");
+                ToastService.showToast(stage, "Please enter a rejection reason", ToastService.ToastType.WARNING);
                 return;
             }
             feedback = input.get().trim();
@@ -554,31 +652,19 @@ public class MOApplicationReviewController {
 
         boolean success = ApplicationService.rejectApplication(selected.getApplicationId(), feedback, user.getId());
         if (!success) {
-            showAlert(Alert.AlertType.ERROR, "Rejection Failed", "This application cannot be rejected.");
+            ToastService.showToast(stage, "This application cannot be rejected", ToastService.ToastType.ERROR);
             return;
         }
 
-        showAlert(Alert.AlertType.INFORMATION, "Rejected", "This application has been updated to REJECTED.");
+        ToastService.showToast(stage, "Application updated to REJECTED", ToastService.ToastType.SUCCESS);
         loadApplicants();
     }
 
     @FXML
     private void handleBack() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
-            Parent root = loader.load();
-            MODashboardController controller = loader.getController();
-            controller.setUser(user);
+        handleBackAction();
+    }
 
-<<<<<<< Updated upstream
-            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - MO Dashboard");
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to go back: " + e.getMessage());
-=======
     @FXML
     private void handlePersonalCenter(ActionEvent event) {
         try {
@@ -591,45 +677,6 @@ public class MOApplicationReviewController {
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - MO Personal Center");
-        } catch (Exception e) {
-            e.printStackTrace();
-            ToastService.showToast(stage, "Failed to load personal center page", ToastService.ToastType.ERROR);
->>>>>>> Stashed changes
-        }
-    }
-
-<<<<<<< Updated upstream
-    private void handleBackAction() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
-            Parent root = loader.load();
-            MODashboardController controller = loader.getController();
-=======
-    @FXML
-    private void handlePersonalCenter(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOProfileView.fxml"));
-            Parent root = loader.load();
-            MOProfileViewController controller = loader.getController();
->>>>>>> Stashed changes
-            controller.setUser(user);
-            controller.setStage(stage);
-
-            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-<<<<<<< Updated upstream
-            root.requestLayout();
-            stage.sizeToScene();
-            stage.setTitle("BUPT International School TA Recruitment System - MO Dashboard");
-        } catch (Exception e) {
-            e.printStackTrace();
-            ToastService.showToast(stage, "Failed to go back: " + e.getMessage(), ToastService.ToastType.ERROR);
-        }
-    }
-
-=======
             stage.setTitle("BUPT International School TA Recruitment System - MO Personal Center");
         } catch (Exception e) {
             e.printStackTrace();
@@ -657,7 +704,6 @@ public class MOApplicationReviewController {
         }
     }
 
->>>>>>> Stashed changes
     @FXML
     private void handleLogout() {
         try {

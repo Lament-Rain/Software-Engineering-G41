@@ -1,5 +1,7 @@
 package controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,9 +10,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import model.UserRole;
+import service.FormValidationService;
+import service.KeyboardShortcutService;
+import service.ToastService;
 import service.UserService;
 
 public class RegisterController {
+
     @FXML
     private ToggleButton taToggle;
     @FXML
@@ -38,11 +44,30 @@ public class RegisterController {
     @FXML
     private Label successMessage;
 
+    @FXML
+    private Label emailError;
+    @FXML
+    private Label passwordError;
+    @FXML
+    private Label confirmPasswordError;
+    @FXML
+    private Label usernameError;
+    @FXML
+    private Label phoneError;
+    @FXML
+    private Label departmentError;
+
     private Stage stage;
     private UserRole selectedRole = UserRole.TA;
+    private KeyboardShortcutService shortcutService;
 
     public void setStage(Stage stage) {
         this.stage = stage;
+        setupKeyboardShortcuts();
+    }
+
+    public void setEmail(String email) {
+        emailField.setText(email);
     }
 
     @FXML
@@ -51,8 +76,6 @@ public class RegisterController {
         taToggle.setOnAction(e -> selectRole(UserRole.TA));
         moToggle.setOnAction(e -> selectRole(UserRole.MO));
         adminToggle.setOnAction(e -> selectRole(UserRole.ADMIN));
-<<<<<<< Updated upstream
-=======
 
         setupFieldValidation();
     }
@@ -196,7 +219,6 @@ public class RegisterController {
         FormValidationService.clearError(phoneField, phoneError);
         FormValidationService.clearError(departmentField, departmentError);
         errorMessage.setText("");
->>>>>>> Stashed changes
     }
 
     private void selectRole(UserRole role) {
@@ -204,12 +226,30 @@ public class RegisterController {
         taToggle.setSelected(role == UserRole.TA);
         moToggle.setSelected(role == UserRole.MO);
         adminToggle.setSelected(role == UserRole.ADMIN);
+
+        if (role == UserRole.MO) {
+            departmentField.setPromptText("Required for Module Organizer");
+        } else {
+            departmentField.setPromptText("Optional");
+        }
     }
 
     @FXML
     private void handleRegister(ActionEvent event) {
-        errorMessage.setText("");
-        successMessage.setText("");
+        handleRegisterAction();
+    }
+
+    private void handleRegisterAction() {
+        completeRegistration();
+    }
+
+    public void completeRegistration() {
+        clearAllErrors();
+
+        if (!validateAllFields()) {
+            ToastService.showToast(stage, "Please fix the errors before registering", ToastService.ToastType.WARNING);
+            return;
+        }
 
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
@@ -218,49 +258,46 @@ public class RegisterController {
         String phone = phoneField.getText().trim();
         String department = departmentField.getText().trim();
 
-        if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || email.isEmpty() || phone.isEmpty()) {
-            errorMessage.setText("Please complete all required fields.");
-            return;
-        }
-
         if (!password.equals(confirmPassword)) {
-            errorMessage.setText("The two passwords do not match.");
+            FormValidationService.showError(confirmPasswordField, confirmPasswordError, "Passwords do not match");
+            ToastService.showToast(stage, "Passwords do not match", ToastService.ToastType.WARNING);
             return;
         }
 
-        if (password.length() < 8) {
-            errorMessage.setText("Password must be at least 8 characters long.");
-            return;
-        }
+        registerButton.setDisable(true);
+        registerButton.setText("Registering...");
 
-        if (!password.matches(".*[A-Za-z].*") || !password.matches(".*\\d.*")) {
-            errorMessage.setText("Password must contain both letters and numbers.");
-            return;
-        }
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.millis(500), event -> {
+            try {
+                Object user = UserService.register(username, password, email, phone, selectedRole, department);
 
-        if (!email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-            errorMessage.setText("Please enter a valid email address.");
-            return;
-        }
+                if (user != null) {
+                    ToastService.showToast(stage, "Registration successful! Please log in.", ToastService.ToastType.SUCCESS);
+                    successMessage.setText("Registration successful. Please return to the login page.");
+                    clearForm();
+                    registerButton.setDisable(false);
+                    registerButton.setText("Create Account");
 
-        if (!phone.matches("^1\\d{10}$")) {
-            errorMessage.setText("Please enter a valid phone number.");
-            return;
-        }
-
-        if (selectedRole == UserRole.MO && department.isEmpty()) {
-            errorMessage.setText("Please enter a department for the module organizer account.");
-            return;
-        }
-
-        boolean success = UserService.register(username, password, email, phone, selectedRole, department) != null;
-
-        if (success) {
-            successMessage.setText("Registration successful. Please return to the login page.");
-            clearForm();
-        } else {
-            errorMessage.setText("Registration failed. The username may already exist.");
-        }
+                    Timeline redirectTimeline = new Timeline();
+                    redirectTimeline.getKeyFrames().add(new KeyFrame(javafx.util.Duration.millis(2000), ev -> {
+                        handleBackAction();
+                    }));
+                    redirectTimeline.play();
+                } else {
+                    FormValidationService.showError(usernameField, usernameError, "Username already exists");
+                    ToastService.showToast(stage, "Registration failed. Username may already exist.", ToastService.ToastType.ERROR);
+                    registerButton.setDisable(false);
+                    registerButton.setText("Create Account");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                ToastService.showToast(stage, "Registration failed: " + e.getMessage(), ToastService.ToastType.ERROR);
+                registerButton.setDisable(false);
+                registerButton.setText("Create Account");
+            }
+        }));
+        timeline.play();
     }
 
     private void clearForm() {
@@ -270,24 +307,21 @@ public class RegisterController {
         emailField.setText("");
         phoneField.setText("");
         departmentField.setText("");
+        clearAllErrors();
     }
 
     @FXML
     private void handleBack(ActionEvent event) {
+        handleBackAction();
+    }
+
+    private void handleBackAction() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
             LoginController controller = loader.getController();
             controller.setStage(stage);
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            Scene scene = new Scene(root, 800, 600);
-            stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Login");
-=======
-=======
->>>>>>> Stashed changes
             boolean isFullScreen = stage.isFullScreen();
             double currentWidth = stage.getWidth();
             double currentHeight = stage.getHeight();
@@ -310,10 +344,9 @@ public class RegisterController {
 
             root.requestLayout();
             stage.sizeToScene();
->>>>>>> Stashed changes
         } catch (Exception e) {
             e.printStackTrace();
-            errorMessage.setText("Failed to load the page.");
+            ToastService.showToast(stage, "Failed to load login page: " + e.getMessage(), ToastService.ToastType.ERROR);
         }
     }
 }

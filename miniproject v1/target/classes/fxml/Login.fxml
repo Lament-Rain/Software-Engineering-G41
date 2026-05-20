@@ -1,57 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<<<<<<< Updated upstream
-<?import javafx.collections.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
-
-<AnchorPane fx:id="loginPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController">
-    <ScrollPane fitToWidth="true" pannable="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
-                AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
-                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-    <VBox alignment="CENTER" spacing="0" styleClass="root">
-        <!-- 顶部装饰条 -->
-        <HBox prefHeight="8">
-            <Region styleClass="bg-primary" style="-fx-pref-width: 25%;" />
-            <Region styleClass="bg-secondary" style="-fx-pref-width: 25%;" />
-            <Region styleClass="bg-accent" style="-fx-pref-width: 25%;" />
-            <Region styleClass="bg-success" style="-fx-pref-width: 25%;" />
-        </HBox>
-        
-        <!-- 登录容器 -->
-        <VBox alignment="CENTER" spacing="48" style="-fx-padding: 48px; -fx-fill-width: true;">
-            <!-- 登录表单 -->
-            <VBox alignment="CENTER" styleClass="container shadow-lg" maxWidth="600" style="-fx-pref-width: 90%; -fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px;" spacing="24">
-                <!-- Title Section -->
-                <VBox alignment="CENTER" spacing="8" style="-fx-fill-width: true; -fx-padding: 32px 32px 0 32px;">
-                    <Label text="BUPT International School"
-                           styleClass="title"
-                           textAlignment="CENTER"
-                           alignment="CENTER"
-                           maxWidth="Infinity" />
-                    <Label text="TA Recruitment System"
-                           styleClass="title"
-                           textAlignment="CENTER"
-                           alignment="CENTER"
-                           maxWidth="Infinity" />
-                    <Label text="Please log in to access the system" styleClass="subtitle" />
-                </VBox>
-                
-                <!-- Icon Section -->
-                <VBox alignment="CENTER" spacing="16" style="-fx-padding: 16px 0 0 0;">
-                    <Circle radius="48.0" fill="#f8f9fa" stroke="#e9ecef" strokeWidth="2" />
-                    <Label text="👤" style="-fx-font-size: 32px;" />
-                </VBox>
-                
-                <!-- Form Fields -->
-                <VBox spacing="20" style="-fx-pref-width: 100%; -fx-padding: 0 32px;">
-                    <VBox spacing="8" style="-fx-pref-width: 100%;">
-                        <Label text="Username" styleClass="form-label" />
-                        <TextField fx:id="usernameField" promptText="Please enter username" styleClass="form-field" style="-fx-pref-width: 400px; -fx-min-width: 400px; -fx-min-height: 44px;" />
-=======
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -84,50 +32,43 @@
                         <Label text="Username" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
                         <TextField fx:id="usernameField" promptText="Please enter username" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-pref-width: 100%; -fx-min-height: 44px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-border-radius: 8px;" />
                         <Label fx:id="usernameError" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-text-fill: #ef4444;" visible="false" managed="false" />
->>>>>>> Stashed changes
                     </VBox>
-                    <VBox spacing="8" style="-fx-pref-width: 100%;">
-                        <Label text="Password" styleClass="form-label" />
-                        <PasswordField fx:id="passwordField" promptText="Please enter password" styleClass="form-field" style="-fx-pref-width: 400px; -fx-min-width: 400px; -fx-min-height: 44px;" />
+                    <VBox spacing="4" style="-fx-pref-width: 100%;">
+                        <Label text="Password" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
+                        <PasswordField fx:id="passwordField" promptText="Please enter password" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-pref-width: 100%; -fx-min-height: 44px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-border-radius: 8px;" />
+                        <Label fx:id="passwordError" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-text-fill: #ef4444;" visible="false" managed="false" />
                     </VBox>
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-                    <VBox spacing="8" style="-fx-pref-width: 100%;">
-                        <Label text="Role" styleClass="form-label" />
-                        <ComboBox fx:id="roleComboBox" promptText="Please select role" styleClass="form-field" style="-fx-pref-width: 400px; -fx-min-width: 400px; -fx-min-height: 44px;" />
-=======
-=======
->>>>>>> Stashed changes
                     <VBox spacing="4" style="-fx-pref-width: 100%;" fillWidth="true">
                         <Label text="Role" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
                         <ComboBox fx:id="roleComboBox" promptText="Please select your role" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-pref-width: 100%; -fx-max-width: Infinity; -fx-min-width: 0; -fx-min-height: 44px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-text-fill: #1f2937; -fx-prompt-text-fill: #9ca3af;" />
                         <Label fx:id="roleError" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-text-fill: #ef4444;" visible="false" managed="false" />
->>>>>>> Stashed changes
                     </VBox>
-                    
-                    <!-- Auxiliary Functions -->
-                    <HBox alignment="CENTER_RIGHT" style="-fx-spacing: 16;">
-                        <CheckBox fx:id="rememberMeCheckBox" text="Remember me" style="-fx-font-size: 14px;" />
-                        <Hyperlink fx:id="forgotPasswordLink" text="Forgot password?" style="-fx-font-size: 14px;" />
+
+                    <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-margin-top: 8px;">
+                        <CheckBox fx:id="rememberMeCheckBox" text="Remember me" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-text-fill: #374151;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="forgotPasswordLabel" text="Forgot password?" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-text-fill: #003366; -fx-underline: false;" />
+                    </HBox>
+
+                    <Label fx:id="errorMessage" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-text-fill: #ef4444;" visible="false" managed="false" />
+                </VBox>
+
+                <HBox alignment="CENTER" spacing="24" style="-fx-padding: 32px 20px; -fx-margin-top: 32px; -fx-margin-bottom: 32px;">
+                    <Button fx:id="cancelButton" text="Cancel" onAction="#handleCancel" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 12px 24px; -fx-background-color: #ffffff; -fx-text-fill: #374151; -fx-border-color: #d1d5db; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-border-radius: 8px;" />
+                    <Button fx:id="loginButton" text="Login" onAction="#handleLogin" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 12px 24px; -fx-background-color: #003366; -fx-text-fill: #ffffff; -fx-background-radius: 8px; -fx-border-radius: 8px;" />
+                    <Button fx:id="registerButton" text="Register" onAction="#handleRegister" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 12px 24px; -fx-background-color: #10b981; -fx-text-fill: #ffffff; -fx-background-radius: 8px; -fx-border-radius: 8px;" />
+                </HBox>
+
+                <VBox alignment="CENTER" style="-fx-padding: 20px 20px 20px 20px;">
+                    <HBox spacing="8" alignment="CENTER">
+                        <Label text="Keyboard shortcuts: Enter to login" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-text-fill: #6b7280;" />
                     </HBox>
                 </VBox>
-                
-                <!-- Error Message -->
-                <Label fx:id="errorMessage" styleClass="error-message" style="-fx-padding: 0 32px;" />
-                
-                <!-- Button Section -->
-                <HBox spacing="16" alignment="CENTER" style="-fx-pref-width: 100%; -fx-padding: 0 32px 32px 32px;">
-                    <Button fx:id="cancelButton" text="Cancel" styleClass="btn btn-secondary" onAction="#handleCancel" style="-fx-pref-width: 120px; -fx-min-height: 44px;" />
-                    <Button fx:id="loginButton" text="Login" styleClass="btn btn-primary" onAction="#handleLogin" style="-fx-pref-width: 120px; -fx-min-height: 44px;" />
-                    <Button fx:id="registerButton" text="Register" styleClass="btn btn-success" onAction="#handleRegister" style="-fx-pref-width: 120px; -fx-min-height: 44px;" />
-                </HBox>
             </VBox>
-            
-            <!-- Bottom Information -->
-            <VBox alignment="CENTER" style="-fx-padding: 16px 0;">
-                <Label text="© 2026 BUPT International School. All rights reserved." textFill="#6c757d" style="-fx-font-size: 12px;" />
+
+            <VBox alignment="CENTER" style="-fx-padding: 20px 0;">
+                <Label text="© 2026 BUPT International School. All rights reserved." style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 12px; -fx-text-fill: #6b7280;" />
             </VBox>
         </VBox>
-    </VBox>
     </ScrollPane>
 </AnchorPane>

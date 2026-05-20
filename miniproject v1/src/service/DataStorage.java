@@ -3,58 +3,48 @@ package service;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 import model.*;
 
 public class DataStorage {
-    private static List<User> users = new ArrayList<>();
-    private static List<Job> jobs = new ArrayList<>();
-    private static List<Application> applications = new ArrayList<>();
-    private static List<Log> logs = new ArrayList<>();
+    private static CopyOnWriteArrayList<User> users = new CopyOnWriteArrayList<>();
+    private static CopyOnWriteArrayList<Job> jobs = new CopyOnWriteArrayList<>();
+    private static CopyOnWriteArrayList<Application> applications = new CopyOnWriteArrayList<>();
+    private static CopyOnWriteArrayList<Log> logs = new CopyOnWriteArrayList<>();
 
     private static final File DATA_DIR = resolveDataDirectory();
     private static final String USERS_FILE = new File(DATA_DIR, "users.txt").getAbsolutePath();
     private static final String JOBS_FILE = new File(DATA_DIR, "jobs.txt").getAbsolutePath();
     private static final String APPLICATIONS_FILE = new File(DATA_DIR, "applications.txt").getAbsolutePath();
     private static final String LOGS_FILE = new File(DATA_DIR, "logs.txt").getAbsolutePath();
-<<<<<<< Updated upstream
-=======
 
     private static final Object usersLock = new Object();
     private static final Object jobsLock = new Object();
     private static final Object applicationsLock = new Object();
     private static final Object logsLock = new Object();
->>>>>>> Stashed changes
 
     // Initialize data storage
     public static void initialize() {
         try {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            // Ensure the data directory exists
-            File dataDir = new File("src/data");
-            if (!dataDir.exists()) {
-                dataDir.mkdirs();
-=======
             if (!DATA_DIR.exists()) {
                 DATA_DIR.mkdirs();
->>>>>>> Stashed changes
-=======
-            if (!DATA_DIR.exists()) {
-                DATA_DIR.mkdirs();
->>>>>>> Stashed changes
             }
 
-            // Load data
             loadUsers();
             loadJobs();
             loadApplications();
             loadLogs();
 
-            // If there are no users, add a default admin account
+            IndexService.rebuildIndexes();
+
             if (users.isEmpty()) {
-                Admin admin = new Admin("admin1", "admin", "admin123", "admin@bupt.edu.cn", "13800138000", model.AdminLevel.SUPER);
+                String encodedPassword = service.PasswordEncoder.encode("admin123");
+                Admin admin = new Admin("admin1", "admin", encodedPassword, "admin@bupt.edu.cn", "13800138000", model.AdminLevel.SUPER);
                 users.add(admin);
                 saveUsers();
+                IndexService.indexUserUpdate(admin);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -83,126 +73,60 @@ public class DataStorage {
         try (BufferedReader reader = new BufferedReader(new FileReader(USERS_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Parse user data
+                // Parse user data safely
                 if (line.startsWith("Admin")) {
                     // Parse Admin user
-                    String id = line.split("id='")[1].split("'")[0];
-                    String username = line.split("username='")[1].split("'")[0];
+                    String id = parseField(line, "id='");
+                    String username = parseField(line, "username='");
                     String password = "123456";
                     if (line.contains("password='")) {
-                        password = line.split("password='")[1].split("'")[0];
+                        password = parseField(line, "password='");
                     }
-                    String level = line.split("level=")[1].split("}")[0];
+                    String level = parseField(line, "level=", "}");
                     // Create Admin object
                     Admin admin = new Admin(id, username, password, username + "@bupt.edu.cn", "13800138000", AdminLevel.valueOf(level));
                     users.add(admin);
                 } else if (line.startsWith("TA")) {
-                // Parse TA user
-                String id = line.split("id='")[1].split("'" )[0];
-                String username = line.split("username='")[1].split("'" )[0];
-                String password = "123456";
-                if (line.contains("password='")) {
-                    password = line.split("password='")[1].split("'" )[0];
-                }
-                String email = username + "@bupt.edu.cn";
-                if (line.contains("email='")) {
-                    email = line.split("email='")[1].split("'" )[0];
-                }
-                String phone = "13800138000";
-                if (line.contains("phone='")) {
-                    phone = line.split("phone='")[1].split("'" )[0];
-                }
-                // Create TA object
-                TA ta = new TA(id, username, password, email, phone);
-                
-                // Parse other fields
-                if (line.contains("name='")) {
-                    String name = line.split("name='")[1].split("'" )[0];
-                    ta.setName(name);
-                }
-                if (line.contains("gender='")) {
-                    String gender = line.split("gender='")[1].split("'" )[0];
-                    ta.setGender(gender);
-                }
-                if (line.contains("age=")) {
-                    String ageStr = line.split("age=")[1].split("," )[0];
-                    try {
-                        int age = Integer.parseInt(ageStr);
-                        ta.setAge(age);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
+                    // Parse TA user
+                    String id = parseField(line, "id='");
+                    String username = parseField(line, "username='");
+                    String password = "123456";
+                    if (line.contains("password='")) {
+                        password = parseField(line, "password='");
                     }
-                }
-                if (line.contains("department='")) {
-                    String department = line.split("department='")[1].split("'" )[0];
-                    ta.setDepartment(department);
-                }
-                if (line.contains("grade='")) {
-                    String grade = line.split("grade='")[1].split("'" )[0];
-                    ta.setGrade(grade);
-                }
-                if (line.contains("studentId='")) {
-                    String studentId = line.split("studentId='")[1].split("'" )[0];
-                    ta.setStudentId(studentId);
-                }
-                if (line.contains("availableTime='")) {
-                    String availableTime = line.split("availableTime='")[1].split("'" )[0];
-                    ta.setAvailableTime(availableTime);
-                }
-                if (line.contains("skills=")) {
-                    String skillsStr = line.split("skills=")[1].split("," )[0];
-                    // Simple handling, actual parsing would need to be more complex
-                    java.util.List<String> skills = new java.util.ArrayList<>();
-                    if (!skillsStr.equals("null")) {
-                        skillsStr = skillsStr.replaceAll("\\[|\\]", "");
-                        String[] skillArray = skillsStr.split(", ");
-                        for (String skill : skillArray) {
-                            skills.add(skill);
+                    String email = username + "@bupt.edu.cn";
+                    if (line.contains("email='")) {
+                        email = parseField(line, "email='");
+                    }
+                    String phone = "13800138000";
+                    if (line.contains("phone='")) {
+                        phone = parseField(line, "phone='");
+                    }
+                    // Create TA object
+                    TA ta = new TA(id, username, password, email, phone);
+                    
+                    // Parse other fields
+                    if (line.contains("name='")) {
+                        String name = parseField(line, "name='");
+                        ta.setName(name);
+                    }
+                    if (line.contains("gender='")) {
+                        String gender = parseField(line, "gender='");
+                        ta.setGender(gender);
+                    }
+                    if (line.contains("age=")) {
+                        String ageStr = parseField(line, "age=", ",");
+                        try {
+                            int age = Integer.parseInt(ageStr);
+                            ta.setAge(age);
+                        } catch (NumberFormatException e) {
+                            e.printStackTrace();
                         }
                     }
-                    ta.setSkills(skills);
-                }
-                if (line.contains("experience='")) {
-                    String experience = line.split("experience='")[1].split("'" )[0];
-                    ta.setExperience(experience);
-                }
-                if (line.contains("awards='")) {
-                    String awards = line.split("awards='")[1].split("'" )[0];
-                    ta.setAwards(awards);
-                }
-                if (line.contains("languageSkills='")) {
-                    String languageSkills = line.split("languageSkills='")[1].split("'" )[0];
-                    ta.setLanguageSkills(languageSkills);
-                }
-                if (line.contains("otherSkills='")) {
-                    String otherSkills = line.split("otherSkills='")[1].split("'" )[0];
-                    ta.setOtherSkills(otherSkills);
-                }
-                if (line.contains("resumePath='")) {
-                    String resumePath = line.split("resumePath='")[1].split("'" )[0];
-                    ta.setResumePath(resumePath);
-                }
-                if (line.contains("profileStatus=")) {
-                    String profileStatusStr = line.split("profileStatus=")[1].split("," )[0];
-                    // Remove possible extra characters, such as '}'
-                    profileStatusStr = profileStatusStr.replaceAll("[}\s]", "");
-                    try {
-                        model.ProfileStatus profileStatus = model.ProfileStatus.valueOf(profileStatusStr);
-                        ta.setProfileStatus(profileStatus);
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                        // If parsing fails, set the default value
-                        ta.setProfileStatus(model.ProfileStatus.DRAFT);
+                    if (line.contains("department='")) {
+                        String department = parseField(line, "department='");
+                        ta.setDepartment(department);
                     }
-<<<<<<< Updated upstream
-                }
-                if (line.contains("profileUpdatedAt='")) {
-                    String profileUpdatedAt = line.split("profileUpdatedAt='")[1].split("'" )[0];
-                    ta.setProfileUpdatedAt(profileUpdatedAt);
-                }
-                
-                users.add(ta);
-=======
                     if (line.contains("grade='")) {
                         String grade = parseField(line, "grade='");
                         ta.setGrade(grade);
@@ -273,29 +197,46 @@ public class DataStorage {
                     }
                     
                     users.add(ta);
->>>>>>> Stashed changes
                 } else if (line.startsWith("MO")) {
-                    // Parse MO user
-                    String id = line.split("id='")[1].split("'")[0];
-                    String username = line.split("username='")[1].split("'")[0];
+                    String id = parseField(line, "id='");
+                    String username = parseField(line, "username='");
                     String password = "123456";
                     if (line.contains("password='")) {
-                        password = line.split("password='")[1].split("'")[0];
+                        password = parseField(line, "password='");
                     }
                     String department = "null";
                     if (line.contains("department='")) {
-                        department = line.split("department='")[1].split("'")[0];
+                        department = parseField(line, "department='");
                     }
-                    // Create MO object
                     MO mo = new MO(id, username, password, username + "@bupt.edu.cn", "13800138000", department);
                     users.add(mo);
                 }
             }
         } catch (FileNotFoundException e) {
-            // File does not exist, create an empty list
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (!users.isEmpty()) {
+            users = new CopyOnWriteArrayList<>(users);
+        }
+    }
+    
+    // Safe field parsing method
+    private static String parseField(String line, String fieldPrefix) {
+        return parseField(line, fieldPrefix, "'");
+    }
+    
+    private static String parseField(String line, String fieldPrefix, String fieldSuffix) {
+        int startIndex = line.indexOf(fieldPrefix);
+        if (startIndex == -1) {
+            return "";
+        }
+        startIndex += fieldPrefix.length();
+        int endIndex = line.indexOf(fieldSuffix, startIndex);
+        if (endIndex == -1) {
+            return "";
+        }
+        return line.substring(startIndex, endIndex);
     }
 
     // Save user data
@@ -321,19 +262,19 @@ public class DataStorage {
                         
                         // Parse id
                         if (line.contains("id='")) {
-                            String id = line.split("id='")[1].split("'" )[0];
+                            String id = parseField(line, "id='");
                             job.setId(id);
                         }
                         
                         // Parse title
                         if (line.contains("title='")) {
-                            String title = line.split("title='")[1].split("'" )[0];
+                            String title = parseField(line, "title='");
                             job.setTitle(title);
                         }
                         
                         // Parse type
                         if (line.contains("type=")) {
-                            String typeStr = line.split("type=")[1].split("," )[0];
+                            String typeStr = parseField(line, "type=", ",");
                             // Clean the string and remove possible extra characters
                             typeStr = typeStr.replaceAll("[^A-Z_]", "");
                             try {
@@ -346,19 +287,19 @@ public class DataStorage {
                         
                         // Parse department
                         if (line.contains("department='")) {
-                            String department = line.split("department='")[1].split("'" )[0];
+                            String department = parseField(line, "department='");
                             job.setDepartment(department);
                         }
                         
                         // Parse description
                         if (line.contains("description='")) {
-                            String description = line.split("description='")[1].split("'" )[0];
+                            String description = parseField(line, "description='");
                             job.setDescription(description);
                         }
                         
                         // Parse skills
                         if (line.contains("skills=")) {
-                            String skillsStr = line.split("skills=")[1].split("," )[0];
+                            String skillsStr = parseField(line, "skills=", ",");
                             java.util.List<String> skills = new java.util.ArrayList<>();
                             if (!skillsStr.equals("null")) {
                                 skillsStr = skillsStr.replaceAll("\\[|\\]", "");
@@ -372,13 +313,13 @@ public class DataStorage {
                         
                         // Parse workTime
                         if (line.contains("workTime='")) {
-                            String workTime = line.split("workTime='")[1].split("'" )[0];
+                            String workTime = parseField(line, "workTime='");
                             job.setWorkTime(workTime);
                         }
                         
                         // Parse recruitNum
                         if (line.contains("recruitNum=")) {
-                            String recruitNumStr = line.split("recruitNum=")[1].split("," )[0];
+                            String recruitNumStr = parseField(line, "recruitNum=", ",");
                             try {
                                 int recruitNum = Integer.parseInt(recruitNumStr);
                                 job.setRecruitNum(recruitNum);
@@ -389,37 +330,37 @@ public class DataStorage {
                         
                         // Parse deadline
                         if (line.contains("deadline='")) {
-                            String deadline = line.split("deadline='")[1].split("'" )[0];
+                            String deadline = parseField(line, "deadline='");
                             job.setDeadline(deadline);
                         }
                         
                         // Parse salary
                         if (line.contains("salary='")) {
-                            String salary = line.split("salary='")[1].split("'" )[0];
+                            String salary = parseField(line, "salary='");
                             job.setSalary(salary);
                         }
                         
                         // Parse location
                         if (line.contains("location='")) {
-                            String location = line.split("location='")[1].split("'" )[0];
+                            String location = parseField(line, "location='");
                             job.setLocation(location);
                         }
                         
                         // Parse extraRequirements
                         if (line.contains("extraRequirements='")) {
-                            String extraRequirements = line.split("extraRequirements='")[1].split("'" )[0];
+                            String extraRequirements = parseField(line, "extraRequirements='");
                             job.setExtraRequirements(extraRequirements);
                         }
                         
                         // Parse moId
                         if (line.contains("moId='")) {
-                            String moId = line.split("moId='")[1].split("'" )[0];
+                            String moId = parseField(line, "moId='");
                             job.setMoId(moId);
                         }
                         
                         // Parse status
                         if (line.contains("status=")) {
-                            String statusStr = line.split("status=")[1].split("," )[0];
+                            String statusStr = parseField(line, "status=", ",");
                             // Clean the string and remove possible extra characters such as '}'
                             statusStr = statusStr.replaceAll("[^A-Z_]", "");
                             try {
@@ -433,31 +374,31 @@ public class DataStorage {
                         
                         // Parse createdAt
                         if (line.contains("createdAt='")) {
-                            String createdAt = line.split("createdAt='")[1].split("'" )[0];
+                            String createdAt = parseField(line, "createdAt='");
                             job.setCreatedAt(createdAt);
                         }
                         
                         // Parse updatedAt
                         if (line.contains("updatedAt='")) {
-                            String updatedAt = line.split("updatedAt='")[1].split("'" )[0];
+                            String updatedAt = parseField(line, "updatedAt='");
                             job.setUpdatedAt(updatedAt);
                         }
                         
                         // Parse reviewedBy
                         if (line.contains("reviewedBy='")) {
-                            String reviewedBy = line.split("reviewedBy='")[1].split("'" )[0];
+                            String reviewedBy = parseField(line, "reviewedBy='");
                             job.setReviewedBy(reviewedBy);
                         }
                         
                         // Parse reviewTime
                         if (line.contains("reviewTime='")) {
-                            String reviewTime = line.split("reviewTime='")[1].split("'" )[0];
+                            String reviewTime = parseField(line, "reviewTime='");
                             job.setReviewTime(reviewTime);
                         }
                         
                         // Parse reviewComment
                         if (line.contains("reviewComment='")) {
-                            String reviewComment = line.split("reviewComment='")[1].split("'" )[0];
+                            String reviewComment = parseField(line, "reviewComment='");
                             job.setReviewComment(reviewComment);
                         }
                         
@@ -498,23 +439,24 @@ public class DataStorage {
                     Application app = new Application();
 
                     if (line.contains("id='")) {
-                        String id = line.split("id='")[1].split("'")[0];
+                        String id = parseField(line, "id='");
                         app.setId(id);
                     }
                     if (line.contains("taId='")) {
-                        String taId = line.split("taId='")[1].split("'")[0];
+                        String taId = parseField(line, "taId='");
                         app.setTaId(taId);
                     }
                     if (line.contains("jobId='")) {
-                        String jobId = line.split("jobId='")[1].split("'")[0];
+                        String jobId = parseField(line, "jobId='");
                         app.setJobId(jobId);
                     }
                     if (line.contains("coverLetter='")) {
-                        String coverLetter = line.split("coverLetter='")[1].split("'")[0];
+                        String coverLetter = parseField(line, "coverLetter='");
                         app.setCoverLetter(coverLetter);
                     }
                     if (line.contains("status=")) {
-                        String statusStr = line.split("status=")[1].split(",")[0].replaceAll("[^A-Z_]", "");
+                        String statusStr = parseField(line, "status=", ",");
+                        statusStr = statusStr.replaceAll("[^A-Z_]", "");
                         try {
                             app.setStatus(model.ApplicationStatus.valueOf(statusStr));
                         } catch (IllegalArgumentException e) {
@@ -522,27 +464,27 @@ public class DataStorage {
                         }
                     }
                     if (line.contains("createdAt='")) {
-                        String createdAt = line.split("createdAt='")[1].split("'")[0];
+                        String createdAt = parseField(line, "createdAt='");
                         app.setCreatedAt(createdAt);
                     }
                     if (line.contains("updatedAt='")) {
-                        String updatedAt = line.split("updatedAt='")[1].split("'")[0];
+                        String updatedAt = parseField(line, "updatedAt='");
                         app.setUpdatedAt(updatedAt);
                     }
                     if (line.contains("reviewedBy='")) {
-                        String reviewedBy = line.split("reviewedBy='")[1].split("'")[0];
+                        String reviewedBy = parseField(line, "reviewedBy='");
                         app.setReviewedBy("null".equals(reviewedBy) ? null : reviewedBy);
                     }
                     if (line.contains("reviewTime='")) {
-                        String reviewTime = line.split("reviewTime='")[1].split("'")[0];
+                        String reviewTime = parseField(line, "reviewTime='");
                         app.setReviewTime("null".equals(reviewTime) ? null : reviewTime);
                     }
                     if (line.contains("reviewComment='")) {
-                        String reviewComment = line.split("reviewComment='")[1].split("'")[0];
+                        String reviewComment = parseField(line, "reviewComment='");
                         app.setReviewComment("null".equals(reviewComment) ? null : reviewComment);
                     }
                     if (line.contains("matchScore=")) {
-                        String matchScoreStr = line.split("matchScore=")[1].split("}")[0].trim();
+                        String matchScoreStr = parseField(line, "matchScore=", "}").trim();
                         try {
                             app.setMatchScore(Double.parseDouble(matchScoreStr));
                         } catch (NumberFormatException e) {
@@ -578,7 +520,40 @@ public class DataStorage {
         try (BufferedReader reader = new BufferedReader(new FileReader(LOGS_FILE))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                // Simplified handling
+                if (line.startsWith("Log{")) {
+                    try {
+                        Log log = new Log();
+                        
+                        if (line.contains("id='")) {
+                            String id = parseField(line, "id='");
+                            log.setId(id);
+                        }
+                        if (line.contains("action='")) {
+                            String action = parseField(line, "action='");
+                            log.setAction(action);
+                        }
+                        if (line.contains("user='")) {
+                            String user = parseField(line, "user='");
+                            log.setUser(user);
+                        }
+                        if (line.contains("details='")) {
+                            String details = parseField(line, "details='");
+                            log.setDetails(details);
+                        }
+                        if (line.contains("timestamp='")) {
+                            String timestamp = parseField(line, "timestamp='");
+                            log.setTimestamp(timestamp);
+                        }
+                        if (line.contains("ip='")) {
+                            String ip = parseField(line, "ip='");
+                            log.setIp(ip);
+                        }
+                        
+                        logs.add(log);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         } catch (FileNotFoundException e) {
             // File does not exist, create an empty list
@@ -604,8 +579,24 @@ public class DataStorage {
     }
 
     public static void saveUsers(List<User> userList) {
-        users = userList;
-        saveUsers();
+        synchronized (usersLock) {
+            users = new CopyOnWriteArrayList<>(userList);
+            saveUsers();
+        }
+    }
+
+    public static void saveUsersAtomic(List<User> userList) {
+        synchronized (usersLock) {
+            users = new CopyOnWriteArrayList<>(userList);
+        }
+    }
+
+    public static void persistUsersAsync() {
+        new Thread(() -> {
+            synchronized (usersLock) {
+                saveUsers();
+            }
+        }).start();
     }
 
     // Job-related operations
@@ -614,8 +605,32 @@ public class DataStorage {
     }
 
     public static void saveJobs(List<Job> jobList) {
-        jobs = jobList;
-        saveJobs();
+        synchronized (jobsLock) {
+            jobs = new CopyOnWriteArrayList<>(jobList);
+            saveJobs();
+        }
+    }
+
+    public static void saveJobsAtomic(List<Job> jobList) {
+        synchronized (jobsLock) {
+            jobs = new CopyOnWriteArrayList<>(jobList);
+        }
+    }
+
+    public static void persistJobsAsync() {
+        new Thread(() -> {
+            synchronized (jobsLock) {
+                saveJobs();
+            }
+        }).start();
+    }
+
+    public static void batchSaveJobs(List<Job> jobList, boolean async) {
+        if (async) {
+            persistJobsAsync();
+        } else {
+            saveJobs(jobList);
+        }
     }
 
     // Application-related operations
@@ -624,15 +639,76 @@ public class DataStorage {
     }
 
     public static void saveApplications(List<Application> applicationList) {
-        applications = applicationList;
-        saveApplications();
+        synchronized (applicationsLock) {
+            applications = new CopyOnWriteArrayList<>(applicationList);
+            saveApplications();
+        }
+    }
+
+    public static void saveApplicationsAtomic(List<Application> applicationList) {
+        synchronized (applicationsLock) {
+            applications = new CopyOnWriteArrayList<>(applicationList);
+        }
+    }
+
+    public static void persistApplicationsAsync() {
+        new Thread(() -> {
+            synchronized (applicationsLock) {
+                saveApplications();
+            }
+        }).start();
+    }
+
+    public static void batchSaveApplications(List<Application> applicationList, boolean async) {
+        if (async) {
+            persistApplicationsAsync();
+        } else {
+            saveApplications(applicationList);
+        }
+    }
+
+    public static int batchAddApplications(List<Application> newApps) {
+        synchronized (applicationsLock) {
+            int count = 0;
+            for (Application app : newApps) {
+                if (!applications.contains(app)) {
+                    applications.add(app);
+                    IndexService.indexApplicationUpdate(app);
+                    count++;
+                }
+            }
+            persistApplicationsAsync();
+            return count;
+        }
+    }
+
+    public static int batchUpdateApplications(List<Application> updatedApps) {
+        synchronized (applicationsLock) {
+            int count = 0;
+            Map<String, Application> appMap = applications.stream()
+                    .collect(Collectors.toMap(Application::getId, a -> a));
+
+            for (Application updated : updatedApps) {
+                if (appMap.containsKey(updated.getId())) {
+                    IndexService.indexApplicationUpdate(updated);
+                    applications.set(applications.indexOf(appMap.get(updated.getId())), updated);
+                    count++;
+                }
+            }
+            persistApplicationsAsync();
+            return count;
+        }
     }
 
     // Log-related operations
-    public static void addLog(String action, String user, String details) {
-        Log log = new Log(action, user, details);
+    public static void addLog(String action, String user, String details, String ip) {
+        Log log = new Log(action, user, details, ip);
         logs.add(log);
         saveLogs();
+    }
+    
+    public static void addLog(String action, String user, String details) {
+        addLog(action, user, details, "unknown");
     }
 
     public static List<Log> getLogs() {

@@ -24,6 +24,9 @@ import model.Job;
 import model.TA;
 import service.ApplicationService;
 import service.JobService;
+import service.KeyboardShortcutService;
+import service.NavigationHistory;
+import controller.SearchBarController;
 
 import java.util.Comparator;
 import java.util.List;
@@ -72,6 +75,7 @@ public class TAApplicationHistoryController {
 
     private TA user;
     private Stage stage;
+    private KeyboardShortcutService shortcutService;
 
     @FXML
     private void initialize() {
@@ -124,8 +128,6 @@ public class TAApplicationHistoryController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
-<<<<<<< Updated upstream
-=======
         setupKeyboardShortcuts();
     }
     
@@ -362,7 +364,6 @@ public class TAApplicationHistoryController {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to load personal center page: " + e.getMessage());
         }
->>>>>>> Stashed changes
     }
 
     private void refreshApplications() {
@@ -524,19 +525,24 @@ public class TAApplicationHistoryController {
 
     @FXML
     private void handleBack() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TADashboard.fxml"));
-            Parent root = loader.load();
-            TADashboardController controller = loader.getController();
-            controller.setUser(user);
+        // If we can go back, do so; otherwise, go to dashboard
+        if (NavigationHistory.getInstance().canGoBack()) {
+            NavigationHistory.getInstance().goBack();
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TADashboard.fxml"));
+                Parent root = loader.load();
+                TADashboardController controller = loader.getController();
+                controller.setUser(user);
 
-            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Dashboard");
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to go back: " + e.getMessage());
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - Dashboard");
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to go back: " + e.getMessage());
+            }
         }
     }
 
@@ -548,9 +554,32 @@ public class TAApplicationHistoryController {
             LoginController controller = loader.getController();
             controller.setStage(stage);
 
-            Scene scene = new Scene(root, 800, 600);
+            // Save current window state
+            boolean isFullScreen = stage.isFullScreen();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            // Create new scene without hardcoded size
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            
+            // Apply saved window state
             stage.setScene(scene);
+            if (isFullScreen) {
+                stage.setFullScreen(true);
+            } else if (currentWidth > 0 && currentHeight > 0) {
+                stage.setWidth(currentWidth);
+                stage.setHeight(currentHeight);
+            } else {
+                // Default size if no previous size
+                stage.setWidth(800);
+                stage.setHeight(600);
+            }
             stage.setTitle("BUPT International School TA Recruitment System - Login");
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                stage.sizeToScene();
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Logout failed: " + e.getMessage());

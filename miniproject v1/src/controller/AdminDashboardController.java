@@ -15,16 +15,10 @@ import service.ApplicationService;
 import service.JobService;
 import service.UserService;
 import service.AIService;
-<<<<<<< Updated upstream
-=======
 import service.KeyboardShortcutService;
 import service.ToastService;
 import service.NavigationHistory;
 import controller.SearchBarController;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,6 +35,24 @@ public class AdminDashboardController {
     private TableView<SystemStatus> systemStatusTable;
     
     private Admin user;
+    private Stage stage;
+    private KeyboardShortcutService shortcutService;
+    
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        setupKeyboardShortcuts();
+    }
+    
+    private void setupKeyboardShortcuts() {
+        shortcutService = new KeyboardShortcutService(stage);
+        shortcutService.registerShortcut("ctrl+f", this::handleSearchAction);
+        shortcutService.registerShortcut("escape", this::handleHomeAction);
+
+        if (stage.getScene() != null) {
+            Parent root = stage.getScene().getRoot();
+            shortcutService.setupEnterKeyNavigation(root);
+        }
+    }
     
     public void setUser(Admin user) {
         this.user = user;
@@ -189,6 +201,10 @@ public class AdminDashboardController {
         dialog.setHeaderText("豆包大模型深度思考能力API配置");
         dialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
         
+        // 设置对话框大小
+        dialog.getDialogPane().setPrefWidth(800);
+        dialog.getDialogPane().setPrefHeight(600);
+        
         // 创建表单
         javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
         grid.setHgap(15);
@@ -201,7 +217,16 @@ public class AdminDashboardController {
         apiKeyLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
         javafx.scene.control.TextField apiKeyField = new javafx.scene.control.TextField();
         apiKeyField.setText(AIService.getApiKey());
+        apiKeyField.setPrefWidth(600);
         apiKeyField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
+        
+        // 模型输入
+        javafx.scene.control.Label modelLabel = new javafx.scene.control.Label("Model:");
+        modelLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
+        javafx.scene.control.TextField modelField = new javafx.scene.control.TextField();
+        modelField.setText(AIService.getCurrentModel());
+        modelField.setPrefWidth(600);
+        modelField.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
         
         // 测试输入
         javafx.scene.control.Label testInputLabel = new javafx.scene.control.Label("测试输入:");
@@ -209,6 +234,7 @@ public class AdminDashboardController {
         javafx.scene.control.TextArea testInputArea = new javafx.scene.control.TextArea();
         testInputArea.setText("常见的十字花科植物有哪些？");
         testInputArea.setPrefHeight(100);
+        testInputArea.setPrefWidth(600);
         testInputArea.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
         
         // 测试结果
@@ -216,6 +242,7 @@ public class AdminDashboardController {
         testResultLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14px;");
         javafx.scene.control.TextArea testResultArea = new javafx.scene.control.TextArea();
         testResultArea.setPrefHeight(150);
+        testResultArea.setPrefWidth(600);
         testResultArea.setEditable(false);
         testResultArea.setStyle("-fx-font-size: 14px; -fx-padding: 8px; -fx-border-color: #ddd; -fx-border-radius: 4px; -fx-background-color: #f9f9f9;");
         
@@ -229,6 +256,7 @@ public class AdminDashboardController {
         testButton.setOnMouseExited(mouseEvent -> testButton.setStyle("-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
         testButton.setOnAction(testEvent -> {
             String apiKey = apiKeyField.getText().trim();
+            String model = modelField.getText().trim();
             String testInput = testInputArea.getText().trim();
             
             if (apiKey.isEmpty()) {
@@ -236,6 +264,15 @@ public class AdminDashboardController {
                 alert.setTitle("警告");
                 alert.setHeaderText("API Key未设置");
                 alert.setContentText("请先输入API Key");
+                alert.showAndWait();
+                return;
+            }
+            
+            if (model.isEmpty()) {
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
+                alert.setTitle("警告");
+                alert.setHeaderText("Model未设置");
+                alert.setContentText("请先输入Model");
                 alert.showAndWait();
                 return;
             }
@@ -250,8 +287,8 @@ public class AdminDashboardController {
             }
             
             try {
-                // 设置API密钥
-                AIService.setApiKey(apiKey);
+                // 设置API密钥和模型
+                AIService.setApiConfig(apiKey, model);
                 
                 // 调用API
                 testResultArea.setText("正在调用API...");
@@ -274,7 +311,7 @@ public class AdminDashboardController {
                     javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
                     errorAlert.setTitle("错误");
                     errorAlert.setHeaderText("API测试失败");
-                    errorAlert.setContentText("测试失败，请检查API密钥和网络连接");
+                    errorAlert.setContentText("测试失败，请检查API密钥、模型和网络连接");
                     errorAlert.showAndWait();
                 }
                 
@@ -289,14 +326,64 @@ public class AdminDashboardController {
             }
         });
         
+        // 保存按钮
+        javafx.scene.control.Button saveButton = new javafx.scene.control.Button("保存");
+        saveButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
+        saveButton.setOnMouseEntered(mouseEvent -> saveButton.setStyle("-fx-background-color: #45a049; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
+        saveButton.setOnMouseExited(mouseEvent -> saveButton.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
+        saveButton.setOnAction(saveEvent -> {
+            if (testSuccess[0]) {
+                String apiKey = apiKeyField.getText().trim();
+                String model = modelField.getText().trim();
+                try {
+                    // 保存API配置到文件
+                    AIService.saveApiConfig(apiKey, model);
+                    
+                    // 显示成功消息
+                    javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+                    successAlert.setTitle("成功");
+                    successAlert.setHeaderText("API配置保存成功");
+                    successAlert.setContentText("大模型API配置已保存");
+                    successAlert.showAndWait();
+                } catch (IllegalArgumentException e) {
+                    // 处理API配置重复的情况
+                    javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
+                    errorAlert.setTitle("警告");
+                    errorAlert.setHeaderText("保存失败");
+                    errorAlert.setContentText(e.getMessage());
+                    errorAlert.showAndWait();
+                } catch (Exception e) {
+                    javafx.scene.control.Alert errorAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                    errorAlert.setTitle("错误");
+                    errorAlert.setHeaderText("保存失败");
+                    errorAlert.setContentText("保存API配置失败: " + e.getMessage());
+                    errorAlert.showAndWait();
+                }
+            } else {
+                // 测试失败，不保存配置
+                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
+                alert.setTitle("警告");
+                alert.setHeaderText("不是有效的API配置，无法保存");
+                alert.setContentText("请先测试API确保配置正确");
+                alert.showAndWait();
+            }
+        });
+        
         // 添加到网格
         grid.add(apiKeyLabel, 0, 0);
         grid.add(apiKeyField, 1, 0);
-        grid.add(testInputLabel, 0, 1);
-        grid.add(testInputArea, 1, 1);
-        grid.add(testButton, 1, 2);
-        grid.add(testResultLabel, 0, 3);
-        grid.add(testResultArea, 1, 3);
+        grid.add(modelLabel, 0, 1);
+        grid.add(modelField, 1, 1);
+        grid.add(testInputLabel, 0, 2);
+        grid.add(testInputArea, 1, 2);
+        
+        // 创建按钮容器
+        javafx.scene.layout.HBox buttonBox = new javafx.scene.layout.HBox(10);
+        buttonBox.getChildren().addAll(testButton, saveButton);
+        grid.add(buttonBox, 1, 3);
+        
+        grid.add(testResultLabel, 0, 4);
+        grid.add(testResultArea, 1, 4);
         
         // 设置对话框内容
         dialog.getDialogPane().setContent(grid);
@@ -318,40 +405,97 @@ public class AdminDashboardController {
         cancelButton.setOnMouseExited(mouseEvent -> cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
         
         // 显示对话框并处理结果
-        java.util.Optional<Void> result = dialog.showAndWait();
-        if (result.isPresent()) {
-            // 只有在测试成功时才保存配置
-            if (testSuccess[0]) {
-                // 保存API密钥
-                String apiKey = apiKeyField.getText().trim();
-                AIService.setApiKey(apiKey);
-                
-                // 显示成功消息
-                javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                successAlert.setTitle("成功");
-                successAlert.setHeaderText("API配置保存成功");
-                successAlert.setContentText("大模型API配置已保存");
-                successAlert.showAndWait();
-            } else {
-                // 测试失败，不保存配置
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
-                alert.setTitle("警告");
-                alert.setHeaderText("API配置未保存");
-                alert.setContentText("请先测试API确保配置正确");
-                alert.showAndWait();
-            }
+        dialog.showAndWait();
+        // 移除自动保存逻辑，只有点击保存按钮才保存API key
+    }
+    
+    // API Key选择
+    @FXML
+    private void handleApiKeyChoose(ActionEvent event) {
+        // 创建API Key选择对话框
+        javafx.scene.control.Dialog<Void> dialog = new javafx.scene.control.Dialog<>();
+        dialog.setTitle("API配置选择");
+        dialog.setHeaderText("选择要使用的API配置");
+        dialog.getDialogPane().setStyle("-fx-background-color: #f5f5f5; -fx-border-color: #ddd; -fx-border-radius: 8px;");
+        
+        // 加载保存的API配置
+        java.util.List<java.util.Map<String, String>> apiConfigs = AIService.loadApiConfigs();
+        
+        if (apiConfigs.isEmpty()) {
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.WARNING);
+            alert.setTitle("警告");
+            alert.setHeaderText("没有保存的API配置");
+            alert.setContentText("请先在Model API Config中测试并保存API配置");
+            alert.showAndWait();
+            return;
         }
+        
+        // 创建列表视图
+        javafx.scene.control.ListView<String> apiConfigList = new javafx.scene.control.ListView<>();
+        java.util.List<String> configStrings = new java.util.ArrayList<>();
+        for (java.util.Map<String, String> config : apiConfigs) {
+            String configStr = "Model: " + config.get("model") + " | API Key: " + config.get("apiKey");
+            configStrings.add(configStr);
+        }
+        apiConfigList.setItems(javafx.collections.FXCollections.observableArrayList(configStrings));
+        apiConfigList.setPrefHeight(300);
+        apiConfigList.setPrefWidth(600);
+        apiConfigList.setStyle("-fx-font-size: 14px; -fx-border-color: #ddd; -fx-border-radius: 4px;");
+        
+        // 设置双击事件
+        apiConfigList.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 2) {
+                int selectedIndex = apiConfigList.getSelectionModel().getSelectedIndex();
+                if (selectedIndex >= 0 && selectedIndex < apiConfigs.size()) {
+                    java.util.Map<String, String> selectedConfig = apiConfigs.get(selectedIndex);
+                    String apiKey = selectedConfig.get("apiKey");
+                    String model = selectedConfig.get("model");
+                    
+                    // 设置为当前API配置
+                    AIService.setApiConfig(apiKey, model);
+                    
+                    // 显示成功消息
+                    javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
+                    successAlert.setTitle("成功");
+                    successAlert.setHeaderText("API配置选择成功");
+                    successAlert.setContentText("已选择API配置: Model=" + model + ", API Key=" + apiKey);
+                    successAlert.showAndWait();
+                    
+                    // 关闭对话框
+                    dialog.close();
+                }
+            }
+        });
+        
+        // 设置对话框内容
+        dialog.getDialogPane().setContent(apiConfigList);
+        
+        // 添加按钮
+        javafx.scene.control.ButtonType cancelButtonType = new javafx.scene.control.ButtonType("取消", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+        dialog.getDialogPane().getButtonTypes().add(cancelButtonType);
+        
+        // 样式按钮
+        javafx.scene.control.Button cancelButton = (javafx.scene.control.Button) dialog.getDialogPane().lookupButton(cancelButtonType);
+        cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;");
+        cancelButton.setOnMouseEntered(mouseEvent -> cancelButton.setStyle("-fx-background-color: #da190b; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
+        cancelButton.setOnMouseExited(mouseEvent -> cancelButton.setStyle("-fx-background-color: #f44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 8px 16px; -fx-border-radius: 4px;"));
+        
+        // 显示对话框
+        dialog.showAndWait();
     }
     
     // Log out
     @FXML
     private void handleLogout(ActionEvent event) {
+        // Clear navigation history on logout
+        NavigationHistory.getInstance().clear();
+        
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
             LoginController controller = loader.getController();
             
-// Get current stage
+    // Get current stage
             Stage stage = null;
             if (event.getSource() instanceof Button) {
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
@@ -361,9 +505,32 @@ public class AdminDashboardController {
             
             controller.setStage(stage);
             
-            Scene scene = new Scene(root, 800, 600);
+            // Save current window state
+            boolean isFullScreen = stage.isFullScreen();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            // Create new scene without hardcoded size
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            
+            // Apply saved window state
             stage.setScene(scene);
+            if (isFullScreen) {
+                stage.setFullScreen(true);
+            } else if (currentWidth > 0 && currentHeight > 0) {
+                stage.setWidth(currentWidth);
+                stage.setHeight(currentHeight);
+            } else {
+                // Default size if no previous size
+                stage.setWidth(800);
+                stage.setHeight(600);
+            }
             stage.setTitle("BUPT International School TA Recruitment System - Login");
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                stage.sizeToScene();
         } catch (Exception e) {
             e.printStackTrace();
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
@@ -378,8 +545,13 @@ public class AdminDashboardController {
     // Handle home button click
     @FXML
     private void handleHome(ActionEvent event) {
-        // Refresh current page
-        initializeDashboard();
+        // If we can go back, do so; otherwise, stay on the dashboard
+        if (NavigationHistory.getInstance().canGoBack()) {
+            NavigationHistory.getInstance().goBack();
+        } else {
+            // Refresh current page
+            initializeDashboard();
+        }
     }
     
     // Handle user management button click
@@ -1400,6 +1572,138 @@ public class AdminDashboardController {
             alert.setTitle("Error");
             alert.setHeaderText("Failed to load page");
             alert.setContentText("Failed to load the publish job page. Please try again later.");
+            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            alert.showAndWait();
+        }
+    }
+    
+    private void handleHomeAction() {
+        // If we can go back, do so; otherwise, stay on the dashboard
+        if (NavigationHistory.getInstance().canGoBack()) {
+            NavigationHistory.getInstance().goBack();
+        } else {
+            // Refresh current dashboard
+            initializeDashboard();
+        }
+    }
+    
+    private void handleSearchAction() {
+        showSearchBar();
+    }
+
+    private void showSearchBar() {
+        try {
+            // Create list of Admin features
+            List<SearchBarController.Feature> features = new java.util.ArrayList<>();
+            features.add(new SearchBarController.Feature("User Management", () -> handleUserManagement(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Job Management", () -> handleJobManagement(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Application Management", () -> handleApprovalCenter(new ActionEvent())));
+            features.add(new SearchBarController.Feature("System Settings", () -> handleSystemConfiguration(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Job List", () -> {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/JobList.fxml"));
+                    Parent root = loader.load();
+                    JobListController controller = loader.getController();
+                    controller.setUser(user, model.UserRole.ADMIN);
+
+                    final Stage currentStage;
+                    if (stage != null) {
+                        currentStage = stage;
+                    } else {
+                        currentStage = (Stage) systemStatusTable.getScene().getWindow();
+                    }
+                    controller.setStage(currentStage);
+
+                    // Add navigation entry for back functionality
+                    NavigationHistory.getInstance().addEntry("JobList", () -> {
+                        try {
+                            FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
+                            Parent dashboardRoot = dashboardLoader.load();
+                            AdminDashboardController dashboardController = dashboardLoader.getController();
+                            dashboardController.setUser(user);
+                            dashboardController.setStage(currentStage);
+                            
+                            Scene scene = new Scene(dashboardRoot, currentStage.getWidth(), currentStage.getHeight());
+                            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                            currentStage.setScene(scene);
+                            currentStage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
+                            
+                            // Force layout update to ensure components resize properly
+                            dashboardRoot.requestLayout();
+                            currentStage.sizeToScene();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                            alert.setTitle("Error");
+                            alert.setHeaderText("Failed to load page");
+                            alert.setContentText("Failed to load the dashboard. Please try again later.");
+                            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+                            alert.showAndWait();
+                        }
+                    });
+
+                    Scene scene = new Scene(root, currentStage.getWidth(), currentStage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    currentStage.setScene(scene);
+                    currentStage.setTitle("BUPT International School TA Recruitment System - Job Board");
+                    
+                    // Force layout update to ensure components resize properly
+                    root.requestLayout();
+                    currentStage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Failed to load page");
+                    alert.setContentText("Failed to load the job list page. Please try again later.");
+                    alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+                    alert.showAndWait();
+                }
+            }));
+
+            // Load search bar
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SearchBar.fxml"));
+            Parent root = loader.load();
+            SearchBarController controller = loader.getController();
+
+            // Create stage for search bar
+            Stage searchStage = new Stage();
+            searchStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            searchStage.initOwner((Stage) systemStatusTable.getScene().getWindow());
+            searchStage.setTitle("Search Features");
+            // Set fixed size and disable maximize button
+            searchStage.setResizable(false);
+            searchStage.setWidth(600);
+            searchStage.setHeight(450);
+
+            // Set up controller
+            controller.setStage(searchStage);
+            controller.setFeatures(features);
+            controller.setOnFeatureSelected(featureName -> {
+                // Find and execute the selected feature
+                for (SearchBarController.Feature feature : features) {
+                    if (feature.getName().equals(featureName)) {
+                        feature.getAction().run();
+                        break;
+                    }
+                }
+            });
+
+            // Create scene
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            searchStage.setScene(scene);
+
+
+
+            // Show search bar
+            searchStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Failed to load page");
+            alert.setContentText("Failed to load the search bar. Please try again later.");
             alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
             alert.showAndWait();
         }

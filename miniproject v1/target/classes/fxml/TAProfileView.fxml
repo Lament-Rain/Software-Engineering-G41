@@ -67,6 +67,12 @@
                             
                             <Label text="Student ID: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="2" GridPane.columnIndex="2" />
                             <Label fx:id="studentIdLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529;" GridPane.rowIndex="2" GridPane.columnIndex="3" />
+                            
+                            <Label text="Email: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                            <Label fx:id="emailLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529;" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                            
+                            <Label text="Phone: " style="-fx-font-size: 14px; -fx-text-fill: #495057;" GridPane.rowIndex="3" GridPane.columnIndex="2" />
+                            <Label fx:id="phoneLabel" style="-fx-font-size: 14px; -fx-text-fill: #212529;" GridPane.rowIndex="3" GridPane.columnIndex="3" />
                         </GridPane>
                     </VBox>
                     

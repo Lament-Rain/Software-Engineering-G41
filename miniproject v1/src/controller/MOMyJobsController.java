@@ -15,6 +15,9 @@ import model.JobType;
 import model.MO;
 import service.ApplicationService;
 import service.JobService;
+import service.KeyboardShortcutService;
+import service.NavigationHistory;
+import controller.SearchBarController;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -62,14 +65,8 @@ public class MOMyJobsController {
     private Stage stage;
     private final ObservableList<JobRowViewModel> rows = FXCollections.observableArrayList();
     private Job selectedJob;
-<<<<<<< Updated upstream
-=======
     private KeyboardShortcutService shortcutService;
     private static final DateTimeFormatter UI_DATE_FORMATTER = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
     @FXML
     private void initialize() {
@@ -88,9 +85,6 @@ public class MOMyJobsController {
         loadJobs();
     }
 
-<<<<<<< Updated upstream
-    public void setStage(Stage stage) { this.stage = stage; }
-=======
     public void setStage(Stage stage) { 
         this.stage = stage;
         setupKeyboardShortcuts();
@@ -243,26 +237,6 @@ public class MOMyJobsController {
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to load application review page: " + e.getMessage());
-        }
-    }
->>>>>>> Stashed changes
-
-    @FXML
-    private void handlePersonalCenter() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOProfileView.fxml"));
-            Parent root = loader.load();
-            MOProfileViewController controller = loader.getController();
-            controller.setUser(user);
-            controller.setStage(stage);
-
-            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - MO Personal Center");
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load personal center page: " + e.getMessage());
         }
     }
 
@@ -591,19 +565,24 @@ public class MOMyJobsController {
 
     @FXML
     private void handleBack() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
-            Parent root = loader.load();
-            MODashboardController controller = loader.getController();
-            controller.setUser(user);
+        // If we can go back, do so; otherwise, go to dashboard
+        if (NavigationHistory.getInstance().canGoBack()) {
+            NavigationHistory.getInstance().goBack();
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
+                Parent root = loader.load();
+                MODashboardController controller = loader.getController();
+                controller.setUser(user);
 
-            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Module Organizer Dashboard");
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to return: " + e.getMessage());
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - Module Organizer Dashboard");
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to return: " + e.getMessage());
+            }
         }
     }
 
@@ -615,6 +594,29 @@ public class MOMyJobsController {
             JobListController controller = loader.getController();
             controller.setUser(user, model.UserRole.MO);
             controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("JobList", () -> {
+                try {
+                    FXMLLoader myJobsLoader = new FXMLLoader(getClass().getResource("/fxml/MOMyJobs.fxml"));
+                    Parent myJobsRoot = myJobsLoader.load();
+                    MOMyJobsController myJobsController = myJobsLoader.getController();
+                    myJobsController.setUser(user);
+                    myJobsController.setStage(stage);
+                    
+                    Scene scene = new Scene(myJobsRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - My Jobs");
+                    
+                    // Force layout update to ensure components resize properly
+                    myJobsRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to load my jobs page: " + e.getMessage());
+                }
+            });
 
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());

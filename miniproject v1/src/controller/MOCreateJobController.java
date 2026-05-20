@@ -1,18 +1,14 @@
 package controller;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-<<<<<<< Updated upstream
-=======
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -23,7 +19,12 @@ import model.Job;
 import model.JobType;
 import model.MO;
 import model.UserRole;
+import service.FormValidationService;
 import service.JobService;
+import service.KeyboardShortcutService;
+import service.NavigationHistory;
+import service.ToastService;
+import controller.SearchBarController;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -36,6 +37,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class MOCreateJobController {
+
     @FXML
     private Label welcomeLabel;
     @FXML
@@ -85,8 +87,6 @@ public class MOCreateJobController {
     @FXML
     private Label errorMessage;
 
-<<<<<<< Updated upstream
-=======
     @FXML
     private Label titleError;
     @FXML
@@ -108,19 +108,12 @@ public class MOCreateJobController {
     @FXML
     private Button submitButton;
 
->>>>>>> Stashed changes
     private MO moUser;
     private Admin adminUser;
     private UserRole userRole;
     private Stage stage;
-<<<<<<< Updated upstream
-=======
     private KeyboardShortcutService shortcutService;
     private static final DateTimeFormatter UI_DATE_FORMATTER = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
     public void setUser(MO user) {
         this.moUser = user;
@@ -140,6 +133,7 @@ public class MOCreateJobController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+        setupKeyboardShortcuts();
     }
 
     @FXML
@@ -153,8 +147,6 @@ public class MOCreateJobController {
                 "School of Economics and Management",
                 "School of Engineering"
         );
-<<<<<<< Updated upstream
-=======
 
         setupFieldValidation();
     }
@@ -604,11 +596,21 @@ public class MOCreateJobController {
         FormValidationService.clearError(descriptionArea, descriptionError);
         FormValidationService.clearError(skillsArea, skillsError);
         errorMessage.setText("");
->>>>>>> Stashed changes
     }
 
     @FXML
     private void handleSubmit() {
+        handleSubmitAction();
+    }
+
+    private void handleSubmitAction() {
+        clearAllErrors();
+
+        if (!validateAllFields()) {
+            ToastService.showToast(stage, "Please fix the errors before submitting", ToastService.ToastType.WARNING);
+            return;
+        }
+
         String title = titleField.getText();
         String type = typeComboBox.getValue();
         String department = departmentComboBox.getValue();
@@ -618,22 +620,6 @@ public class MOCreateJobController {
         String description = descriptionArea.getText();
         String skills = skillsArea.getText();
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        if (title.isEmpty() || type == null || department == null || workTime.isEmpty() || recruitNumStr.isEmpty() || deadline.isEmpty() || description.isEmpty() || skills.isEmpty()) {
-            errorMessage.setText("Please fill in all required fields.");
-            return;
-        }
-
-        int recruitNum;
-        try {
-            recruitNum = Integer.parseInt(recruitNumStr);
-            if (recruitNum <= 0) {
-                errorMessage.setText("The number of openings must be greater than 0.");
-                return;
-=======
-=======
->>>>>>> Stashed changes
         Integer weeklyWorkload = computeWeeklyWorkload();
         if (weeklyWorkload == null) {
             FormValidationService.showError(monHoursField, workTimeError, "Select weekdays and enter valid periods (1-14, comma-separated) for each selected day");
@@ -691,60 +677,9 @@ public class MOCreateJobController {
                 ToastService.showToast(stage, "An error occurred: " + e.getMessage(), ToastService.ToastType.ERROR);
                 submitButton.setDisable(false);
                 submitButton.setText("Publish Job");
->>>>>>> Stashed changes
             }
-        } catch (NumberFormatException e) {
-            errorMessage.setText("The number of openings must be numeric.");
-            return;
-        }
-
-        List<String> skillsList = java.util.Arrays.asList(skills.split(","));
-        String salary = "";
-        String location = "";
-        String extraRequirements = "";
-
-        Job job = null;
-        if (userRole == UserRole.MO && moUser != null) {
-            job = JobService.createJob(title, JobType.valueOf(type), department, description, skillsList, workTime, recruitNum, deadline, salary, location, extraRequirements, moUser.getId(), "MO", moUser.getName());
-        } else if (userRole == UserRole.ADMIN && adminUser != null) {
-            job = JobService.createJob(title, JobType.valueOf(type), department, description, skillsList, workTime, recruitNum, deadline, salary, location, extraRequirements, adminUser.getId(), "ADMIN", adminUser.getUsername());
-        }
-
-        if (job != null) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Published Successfully");
-            alert.setHeaderText("Job published successfully");
-            alert.setContentText("The position has been published.");
-            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            alert.showAndWait();
-            handleHome();
-        } else {
-            errorMessage.setText("Failed to publish the job. Please try again later.");
-        }
-    }
-
-    private String buildScheduleSummary(String startDateText, String endDateText) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Schedule[");
-        appendDay(sb, "Mon", monCheckBox, monHoursField);
-        appendDay(sb, "Tue", tueCheckBox, tueHoursField);
-        appendDay(sb, "Wed", wedCheckBox, wedHoursField);
-        appendDay(sb, "Thu", thuCheckBox, thuHoursField);
-        appendDay(sb, "Fri", friCheckBox, friHoursField);
-        appendDay(sb, "Sat", satCheckBox, satHoursField);
-        appendDay(sb, "Sun", sunCheckBox, sunHoursField);
-        sb.append("; Start=").append(startDateText).append("; End=").append(endDateText).append("]");
-        return sb.toString();
-    }
-
-    private void appendDay(StringBuilder sb, String day, CheckBox checkBox, TextField field) {
-        if (!checkBox.isSelected()) {
-            return;
-        }
-        if (sb.charAt(sb.length() - 1) != '[') {
-            sb.append(", ");
-        }
-        sb.append(day).append(":").append(field.getText().trim()).append("h");
+        }));
+        timeline.play();
     }
 
     private String buildScheduleSummary(String startDateText, String endDateText) {
@@ -773,41 +708,55 @@ public class MOCreateJobController {
 
     @FXML
     private void handleCancel() {
-        handleHome();
+        handleCancelAction();
+    }
+
+    private void handleCancelAction() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Cancellation");
+        alert.setHeaderText("Are you sure you want to cancel?");
+        alert.setContentText("Any unsaved changes will be lost.");
+        alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+
+        alert.showAndWait().ifPresent(response -> {
+            if (response == javafx.scene.control.ButtonType.OK) {
+                handleHome();
+            }
+        });
     }
 
     @FXML
     private void handleHome() {
-        try {
-            if (userRole == UserRole.MO && moUser != null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
-                Parent root = loader.load();
-                MODashboardController controller = loader.getController();
-                controller.setUser(moUser);
+        // If we can go back, do so; otherwise, go to dashboard
+        if (NavigationHistory.getInstance().canGoBack()) {
+            NavigationHistory.getInstance().goBack();
+        } else {
+            try {
+                if (userRole == UserRole.MO && moUser != null) {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
+                    Parent root = loader.load();
+                    MODashboardController controller = loader.getController();
+                    controller.setUser(moUser);
 
-                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                stage.setScene(scene);
-                stage.setTitle("BUPT International School TA Recruitment System - Module Organizer Dashboard");
-            } else if (userRole == UserRole.ADMIN && adminUser != null) {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
-                Parent root = loader.load();
-                AdminDashboardController controller = loader.getController();
-                controller.setUser(adminUser);
+                    Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Module Organizer Dashboard");
+                } else if (userRole == UserRole.ADMIN && adminUser != null) {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
+                    Parent root = loader.load();
+                    AdminDashboardController controller = loader.getController();
+                    controller.setUser(adminUser);
 
-                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                stage.setScene(scene);
-                stage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
+                    Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                ToastService.showToast(stage, "Failed to load page: " + e.getMessage(), ToastService.ToastType.ERROR);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Failed to load page");
-            alert.setContentText("Failed to load the page. Please try again later.");
-            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            alert.showAndWait();
         }
     }
 
@@ -819,17 +768,35 @@ public class MOCreateJobController {
             LoginController controller = loader.getController();
             controller.setStage(stage);
 
-            Scene scene = new Scene(root, 800, 600);
+            // Save current window state
+            boolean isFullScreen = stage.isFullScreen();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            // Create new scene without hardcoded size
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            
+            // Apply saved window state
             stage.setScene(scene);
+            if (isFullScreen) {
+                stage.setFullScreen(true);
+            } else if (currentWidth > 0 && currentHeight > 0) {
+                stage.setWidth(currentWidth);
+                stage.setHeight(currentHeight);
+            } else {
+                // Default size if no previous size
+                stage.setWidth(800);
+                stage.setHeight(600);
+            }
             stage.setTitle("BUPT International School TA Recruitment System - Login");
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                stage.sizeToScene();
         } catch (Exception e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("Failed to load page");
-            alert.setContentText("Failed to load the login page. Please try again later.");
-            alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
-            alert.showAndWait();
+            ToastService.showToast(stage, "Failed to load login page: " + e.getMessage(), ToastService.ToastType.ERROR);
         }
     }
 }

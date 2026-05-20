@@ -6,15 +6,6 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MOApplicationReviewController">
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
-            <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
-            <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;" />
-            <Button text="Back to MO Dashboard" styleClass="navbar-menu" onAction="#handleBack" />
-=======
-=======
->>>>>>> Stashed changes
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
             <Label text="BUPT TA System" styleClass="navbar-title" />
             <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
@@ -32,10 +23,6 @@
                 <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
                 <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" accessibleText="Log out" />
             </HBox>
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         </HBox>
     </VBox>
 
@@ -48,33 +35,29 @@
 
             <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 16;">
                 <Label text="Select Job" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
-                <ComboBox fx:id="jobSelector" promptText="Choose a job" style="-fx-pref-width: 420px;" />
+                <ComboBox fx:id="jobSelector" promptText="Choose a job" style="-fx-pref-width: 420px;" accessibleText="Select a job to review applications" />
             </VBox>
 
-            <HBox style="-fx-spacing: 18;">
+            <HBox style="-fx-spacing: 18;" alignment="CENTER_LEFT">
                 <VBox styleClass="stat-card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 10; -fx-pref-width: 220px;">
                     <Label text="Applicants" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
                     <Label fx:id="applicantCountLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
                 </VBox>
                 <VBox styleClass="stat-card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 10; -fx-pref-width: 220px;">
                     <Label text="Accepted" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
-                    <Label fx:id="acceptedCountLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                    <Label fx:id="acceptedCountLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #28a745;" />
                 </VBox>
                 <VBox styleClass="stat-card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 10; -fx-pref-width: 220px;">
                     <Label text="Pending / Screened" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
-                    <Label fx:id="pendingCountLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #2c3e50;" />
+                    <Label fx:id="pendingCountLabel" text="0" style="-fx-font-size: 30px; -fx-font-weight: 700; -fx-text-fill: #ffc107;" />
                 </VBox>
+                <StackPane style="-fx-pref-width: 60px; -fx-pref-height: 60px;">
+                    <ProgressIndicator fx:id="loadingIndicator" visible="false" style="-fx-progress-color: #3498db;" />
+                </StackPane>
             </HBox>
 
             <HBox spacing="24" alignment="TOP_LEFT">
                 <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 16; -fx-pref-width: 770px;">
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-                    <Label text="Applicant List" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
-                    <TableView fx:id="applicantsTable" style="-fx-pref-height: 500px;">
-=======
-=======
->>>>>>> Stashed changes
                     <HBox style="-fx-spacing: 12; -fx-alignment: center-left;">
                     <Label text="Applicant List" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
                     <Label text="Sort by" style="-fx-font-size: 13px; -fx-text-fill: #6c757d;" />
@@ -85,7 +68,6 @@
                     <Button text="Next" onAction="#handleNextPage" styleClass="btn btn-secondary" style="-fx-pref-width: 90px;" accessibleText="Show next page" />
                 </HBox>
                     <TableView fx:id="applicantsTable" style="-fx-pref-height: 500px;" accessibleText="List of applicants for selected job">
->>>>>>> Stashed changes
                         <columns>
                             <TableColumn fx:id="nameColumn" text="Applicant" prefWidth="150" />
                             <TableColumn fx:id="departmentColumn" text="Department" prefWidth="120" />
@@ -107,15 +89,15 @@
                     <Label text="Resume" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
                     <Label fx:id="applicantResumeLabel" text="-" />
                     <Label text="Experience" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
-                    <TextArea fx:id="experienceArea" editable="false" wrapText="true" style="-fx-pref-height: 95px;" />
+                    <TextArea fx:id="experienceArea" editable="false" wrapText="true" style="-fx-pref-height: 95px;" accessibleText="Applicant experience" />
                     <Label text="Cover Letter" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
-                    <TextArea fx:id="coverLetterArea" editable="false" wrapText="true" style="-fx-pref-height: 110px;" />
+                    <TextArea fx:id="coverLetterArea" editable="false" wrapText="true" style="-fx-pref-height: 110px;" accessibleText="Applicant cover letter" />
                     <Label text="Feedback / Review Comment" style="-fx-font-size: 12px; -fx-text-fill: #6c757d;" />
-                    <TextArea fx:id="feedbackArea" wrapText="true" promptText="Add a shortlist note or rejection reason" style="-fx-pref-height: 110px;" />
+                    <TextArea fx:id="feedbackArea" wrapText="true" promptText="Add a shortlist note or rejection reason" style="-fx-pref-height: 110px;" accessibleText="Enter review feedback or rejection reason" />
                     <HBox style="-fx-spacing: 10; -fx-alignment: center-left;">
-                        <Button fx:id="screenButton" text="Mark Screened" onAction="#handleScreenApplicant" styleClass="btn btn-secondary" style="-fx-pref-width: 110px;" />
-                        <Button fx:id="acceptButton" text="Accept" onAction="#handleAcceptApplicant" styleClass="btn btn-primary" style="-fx-pref-width: 90px;" />
-                        <Button fx:id="rejectButton" text="Reject" onAction="#handleRejectApplicant" styleClass="btn btn-secondary" style="-fx-pref-width: 90px;" />
+                        <Button fx:id="screenButton" text="Mark Screened" onAction="#handleScreenApplicant" styleClass="btn btn-secondary" style="-fx-pref-width: 110px;" accessibleText="Mark applicant as screened" />
+                        <Button fx:id="acceptButton" text="Accept" onAction="#handleAcceptApplicant" styleClass="btn btn-primary" style="-fx-pref-width: 90px;" accessibleText="Accept this applicant" />
+                        <Button fx:id="rejectButton" text="Reject" onAction="#handleRejectApplicant" styleClass="btn btn-danger" style="-fx-pref-width: 90px;" accessibleText="Reject this applicant" />
                     </HBox>
                 </VBox>
             </HBox>

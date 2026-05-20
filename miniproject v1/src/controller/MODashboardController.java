@@ -20,8 +20,14 @@ import model.Job;
 import model.JobStatus;
 import model.JobViewModel;
 import model.MO;
+import model.UserRole;
 import service.ApplicationService;
 import service.JobService;
+import service.KeyboardShortcutService;
+import service.ToastService;
+import service.NavigationHistory;
+import controller.SearchBarController;
+import controller.SearchBarController.Feature;
 
 import java.util.List;
 
@@ -36,6 +42,24 @@ public class MODashboardController {
     private TableView<JobViewModel> jobsTable;
 
     private MO user;
+    private Stage stage;
+    private KeyboardShortcutService shortcutService;
+    
+    public void setStage(Stage stage) {
+        this.stage = stage;
+        setupKeyboardShortcuts();
+    }
+    
+    private void setupKeyboardShortcuts() {
+        shortcutService = new KeyboardShortcutService(stage);
+        shortcutService.registerShortcut("ctrl+f", this::handleSearchAction);
+        shortcutService.registerShortcut("escape", this::handleHomeAction);
+
+        if (stage.getScene() != null) {
+            Parent root = stage.getScene().getRoot();
+            shortcutService.setupEnterKeyNavigation(root);
+        }
+    }
 
     public void setUser(MO user) {
         this.user = user;
@@ -138,9 +162,36 @@ public class MODashboardController {
             Stage stage = getStage(event);
             controller.setStage(stage);
 
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("MOCreateJob", () -> {
+                try {
+                    FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
+                    Parent dashboardRoot = dashboardLoader.load();
+                    MODashboardController dashboardController = dashboardLoader.getController();
+                    dashboardController.setUser(user);
+                    dashboardController.setStage(stage);
+                    
+                    Scene scene = new Scene(dashboardRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - MO Dashboard");
+                    
+                    // Force layout update to ensure components resize properly
+                    dashboardRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to load dashboard, please try again later.");
+                }
+            });
+
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                stage.sizeToScene();
             stage.setTitle("BUPT International School TA Recruitment System - Create TA Position");
         } catch (Exception e) {
             e.printStackTrace();
@@ -211,21 +262,16 @@ public class MODashboardController {
 
     @FXML
     private void handleLogout(ActionEvent event) {
+        // Clear navigation history on logout
+        NavigationHistory.getInstance().clear();
+        
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
             LoginController controller = loader.getController();
-            controller.setStage(getStage(event));
-
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-            Scene scene = new Scene(root, 800, 600);
             Stage stage = getStage(event);
-            stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Login");
-=======
-=======
->>>>>>> Stashed changes
+            controller.setStage(stage);
+
             boolean isFullScreen = stage.isFullScreen();
             double currentWidth = stage.getWidth();
             double currentHeight = stage.getHeight();
@@ -235,10 +281,6 @@ public class MODashboardController {
             stage.setScene(scene);
             stage.setTitle("BUPT International School TA Recruitment System - Login");
             stage.setFullScreen(isFullScreen);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
         } catch (Exception e) {
             e.printStackTrace();
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to load login page. Please try again later.");
@@ -247,7 +289,12 @@ public class MODashboardController {
 
     @FXML
     private void handleHome(ActionEvent event) {
-        initializeDashboard();
+        // If we can go back, do so; otherwise, stay on the dashboard
+        if (NavigationHistory.getInstance().canGoBack()) {
+            NavigationHistory.getInstance().goBack();
+        } else {
+            initializeDashboard();
+        }
     }
 
     @FXML
@@ -296,9 +343,36 @@ public class MODashboardController {
             Stage stage = getStage(event);
             controller.setStage(stage);
 
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("JobList", () -> {
+                try {
+                    FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
+                    Parent dashboardRoot = dashboardLoader.load();
+                    MODashboardController dashboardController = dashboardLoader.getController();
+                    dashboardController.setUser(user);
+                    dashboardController.setStage(stage);
+                    
+                    Scene scene = new Scene(dashboardRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - MO Dashboard");
+                    
+                    // Force layout update to ensure components resize properly
+                    dashboardRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to load dashboard, please try again later.");
+                }
+            });
+
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                stage.sizeToScene();
             stage.setTitle("BUPT International School TA Recruitment System - Job Board");
         } catch (Exception e) {
             e.printStackTrace();
@@ -316,9 +390,36 @@ public class MODashboardController {
             Stage stage = getStage(event);
             controller.setStage(stage);
 
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("MOApplicationReview", () -> {
+                try {
+                    FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
+                    Parent dashboardRoot = dashboardLoader.load();
+                    MODashboardController dashboardController = dashboardLoader.getController();
+                    dashboardController.setUser(user);
+                    dashboardController.setStage(stage);
+                    
+                    Scene scene = new Scene(dashboardRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - MO Dashboard");
+                    
+                    // Force layout update to ensure components resize properly
+                    dashboardRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to load dashboard, please try again later.");
+                }
+            });
+
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                stage.sizeToScene();
             stage.setTitle("BUPT International School TA Recruitment System - Application Review");
         } catch (Exception e) {
             e.printStackTrace();
@@ -336,9 +437,36 @@ public class MODashboardController {
             controller.setStage(stage);
             controller.openJob(jobId);
 
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("MOMyJobs", () -> {
+                try {
+                    FXMLLoader dashboardLoader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
+                    Parent dashboardRoot = dashboardLoader.load();
+                    MODashboardController dashboardController = dashboardLoader.getController();
+                    dashboardController.setUser(user);
+                    dashboardController.setStage(stage);
+                    
+                    Scene scene = new Scene(dashboardRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - MO Dashboard");
+                    
+                    // Force layout update to ensure components resize properly
+                    dashboardRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showAlert(Alert.AlertType.ERROR, "Error", "Failed to load dashboard, please try again later.");
+                }
+            });
+
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                stage.sizeToScene();
             stage.setTitle("BUPT International School TA Recruitment System - My Jobs");
         } catch (Exception e) {
             e.printStackTrace();
@@ -394,8 +522,6 @@ public class MODashboardController {
         alert.initModality(javafx.stage.Modality.APPLICATION_MODAL);
         alert.showAndWait();
     }
-<<<<<<< Updated upstream
-=======
     
     private void handleHomeAction() {
         // If we can go back, do so; otherwise, stay on the dashboard
@@ -461,5 +587,4 @@ public class MODashboardController {
             showAlert(Alert.AlertType.ERROR, "Error", "Failed to load search bar. Please try again later.");
         }
     }
->>>>>>> Stashed changes
 }

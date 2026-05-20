@@ -1,14 +1,9 @@
 package controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-<<<<<<< Updated upstream
-import javafx.scene.control.*;
-import javafx.stage.Stage;
-=======
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -23,54 +18,48 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.prefs.Preferences;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import model.*;
-import service.UserService;
+import service.*;
 
 public class LoginController {
+
     @FXML
     private TextField usernameField;
+
     @FXML
     private PasswordField passwordField;
+
     @FXML
     private ComboBox<String> roleComboBox;
-    @FXML
-    private Button loginButton;
-    @FXML
-    private Button cancelButton;
-    @FXML
-    private Button registerButton;
-    @FXML
-    private Label errorMessage;
+
     @FXML
     private CheckBox rememberMeCheckBox;
-    @FXML
-    private Hyperlink forgotPasswordLink;
-
-    private Stage stage;
-    private static final String PREF_NODE = "ta_recruitment_login";
-    private static final String PREF_REMEMBER = "remember_me";
-    private static final String PREF_USERNAME = "remembered_username";
-    private static final String PREF_ROLE = "remembered_role";
-
-<<<<<<< Updated upstream
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
 
     @FXML
-<<<<<<< Updated upstream
-    private void initialize() {
-        roleComboBox.getItems().addAll("TA Applicant", "Module Organizer", "System Admin");
-        roleComboBox.getSelectionModel().selectFirst();
-        roleComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                roleComboBox.setValue(newValue);
-=======
-=======
+    private Label usernameError;
+
+    @FXML
+    private Label passwordError;
+
+    @FXML
+    private Label roleError;
+
+    @FXML
+    private Label errorMessage;
+
+    @FXML
+    private Label forgotPasswordLabel;
+
+    @FXML
+    private Button cancelButton;
+
+    @FXML
+    private Button loginButton;
+
+    @FXML
+    private Button registerButton;
+
+    @FXML
     private VBox loginCard;
     
     private Stage stage;
@@ -79,7 +68,6 @@ public class LoginController {
     private static final String PREF_USERNAME = "remembered_username";
     private static final String PREF_ROLE = "remembered_role";
 
->>>>>>> Stashed changes
     @FXML
     public void initialize() {
         // ???????
@@ -420,111 +408,23 @@ public class LoginController {
                 ((EmailVerificationController) controller).setStage(stage);
             } else if (controller instanceof RegisterController) {
                 ((RegisterController) controller).setStage(stage);
->>>>>>> Stashed changes
             }
-        });
-        forgotPasswordLink.setOnAction(event -> handleForgotPassword());
-    }
-
-    @FXML
-    private void handleLogin(ActionEvent event) {
-        String username = usernameField.getText();
-        String password = passwordField.getText();
-        String roleStr = roleComboBox.getValue();
-
-        if (username.isEmpty() || password.isEmpty()) {
-            errorMessage.setText("Please enter both username and password.");
-            return;
-        }
-
-        User user = UserService.login(username, password);
-        if (user == null) {
-            errorMessage.setText("Login failed. Invalid username or password.");
-            return;
-        }
-
-        UserRole role = null;
-        switch (roleStr) {
-            case "TA Applicant":
-                role = UserRole.TA;
-                break;
-            case "Module Organizer":
-                role = UserRole.MO;
-                break;
-            case "System Admin":
-                role = UserRole.ADMIN;
-                break;
-        }
-
-        if (user.getRole() != role) {
-            errorMessage.setText("The selected role does not match this account.");
-            return;
-        }
-
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            Parent root = null;
-
-            switch (role) {
-                case TA:
-                    loader.setLocation(getClass().getResource("/fxml/TADashboard.fxml"));
-                    root = loader.load();
-                    TADashboardController controller = loader.getController();
-                    if (controller != null && user instanceof TA) {
-                        controller.setUser((TA) user, true);
-                    }
-                    break;
-                case MO:
-                    loader.setLocation(getClass().getResource("/fxml/MODashboard.fxml"));
-                    root = loader.load();
-                    MODashboardController moController = loader.getController();
-                    if (moController != null && user instanceof MO) {
-                        moController.setUser((MO) user);
-                    }
-                    break;
-                case ADMIN:
-                    loader.setLocation(getClass().getResource("/fxml/AdminDashboard.fxml"));
-                    root = loader.load();
-                    AdminDashboardController adminController = loader.getController();
-                    if (adminController != null && user instanceof Admin) {
-                        adminController.setUser((Admin) user);
-                    }
-                    break;
-            }
-
-            if (root != null) {
-                Scene scene = new Scene(root, 1000, 600);
-                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                stage.setScene(scene);
-                stage.setTitle("BUPT International School TA Recruitment System - " + roleStr);
-            }
-        } catch (Exception e) {
+            
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System");
+            stage.show();
+        } catch (IOException e) {
             e.printStackTrace();
-            errorMessage.setText("Failed to load the page: " + e.getMessage());
+            errorMessage.setText("Failed to load page. Please try again.");
+            errorMessage.setVisible(true);
+            errorMessage.setManaged(true);
         }
     }
-
-    @FXML
-    private void handleCancel(ActionEvent event) {
-        usernameField.clear();
-        passwordField.clear();
-        roleComboBox.getSelectionModel().selectFirst();
-        rememberMeCheckBox.setSelected(false);
-        errorMessage.setText("");
-    }
-
-    @FXML
-    private void handleRegister(ActionEvent event) {
+    
+    private void navigateToPageWithUser(String fxmlFile, model.User user) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Register.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + fxmlFile));
             Parent root = loader.load();
-<<<<<<< Updated upstream
-            RegisterController controller = loader.getController();
-            controller.setStage(stage);
-
-            Scene scene = new Scene(root, 800, 600);
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-=======
             
             // Get current window size
             double width = stage.getWidth();
@@ -545,21 +445,15 @@ public class LoginController {
                 ((AdminDashboardController) controller).setStage(stage);
             }
             
->>>>>>> Stashed changes
             stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Register");
-        } catch (Exception e) {
+            stage.setTitle("BUPT International School TA Recruitment System");
+            stage.show();
+        } catch (IOException e) {
             e.printStackTrace();
-            errorMessage.setText("Failed to load the page: " + e.getMessage());
+            errorMessage.setText("Failed to load page. Please try again.");
+            errorMessage.setVisible(true);
+            errorMessage.setManaged(true);
         }
-    }
-
-    private void handleForgotPassword() {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Forgot Password");
-        alert.setHeaderText(null);
-        alert.setContentText("Please contact the system administrator to reset your password.");
-        alert.showAndWait();
     }
 }
 

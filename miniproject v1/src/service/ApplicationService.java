@@ -2,33 +2,29 @@ package service;
 
 import model.*;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-<<<<<<< Updated upstream
-=======
 import java.util.stream.Collectors;
 import java.util.Set;
 import java.util.HashSet;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 
 public class ApplicationService {
-    // Submit application
+    private static final int DEFAULT_PAGE_SIZE = 20;
+    private static final long CACHE_TTL_SHORT = 60 * 1000;
+    private static final long CACHE_TTL_MEDIUM = 5 * 60 * 1000;
+    private static final long CACHE_TTL_LONG = 30 * 60 * 1000;
+
     public static Application submitApplication(String taId, String jobId, String coverLetter) {
-        // Check whether the TA exists and the profile is approved
         TA ta = UserService.getTAProfile(taId);
         if (ta == null || ta.getProfileStatus() != model.ProfileStatus.APPROVED) {
             return null;
         }
 
-        // Check whether the job exists and can be applied for
         Job job = JobService.getJobById(jobId);
         if (job == null || job.getStatus() != model.JobStatus.PUBLISHED) {
             return null;
         }
 
-        // Check whether a non-repeatable application already exists
         List<Application> applications = DataStorage.getApplications();
         for (Application app : applications) {
             if (!app.getTaId().equals(taId) || !app.getJobId().equals(jobId)) {
@@ -41,23 +37,23 @@ public class ApplicationService {
             }
         }
 
-        // Create application
         String id = UUID.randomUUID().toString();
         Application application = new Application(id, taId, jobId, coverLetter);
 
-        // Calculate match score
         double matchScore = calculateMatchScore(ta, job);
         application.setMatchScore(matchScore);
 
-        // Save application
         applications.add(application);
         DataStorage.saveApplications(applications);
+        IndexService.indexApplicationUpdate(application);
+        CacheService.invalidateByPattern(CacheService.jobApplicationsKey(jobId));
+        CacheService.invalidateByPattern(CacheService.taApplicationsKey(taId));
+        CacheService.invalidate(CacheService.pendingApplicationsKey(job.getMoId()));
         DataStorage.addLog("SUBMIT_APPLICATION", taId, "Application submitted for job: " + job.getTitle());
 
         return application;
     }
 
-    // Screen applicants
     public static boolean screenApplication(String applicationId, model.ApplicationStatus status, String comment, String moId) {
         List<Application> applications = DataStorage.getApplications();
         for (int i = 0; i < applications.size(); i++) {
@@ -70,6 +66,8 @@ public class ApplicationService {
                 app.setUpdatedAt(java.time.LocalDateTime.now().toString());
                 applications.set(i, app);
                 DataStorage.saveApplications(applications);
+                IndexService.indexApplicationUpdate(app);
+                invalidateApplicationCaches(app);
                 DataStorage.addLog("SCREEN_APPLICATION", moId, "Application screened: " + status);
                 return true;
             }
@@ -77,7 +75,6 @@ public class ApplicationService {
         return false;
     }
 
-    // Reject application
     public static boolean rejectApplication(String applicationId, String reason, String moId) {
         List<Application> applications = DataStorage.getApplications();
         for (int i = 0; i < applications.size(); i++) {
@@ -90,6 +87,8 @@ public class ApplicationService {
                 app.setUpdatedAt(java.time.LocalDateTime.now().toString());
                 applications.set(i, app);
                 DataStorage.saveApplications(applications);
+                IndexService.indexApplicationUpdate(app);
+                invalidateApplicationCaches(app);
                 DataStorage.addLog("REJECT_APPLICATION", moId, "Application rejected: TA " + app.getTaId() + " reason: " + reason);
                 return true;
             }
@@ -97,12 +96,10 @@ public class ApplicationService {
         return false;
     }
 
-    // Accept application
     public static boolean acceptApplication(String applicationId, String moId) {
         List<Application> applications = DataStorage.getApplications();
         Application targetApp = null;
-        
-        // Find target application
+
         for (Application app : applications) {
             if (app.getId().equals(applicationId)) {
                 targetApp = app;
@@ -114,13 +111,11 @@ public class ApplicationService {
             return false;
         }
 
-        // Check whether the job exists
         Job job = JobService.getJobById(targetApp.getJobId());
         if (job == null) {
             return false;
         }
 
-        // Check whether the number of accepted applicants has reached the limit
         int acceptedCount = 0;
         for (Application app : applications) {
             if (app.getJobId().equals(targetApp.getJobId()) && app.getStatus() == model.ApplicationStatus.ACCEPTED) {
@@ -133,13 +128,11 @@ public class ApplicationService {
             return false;
         }
 
-        // Update application status
         targetApp.setStatus(model.ApplicationStatus.ACCEPTED);
         targetApp.setReviewedBy(moId);
         targetApp.setReviewTime(java.time.LocalDateTime.now().toString());
         targetApp.setUpdatedAt(java.time.LocalDateTime.now().toString());
 
-        // Save updates
         for (int i = 0; i < applications.size(); i++) {
             if (applications.get(i).getId().equals(applicationId)) {
                 applications.set(i, targetApp);
@@ -148,64 +141,85 @@ public class ApplicationService {
         }
 
         DataStorage.saveApplications(applications);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> Stashed changes
         job.setCurrentNum(currentNumBaseline + 1);
         JobService.updateJob(job);
         IndexService.indexApplicationUpdate(targetApp);
         markAcceptedJobBusySlots(targetApp.getTaId(), job);
         invalidateApplicationCaches(targetApp);
->>>>>>> Stashed changes
         DataStorage.addLog("ACCEPT_APPLICATION", moId, "Application accepted: TA " + targetApp.getTaId() + " for job " + job.getTitle());
 
         return true;
     }
-    
-    // Filter applications by status
+
+    public static PaginationUtil.Page<Application> getApplicationsByJobPaged(String jobId, int page, int size) {
+        String cacheKey = CacheService.jobApplicationsKey(jobId) + "_paged_" + page + "_" + size;
+        return CacheService.getOrCompute(cacheKey, () -> {
+            List<Application> apps = IndexService.getApplicationsByJobId(jobId);
+            return PaginationUtil.paginate(apps, page, size);
+        }, CACHE_TTL_SHORT);
+    }
+
+    public static PaginationUtil.Page<Application> getApplicationsByTAPaged(String taId, int page, int size) {
+        String cacheKey = CacheService.taApplicationsKey(taId) + "_paged_" + page + "_" + size;
+        return CacheService.getOrCompute(cacheKey, () -> {
+            List<Application> apps = IndexService.getApplicationsByTaId(taId);
+            return PaginationUtil.paginate(apps, page, size);
+        }, CACHE_TTL_SHORT);
+    }
+
+    public static List<Application> getPendingApplications(String moId) {
+        String cacheKey = CacheService.pendingApplicationsKey(moId);
+        return CacheService.getOrCompute(cacheKey, () -> {
+            List<Application> apps = DataStorage.getApplications();
+            return apps.stream()
+                    .filter(app -> app.getStatus() == model.ApplicationStatus.PENDING ||
+                                   app.getStatus() == model.ApplicationStatus.SCREENED)
+                    .collect(Collectors.toList());
+        }, CACHE_TTL_MEDIUM);
+    }
+
+    public static PaginationUtil.Page<Application> getPendingApplicationsPaged(String moId, int page, int size) {
+        String cacheKey = CacheService.pendingApplicationsKey(moId) + "_paged_" + page + "_" + size;
+        return CacheService.getOrCompute(cacheKey, () -> {
+            List<Application> apps = getPendingApplications(moId);
+            return PaginationUtil.paginate(apps, page, size);
+        }, CACHE_TTL_MEDIUM);
+    }
+
     public static List<Application> getApplicationsByJobAndStatus(String jobId, model.ApplicationStatus status) {
-        List<Application> applications = DataStorage.getApplications();
-        List<Application> result = new java.util.ArrayList<>();
-        for (Application app : applications) {
-            if (app.getJobId().equals(jobId) && (status == null || app.getStatus() == status)) {
-                result.add(app);
+        String cacheKey = CacheService.jobApplicationsKey(jobId) + "_status_" + (status != null ? status.name() : "all");
+        return CacheService.getOrCompute(cacheKey, () -> {
+            List<Application> apps = IndexService.getApplicationsByJobId(jobId);
+            if (status == null) {
+                return apps;
             }
-        }
-        return result;
+            return apps.stream()
+                    .filter(app -> app.getStatus() == status)
+                    .collect(Collectors.toList());
+        }, CACHE_TTL_MEDIUM);
     }
 
-    // Get TA applications
     public static List<Application> getApplicationsByTA(String taId) {
-        List<Application> applications = DataStorage.getApplications();
-        List<Application> result = new java.util.ArrayList<>();
-        for (Application app : applications) {
-            if (app.getTaId().equals(taId)) {
-                result.add(app);
-            }
-        }
-        return result;
+        String cacheKey = CacheService.taApplicationsKey(taId);
+        return CacheService.getOrCompute(cacheKey, () -> IndexService.getApplicationsByTaId(taId), CACHE_TTL_SHORT);
     }
 
-    // Get job applications
     public static List<Application> getApplicationsByJob(String jobId) {
-        List<Application> applications = DataStorage.getApplications();
-        List<Application> result = new java.util.ArrayList<>();
-        for (Application app : applications) {
-            if (app.getJobId().equals(jobId)) {
-                result.add(app);
-            }
-        }
-        return result;
+        String cacheKey = CacheService.jobApplicationsKey(jobId);
+        return CacheService.getOrCompute(cacheKey, () -> IndexService.getApplicationsByJobId(jobId), CACHE_TTL_SHORT);
     }
 
-    // Get all applications
     public static List<Application> getAllApplications() {
         return DataStorage.getApplications();
     }
 
-    // Withdraw application
+    public static PaginationUtil.Page<Application> getAllApplicationsPaged(int page, int size) {
+        String cacheKey = "all_apps_paged_" + page + "_" + size;
+        return CacheService.getOrCompute(cacheKey, () -> {
+            return PaginationUtil.paginate(DataStorage.getApplications(), page, size);
+        }, CACHE_TTL_SHORT);
+    }
+
     public static boolean withdrawApplication(String applicationId, String taId) {
         List<Application> applications = DataStorage.getApplications();
         for (int i = 0; i < applications.size(); i++) {
@@ -227,14 +241,14 @@ public class ApplicationService {
             app.setUpdatedAt(java.time.LocalDateTime.now().toString());
             applications.set(i, app);
             DataStorage.saveApplications(applications);
+            IndexService.indexApplicationUpdate(app);
+            invalidateApplicationCaches(app);
             DataStorage.addLog("WITHDRAW_APPLICATION", taId, "Application withdrawn: " + applicationId);
             return true;
         }
         return false;
     }
 
-<<<<<<< Updated upstream
-=======
     private static void invalidateApplicationCaches(Application app) {
         CacheService.invalidateByPattern(CacheService.jobApplicationsKey(app.getJobId()));
         CacheService.invalidateByPattern(CacheService.taApplicationsKey(app.getTaId()));
@@ -499,10 +513,6 @@ public class ApplicationService {
         return result;
     }
 
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     public static boolean isDeadlinePassed(String deadline) {
         if (deadline == null || deadline.trim().isEmpty() || "null".equalsIgnoreCase(deadline.trim())) {
             return true;

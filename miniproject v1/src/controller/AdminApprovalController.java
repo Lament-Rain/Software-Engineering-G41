@@ -2,6 +2,7 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -18,8 +20,13 @@ import javafx.stage.Stage;
 import model.Admin;
 import model.ProfileStatus;
 import model.TA;
-import model.User;
+import service.CacheService;
+import service.PaginationUtil;
 import service.UserService;
+import service.KeyboardShortcutService;
+import service.NavigationHistory;
+import controller.SearchBarController;
+import java.util.List;
 
 public class AdminApprovalController {
     @FXML
@@ -64,12 +71,20 @@ public class AdminApprovalController {
     private TableColumn<TA, String> reviewedCommentCol;
     @FXML
     private TableColumn<TA, String> reviewedUpdatedAtCol;
+    @FXML
+    private ProgressIndicator loadingIndicator;
 
     private final ObservableList<TA> pendingTAs = FXCollections.observableArrayList();
     private final ObservableList<TA> reviewedTAs = FXCollections.observableArrayList();
 
     private Admin user;
     private Stage stage;
+    private int pendingPage = 0;
+    private int reviewedPage = 0;
+    private static final int PAGE_SIZE = 20;
+    private PaginationUtil.Page<TA> pendingPageData;
+    private PaginationUtil.Page<TA> reviewedPageData;
+    private KeyboardShortcutService shortcutService;
 
     @FXML
     private void initialize() {
@@ -84,28 +99,111 @@ public class AdminApprovalController {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+        setupKeyboardShortcuts();
+    }
+    
+    private void setupKeyboardShortcuts() {
+        shortcutService = new KeyboardShortcutService(stage);
+        shortcutService.registerShortcut("ctrl+f", this::handleSearchAction);
+        shortcutService.registerShortcut("escape", this::handleBackAction);
+
+        if (stage.getScene() != null) {
+            Parent root = stage.getScene().getRoot();
+            shortcutService.setupEnterKeyNavigation(root);
+        }
+    }
+    
+    private void handleSearchAction() {
+        showSearchBar();
     }
 
-    @FXML
-    private void handleLogout() {
+    private void showSearchBar() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            // Create list of Admin features
+            List<SearchBarController.Feature> features = new java.util.ArrayList<>();
+            features.add(new SearchBarController.Feature("Dashboard", () -> handleHome(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Approval Center", () -> handleApprovalCenter(new ActionEvent())));
+            features.add(new SearchBarController.Feature("User Management", () -> handleUserManagement(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Create Job", () -> handleCreateJob()));
+
+            // Load search bar
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SearchBar.fxml"));
             Parent root = loader.load();
-            LoginController controller = loader.getController();
+            SearchBarController controller = loader.getController();
+
+            // Create stage for search bar
+            Stage searchStage = new Stage();
+            searchStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            searchStage.initOwner(stage);
+            searchStage.setTitle("Search Features");
+
+            // Set up controller
+            controller.setStage(searchStage);
+            controller.setFeatures(features);
+            controller.setOnFeatureSelected(featureName -> {
+                // Find and execute the selected feature
+                for (SearchBarController.Feature feature : features) {
+                    if (feature.getName().equals(featureName)) {
+                        feature.getAction().run();
+                        break;
+                    }
+                }
+            });
+
+            // Create scene
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            searchStage.setScene(scene);
+
+            // Show search bar
+            searchStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to load search bar: " + e.getMessage());
+        }
+    }
+
+    private void handleCreateJob() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOCreateJob.fxml"));
+            Parent root = loader.load();
+            MOCreateJobController controller = loader.getController();
+            controller.setAdminUser(user);
             controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("MOCreateJob", () -> {
+                try {
+                    FXMLLoader approvalLoader = new FXMLLoader(getClass().getResource("/fxml/AdminApproval.fxml"));
+                    Parent approvalRoot = approvalLoader.load();
+                    AdminApprovalController approvalController = approvalLoader.getController();
+                    approvalController.setUser(user);
+                    approvalController.setStage(stage);
+                    
+                    Scene scene = new Scene(approvalRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Admin Approval");
+                    
+                    // Force layout update to ensure components resize properly
+                    approvalRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    showError("Failed to load admin approval page: " + e.getMessage());
+                }
+            });
 
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Login");
+            stage.setTitle("BUPT International School TA Recruitment System - Create Job");
         } catch (Exception e) {
             e.printStackTrace();
-            showError("Failed to logout: " + e.getMessage());
+            showError("Failed to load create job page: " + e.getMessage());
         }
     }
 
-<<<<<<< Updated upstream
-=======
     private void handleBackAction() {
         handleHome(new ActionEvent());
     }
@@ -128,7 +226,6 @@ public class AdminApprovalController {
         }
     }
 
->>>>>>> Stashed changes
     private void setupTables() {
         pendingUsernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         pendingNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -150,30 +247,46 @@ public class AdminApprovalController {
     }
 
     private void refreshTables() {
-        pendingTAs.clear();
-        reviewedTAs.clear();
-
-        for (User currentUser : UserService.getAllUsers()) {
-            if (!(currentUser instanceof TA)) {
-                continue;
-            }
-            TA ta = (TA) currentUser;
-            if (ta.getProfileStatus() == ProfileStatus.PENDING) {
-                pendingTAs.add(ta);
-            } else if (ta.getProfileStatus() == ProfileStatus.APPROVED || ta.getProfileStatus() == ProfileStatus.REJECTED) {
-                reviewedTAs.add(ta);
-            }
+        if (loadingIndicator != null) {
+            loadingIndicator.setVisible(true);
         }
 
-        pendingCountLabel.setText(String.valueOf(pendingTAs.size()));
-        reviewedCountLabel.setText(String.valueOf(reviewedTAs.size()));
+        Task<Void> refreshTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                pendingPageData = UserService.getPendingTAsPaged(pendingPage, PAGE_SIZE);
+                PaginationUtil.Page<TA> reviewedData = UserService.getPendingTAsPaged(reviewedPage, PAGE_SIZE);
 
-        if (pendingTAs.isEmpty()) {
-            updateSelectionSummary(null);
-        } else if (pendingTable.getSelectionModel().getSelectedItem() == null) {
-            pendingTable.getSelectionModel().selectFirst();
-            updateSelectionSummary(pendingTable.getSelectionModel().getSelectedItem());
-        }
+                javafx.application.Platform.runLater(() -> {
+                    pendingTAs.clear();
+                    pendingTAs.addAll(pendingPageData.getContent());
+
+                    reviewedTAs.clear();
+                    reviewedData.getContent().stream()
+                            .filter(ta -> ta.getProfileStatus() == ProfileStatus.APPROVED ||
+                                         ta.getProfileStatus() == ProfileStatus.REJECTED)
+                            .forEach(reviewedTAs::add);
+
+                    pendingCountLabel.setText(String.valueOf(pendingPageData.getTotalElements()));
+                    reviewedCountLabel.setText(String.valueOf(reviewedData.getTotalElements()));
+
+                    if (pendingTAs.isEmpty()) {
+                        updateSelectionSummary(null);
+                    } else if (pendingTable.getSelectionModel().getSelectedItem() == null) {
+                        pendingTable.getSelectionModel().selectFirst();
+                        updateSelectionSummary(pendingTable.getSelectionModel().getSelectedItem());
+                    }
+
+                    if (loadingIndicator != null) {
+                        loadingIndicator.setVisible(false);
+                    }
+                });
+
+                return null;
+            }
+        };
+
+        new Thread(refreshTask).start();
     }
 
     @FXML
@@ -188,6 +301,9 @@ public class AdminApprovalController {
 
     @FXML
     private void handleRefresh(ActionEvent event) {
+        pendingPage = 0;
+        reviewedPage = 0;
+        CacheService.invalidate(CacheService.pendingTAsKey());
         refreshTables();
     }
 
@@ -255,9 +371,32 @@ public class AdminApprovalController {
             LoginController controller = loader.getController();
             controller.setStage(stage);
 
-            Scene scene = new Scene(root, 800, 600);
+            // Save current window state
+            boolean isFullScreen = stage.isFullScreen();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            
+            // Create new scene without hardcoded size
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            
+            // Apply saved window state
             stage.setScene(scene);
+            if (isFullScreen) {
+                stage.setFullScreen(true);
+            } else if (currentWidth > 0 && currentHeight > 0) {
+                stage.setWidth(currentWidth);
+                stage.setHeight(currentHeight);
+            } else {
+                // Default size if no previous size
+                stage.setWidth(800);
+                stage.setHeight(600);
+            }
             stage.setTitle("BUPT International School TA Recruitment System - Login");
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                stage.sizeToScene();
         } catch (Exception e) {
             e.printStackTrace();
             showError("Failed to load login page");
@@ -311,14 +450,7 @@ public class AdminApprovalController {
             Parent root = loader.load();
             AdminDashboardController controller = loader.getController();
             controller.setUser(user);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-=======
             controller.setStage(stage);
->>>>>>> Stashed changes
-=======
-            controller.setStage(stage);
->>>>>>> Stashed changes
 
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());

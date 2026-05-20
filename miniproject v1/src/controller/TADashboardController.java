@@ -8,14 +8,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-<<<<<<< Updated upstream
-=======
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.AnchorPane;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
@@ -23,8 +17,6 @@ import javafx.stage.Stage;
 import javafx.stage.Modality;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-<<<<<<< Updated upstream
-=======
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -40,7 +32,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.input.MouseButton;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
->>>>>>> Stashed changes
 import model.TA;
 import model.Task;
 import model.ProfileStatus;
@@ -50,14 +41,8 @@ import model.Application;
 import model.UserRole;
 import service.ApplicationService;
 import service.JobService;
+import service.PDFResumeParserService;
 import service.AIService;
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-import service.UserService;
-import java.util.List;
-=======
-=======
->>>>>>> Stashed changes
 import service.WorkloadNotificationService;
 import controller.SkillGapAnalysisController;
 import service.SkillGapAnalysisService;
@@ -70,10 +55,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -87,17 +68,6 @@ public class TADashboardController {
     @FXML
     private Label pendingActionsLabel;
     @FXML
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    private TableView<Task> tasksTable;
-    @FXML
-    private VBox emptyTasksBox;
-    
-    private TA user;
-    private boolean showWelcomeGuideOnInit = false;
-=======
-=======
->>>>>>> Stashed changes
     private Label workloadLabel;
     @FXML
     private Label workloadBandLabel;
@@ -123,10 +93,6 @@ public class TADashboardController {
     private String[][] scheduleStatuses;
     private final Set<Region> selectedCells = new HashSet<>();
     private final List<TaskItem> dashboardTasks = new ArrayList<>();
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
     
     public void setUser(TA user) {
         this.user = user;
@@ -139,13 +105,10 @@ public class TADashboardController {
         this.showWelcomeGuideOnInit = showWelcomeGuide;
         initializeDashboard();
         showPendingWorkloadNotifications();
-<<<<<<< Updated upstream
-=======
     }
     
     public void setStage(Stage stage) {
         this.stage = stage;
->>>>>>> Stashed changes
     }
     
     private void initializeDashboard() {
@@ -227,7 +190,6 @@ public class TADashboardController {
         }
         if (user.getResumePath() == null || user.getResumePath().isEmpty()) {
             dashboardTasks.add(new TaskItem(SYSTEM_RESUME, "2026-04-25", true, false));
-<<<<<<< Updated upstream
         }
 
         boolean hasSkillInfo = user.getSkills() != null && !user.getSkills().isEmpty()
@@ -579,381 +541,6 @@ public class TADashboardController {
             default:
                 return "-fx-background-color: #dbeafe; -fx-background-radius: 4; -fx-border-color: #93c5fd; -fx-border-radius: 4;";
         }
-<<<<<<< Updated upstream
-        
-        // Mock other tasks
-        tasks.add(new model.Task("Apply for Position", "2026-03-28", "Approved"));
-        
-        // Set table data
-        tasksTable.setItems(tasks);
-        
-        // Handle empty state
-        if (tasks.isEmpty()) {
-            tasksTable.setVisible(false);
-            emptyTasksBox.setVisible(true);
-        } else {
-            tasksTable.setVisible(true);
-            emptyTasksBox.setVisible(false);
-        }
-        
-        // Update pending tasks count
-        int pendingTasksCount = tasks.size();
-        pendingActionsLabel.setText(String.valueOf(pendingTasksCount));
-=======
->>>>>>> Stashed changes
-=======
-        }
-
-        boolean hasSkillInfo = user.getSkills() != null && !user.getSkills().isEmpty()
-                && user.getExperience() != null && !user.getExperience().trim().isEmpty();
-        if (!hasSkillInfo) {
-            dashboardTasks.add(new TaskItem(SYSTEM_SKILL, "2026-05-05", true, false));
-        }
-
-        // User custom tasks
-        dashboardTasks.addAll(loadCustomTasksFromAvailableTime());
-
-        // Remove completed tasks from visible list
-        dashboardTasks.removeIf(TaskItem::isCompleted);
-
-        pendingActionsLabel.setText(String.valueOf(dashboardTasks.size()));
-        renderPendingTasks();
-    }
-
-    private void renderPendingTasks() {
-        if (pendingTaskListContainer == null) {
-            return;
-        }
-
-        pendingTaskListContainer.getChildren().clear();
-        if (dashboardTasks.isEmpty()) {
-            Label empty = new Label("No pending tasks. Great job!");
-            empty.setStyle("-fx-font-size: 13px; -fx-text-fill: #6b7280; -fx-padding: 8 4;");
-            pendingTaskListContainer.getChildren().add(empty);
-            return;
-        }
-
-        for (TaskItem task : dashboardTasks) {
-            HBox row = new HBox();
-            row.setSpacing(12);
-            row.setStyle("-fx-padding: 10px 12px; -fx-background-color: #f8f9fa; -fx-background-radius: 8px;");
-
-            VBox info = new VBox();
-            info.setSpacing(3);
-            Label title = new Label(task.getTitle());
-            title.setStyle("-fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #333333;");
-            Label due = new Label("Due: " + task.getDueDate());
-            due.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
-            info.getChildren().addAll(title, due);
-            HBox.setHgrow(info, javafx.scene.layout.Priority.ALWAYS);
-
-            if (task.isSystemTask()) {
-                Label tag = new Label("PENDING");
-                tag.setStyle("-fx-font-size: 12px; -fx-font-weight: 500; -fx-text-fill: #ff9f43; -fx-background-color: rgba(255, 159, 67, 0.1); -fx-padding: 4 8; -fx-background-radius: 12px;");
-                row.getChildren().addAll(info, tag);
-
-                row.setOnMouseClicked(e -> {
-                    if (e.getClickCount() == 2) {
-                        jumpToTask(task.getTitle());
-                    }
-                });
-            } else {
-                CheckBox done = new CheckBox();
-                done.setStyle("-fx-font-size: 14px;");
-                done.setOnAction(e -> {
-                    task.setCompleted(done.isSelected());
-                    saveCustomTasksToAvailableTime();
-                    loadPendingTasks();
-                });
-                row.getChildren().addAll(info, done);
-            }
-
-            pendingTaskListContainer.getChildren().add(row);
-        }
-    }
-
-    private void jumpToTask(String title) {
-        if (SYSTEM_PROFILE.equals(title) || SYSTEM_SKILL.equals(title) || "Profile Under Review".equals(title)) {
-            handleUpdateProfile(new ActionEvent());
-            return;
-        }
-        if (SYSTEM_RESUME.equals(title)) {
-            handleUploadResume(new ActionEvent());
-        }
-    }
-
-    private List<TaskItem> loadCustomTasksFromAvailableTime() {
-        List<TaskItem> customTasks = new ArrayList<>();
-        String available = user.getAvailableTime();
-        if (available == null || !available.contains(TASK_PREFIX)) {
-            return customTasks;
-        }
-
-        int idx = available.indexOf(TASK_PREFIX);
-        String payload = available.substring(idx + TASK_PREFIX.length());
-        if (payload.trim().isEmpty()) {
-            return customTasks;
-        }
-
-        String[] items = payload.split(";;");
-        for (String item : items) {
-            if (item.trim().isEmpty()) continue;
-            String[] parts = item.split("\\|", 3);
-            if (parts.length < 3) continue;
-            boolean completed = "1".equals(parts[2]);
-            customTasks.add(new TaskItem(parts[0], parts[1], false, completed));
-        }
-        return customTasks;
-    }
-
-    private void saveCustomTasksToAvailableTime() {
-        if (user == null) return;
-
-        List<TaskItem> custom = new ArrayList<>();
-        for (TaskItem t : dashboardTasks) {
-            if (!t.isSystemTask()) {
-                custom.add(t);
-            }
-        }
-
-        StringBuilder taskPart = new StringBuilder(TASK_PREFIX);
-        for (int i = 0; i < custom.size(); i++) {
-            TaskItem t = custom.get(i);
-            taskPart.append(t.getTitle()).append("|").append(t.getDueDate()).append("|").append(t.isCompleted() ? "1" : "0");
-            if (i < custom.size() - 1) taskPart.append(";;");
-        }
-
-        String available = user.getAvailableTime() == null ? "" : user.getAvailableTime();
-        String schedulePart = available;
-        int taskIdx = schedulePart.indexOf(TASK_PREFIX);
-        if (taskIdx >= 0) {
-            schedulePart = schedulePart.substring(0, taskIdx);
-        }
-
-        user.setAvailableTime(schedulePart + taskPart);
-        UserService.updateTAProfile(user);
-    }
-
-
-    private void initializeScheduleGrid() {
-        if (scheduleGrid == null) {
-            return;
-        }
-
-        scheduleGrid.getChildren().clear();
-
-        String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-        String[] periodTimes = {
-                "08:00-08:45", "08:50-09:35", "09:50-10:35", "10:40-11:25",
-                "11:30-12:15", "13:00-13:45", "13:50-14:35", "14:45-15:30",
-                "15:40-16:25", "16:35-17:20", "18:00-18:45", "18:50-19:35",
-                "19:40-20:25", "20:30-21:15"
-        };
-
-        for (int col = 0; col < 7; col++) {
-            Label dayLabel = new Label(days[col]);
-            dayLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #475569;");
-            dayLabel.setMaxWidth(Double.MAX_VALUE);
-            dayLabel.setAlignment(Pos.CENTER);
-            scheduleGrid.add(dayLabel, col + 1, 0);
-        }
-
-        for (int row = 0; row < 14; row++) {
-            Label periodLabel = new Label((row + 1) + "\n" + periodTimes[row]);
-            periodLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #64748b;");
-            periodLabel.setAlignment(Pos.CENTER_RIGHT);
-            periodLabel.setPrefWidth(68);
-            scheduleGrid.add(periodLabel, 0, row + 1);
-        }
-
-        scheduleCells = new Region[14][7];
-        scheduleStatuses = new String[14][7];
-
-        for (int row = 0; row < 14; row++) {
-            for (int col = 0; col < 7; col++) {
-                Region cell = new Region();
-                cell.setMinSize(52, 24);
-                cell.setPrefSize(52, 24);
-
-                final int r = row;
-                final int c = col;
-                scheduleStatuses[row][col] = STATUS_FREE;
-                applyStatusToCell(cell, STATUS_FREE);
-
-                cell.setOnMouseClicked(event -> {
-                    if (event.getButton() != MouseButton.PRIMARY) {
-                        return;
-                    }
-                    handleScheduleCellClick(r, c, event.isControlDown());
-                });
-
-                scheduleCells[row][col] = cell;
-                scheduleGrid.add(cell, col + 1, row + 1);
-            }
-        }
-
-        loadScheduleFromUserAvailableTime();
-    }
-
-    private void handleScheduleCellClick(int row, int col, boolean controlDown) {
-        Region cell = scheduleCells[row][col];
-        if (cell == null) {
-            return;
-        }
-
-        if (controlDown) {
-            toggleCellSelection(cell);
-            return;
-        }
-
-        List<String> options = List.of(STATUS_FREE, STATUS_OCCUPIED, STATUS_BUSY);
-        ChoiceDialog<String> dialog = new ChoiceDialog<>(scheduleStatuses[row][col], options);
-        dialog.setTitle("Set Slot Status");
-        dialog.setHeaderText(selectedCells.isEmpty()
-                ? "Select status for this class slot"
-                : "Select status for selected class slots");
-        dialog.setContentText("Status:");
-
-        Optional<String> result = dialog.showAndWait();
-        result.ifPresent(status -> {
-            if (selectedCells.isEmpty()) {
-                applyStatusByCoordinates(row, col, status);
-            } else {
-                applyStatusToSelectedCells(status);
-            }
-            saveScheduleToUserAvailableTime();
-        });
-    }
-
-    private void toggleCellSelection(Region cell) {
-        if (selectedCells.contains(cell)) {
-            selectedCells.remove(cell);
-            updateCellVisual(cell);
-        } else {
-            selectedCells.add(cell);
-            String originalStyle = cell.getStyle();
-            cell.setStyle(originalStyle + " -fx-border-width: 2; -fx-border-color: #1d4ed8;");
-        }
-    }
-
-    private void applyStatusToSelectedCells(String status) {
-        for (int row = 0; row < 14; row++) {
-            for (int col = 0; col < 7; col++) {
-                Region cell = scheduleCells[row][col];
-                if (selectedCells.contains(cell)) {
-                    applyStatusByCoordinates(row, col, status);
-                }
-            }
-        }
-        clearSelection();
-    }
-
-    private void clearSelection() {
-        for (Region cell : selectedCells) {
-            updateCellVisual(cell);
-        }
-        selectedCells.clear();
-    }
-
-    private void applyStatusByCoordinates(int row, int col, String status) {
-        String normalized = normalizeStatus(status);
-        scheduleStatuses[row][col] = normalized;
-        applyStatusToCell(scheduleCells[row][col], normalized);
-    }
-
-    private void applyStatusToCell(Region cell, String status) {
-        String normalized = normalizeStatus(status);
-        cell.setStyle(styleForStatus(normalized));
-
-        String tooltipText;
-        switch (normalized) {
-            case STATUS_OCCUPIED:
-                tooltipText = "Occupied";
-                break;
-            case STATUS_BUSY:
-                tooltipText = "Busy";
-                break;
-            case STATUS_FREE:
-            default:
-                tooltipText = "Free";
-                break;
-        }
-        Tooltip.install(cell, new Tooltip(tooltipText));
-    }
-
-    private void updateCellVisual(Region cell) {
-        for (int row = 0; row < 14; row++) {
-            for (int col = 0; col < 7; col++) {
-                if (scheduleCells[row][col] == cell) {
-                    applyStatusToCell(cell, scheduleStatuses[row][col]);
-                    return;
-                }
-            }
-        }
-    }
-
-    private String normalizeStatus(String status) {
-        if (status == null) {
-            return STATUS_FREE;
-        }
-        String normalized = status.toLowerCase();
-        if (!STATUS_OCCUPIED.equals(normalized) && !STATUS_BUSY.equals(normalized) && !STATUS_FREE.equals(normalized)) {
-            return STATUS_FREE;
-        }
-        return normalized;
-    }
-
-    private void saveScheduleToUserAvailableTime() {
-        if (user == null || scheduleStatuses == null) {
-            return;
-        }
-
-        StringBuilder sb = new StringBuilder(AVAILABLE_TIME_PREFIX);
-        for (int row = 0; row < 14; row++) {
-            for (int col = 0; col < 7; col++) {
-                sb.append(scheduleStatuses[row][col]);
-                if (!(row == 13 && col == 6)) {
-                    sb.append(',');
-                }
-            }
-        }
-
-        user.setAvailableTime(sb.toString());
-        UserService.updateTAProfile(user);
-    }
-
-    private void loadScheduleFromUserAvailableTime() {
-        if (user == null || user.getAvailableTime() == null || !user.getAvailableTime().startsWith(AVAILABLE_TIME_PREFIX)) {
-            return;
-        }
-
-        String payload = user.getAvailableTime().substring(AVAILABLE_TIME_PREFIX.length());
-        String[] parts = payload.split(",");
-        if (parts.length != 98) {
-            return;
-        }
-
-        int idx = 0;
-        for (int row = 0; row < 14; row++) {
-            for (int col = 0; col < 7; col++) {
-                String status = normalizeStatus(parts[idx++]);
-                scheduleStatuses[row][col] = status;
-                applyStatusToCell(scheduleCells[row][col], status);
-            }
-        }
-    }
-
-    private String styleForStatus(String status) {
-        switch (status) {
-            case STATUS_OCCUPIED:
-                return "-fx-background-color: #fde68a; -fx-background-radius: 4; -fx-border-color: #f59e0b; -fx-border-radius: 4;";
-            case STATUS_BUSY:
-                return "-fx-background-color: #fecaca; -fx-background-radius: 4; -fx-border-color: #ef4444; -fx-border-radius: 4;";
-            case STATUS_FREE:
-            default:
-                return "-fx-background-color: #dbeafe; -fx-background-radius: 4; -fx-border-color: #93c5fd; -fx-border-radius: 4;";
-        }
->>>>>>> Stashed changes
     }
     
     private void showPendingWorkloadNotifications() {
@@ -996,58 +583,15 @@ public class TADashboardController {
             return;
         }
         
-<<<<<<< Updated upstream
-        Alert alert2 = new Alert(AlertType.INFORMATION);
-        alert2.setTitle("Information");
-        alert2.setHeaderText("AI Job Matching");
-        alert2.setContentText("Analyzing your personal information and skills...");
-        alert2.initModality(Modality.APPLICATION_MODAL);
-        alert2.showAndWait();
-        
-        // Get recommended jobs
-        List<Job> recommendedJobs = AIService.recommendJobsForTA(user, 5);
-        
-        if (recommendedJobs.isEmpty()) {
-            Alert alert3 = new Alert(AlertType.INFORMATION);
-            alert3.setTitle("Information");
-            alert3.setHeaderText("AI Job Matching");
-            alert3.setContentText("No available job recommendations!");
-            alert3.initModality(Modality.APPLICATION_MODAL);
-            alert3.showAndWait();
-            return;
-=======
         // Create a non-closeable progress dialog
         Stage progressStage = new Stage();
         progressStage.setTitle("AI Job Matching");
         progressStage.initModality(Modality.APPLICATION_MODAL);
         if (stage != null) {
             progressStage.initOwner(stage);
->>>>>>> Stashed changes
         }
+        progressStage.setResizable(false);
         
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-        // Build recommended jobs information
-        StringBuilder message = new StringBuilder("=== Recommended Jobs ===\n\n");
-        for (int i = 0; i < recommendedJobs.size(); i++) {
-            Job job = recommendedJobs.get(i);
-            double matchScore = AIService.calculateSkillMatch(user, job);
-            message.append((i + 1)).append(". " ).append(job.getTitle()).append(" (" ).append(job.getType()).append(")\n" );
-            message.append("   Department: " ).append(job.getDepartment()).append("\n" );
-            message.append("   Work Time: " ).append(job.getWorkTime()).append("\n" );
-            message.append("   Deadline: " ).append(job.getDeadline()).append("\n" );
-            message.append("   Match Score: " ).append(String.format("%.2f%%", matchScore)).append("\n\n" );
-        }
-        
-        Alert alert4 = new Alert(AlertType.INFORMATION);
-        alert4.setTitle("AI Job Matching");
-        alert4.setHeaderText("Recommended Jobs");
-        alert4.setContentText(message.toString());
-        alert4.initModality(Modality.APPLICATION_MODAL);
-        alert4.showAndWait();
-=======
-=======
->>>>>>> Stashed changes
         // Allow user to close this progress window if needed
         
         VBox vbox = new VBox(20);
@@ -1623,89 +1167,428 @@ public class TADashboardController {
                 });
             }
         }).start();
->>>>>>> Stashed changes
     }
     
-    // Skill Gap Identification
+    // Skill Gap Analysis
     @FXML
     private void handleIdentifyMissingSkills(ActionEvent event) {
         if (user == null || user.getProfileStatus() != ProfileStatus.APPROVED) {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Information");
-            alert.setHeaderText("Cannot use Skill Gap Identification");
-            alert.setContentText("Your profile has not been approved yet, cannot use skill gap identification feature.");
+            alert.setHeaderText("Cannot use Skill Gap Analysis");
+            alert.setContentText("Your profile has not been approved yet, cannot use skill gap analysis feature.");
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.showAndWait();
             return;
         }
         
-        // Build job list information
-        List<Job> availableJobs = JobService.getAvailableJobs();
+        List<Job> availableJobs = JobService.getAllJobs();
         if (availableJobs.isEmpty()) {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Information");
-            alert.setHeaderText("Skill Gap Identification");
+            alert.setHeaderText("Skill Gap Analysis");
             alert.setContentText("No available jobs!");
             alert.initModality(Modality.APPLICATION_MODAL);
             alert.showAndWait();
             return;
         }
         
-        // Build job list
-        StringBuilder jobList = new StringBuilder("Please select a job to analyze skill gaps:\n\n");
-        for (int i = 0; i < availableJobs.size(); i++) {
-            Job job = availableJobs.get(i);
-            jobList.append((i + 1)).append(". " ).append(job.getTitle()).append(" (" ).append(job.getType()).append(")\n" );
+        // Create a job selection dialog
+        Stage selectionStage = new Stage();
+        selectionStage.setTitle("Select Target Job");
+        selectionStage.initModality(Modality.APPLICATION_MODAL);
+        if (stage != null) {
+            selectionStage.initOwner(stage);
         }
+        selectionStage.setResizable(true);
         
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle("Skill Gap Identification");
-        alert.setHeaderText("Select Job");
-        alert.setContentText(jobList.toString());
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.showAndWait();
+        VBox vbox = new VBox(20);
+        vbox.setPadding(new Insets(20));
+        vbox.setAlignment(Pos.CENTER);
         
-        // Simplified processing here, should pop up a dialog for user to select job in actual implementation
-        // For demonstration, we select the first job
-        if (!availableJobs.isEmpty()) {
-            Job selectedJob = availableJobs.get(0);
-            
-            Alert analyzingAlert = new Alert(AlertType.INFORMATION);
-            analyzingAlert.setTitle("Skill Gap Identification");
-            analyzingAlert.setHeaderText("Analyzing");
-            analyzingAlert.setContentText("Analyzing your skill match with position \"" + selectedJob.getTitle() + "\"...");
-            analyzingAlert.initModality(Modality.APPLICATION_MODAL);
-            analyzingAlert.showAndWait();
-            
-            // Identify missing skills
-            List<String> missingSkills = AIService.identifyMissingSkills(user, selectedJob);
-            
-            if (missingSkills.isEmpty()) {
-                Alert successAlert = new Alert(AlertType.INFORMATION);
-                successAlert.setTitle("Skill Gap Identification");
-                successAlert.setHeaderText("Analysis Result");
-                successAlert.setContentText("Congratulations! Your skills meet all requirements for this position.");
-                successAlert.initModality(Modality.APPLICATION_MODAL);
-                successAlert.showAndWait();
-            } else {
-                // Build skill gap analysis
-                StringBuilder analysis = new StringBuilder("=== Skill Gap Analysis ===\n\n");
-                analysis.append("You are missing the following skills:\n");
-                for (String skill : missingSkills) {
-                    analysis.append("- " + skill + "\n");
+        Label titleLabel = new Label("Select a job to analyze skill gaps:");
+        
+        // Create job list with radio buttons
+        ObservableList<Job> jobItems = FXCollections.observableArrayList(availableJobs);
+        javafx.scene.control.ListView<Job> jobListView = new javafx.scene.control.ListView<>(jobItems);
+        jobListView.setPrefSize(500, 300);
+        jobListView.setCellFactory(param -> new javafx.scene.control.ListCell<Job>() {
+            @Override
+            protected void updateItem(Job job, boolean empty) {
+                super.updateItem(job, empty);
+                if (empty || job == null) {
+                    setText(null);
+                } else {
+                    setText(job.getTitle() + " (" + job.getDepartment() + ")");
+                }
+            }
+        });
+        
+        HBox buttonBox = new HBox(15);
+        buttonBox.setAlignment(Pos.CENTER);
+        
+        Button selectButton = new Button("Analyze Skill Gap");
+        selectButton.setDisable(true);
+        selectButton.setOnAction(e -> {
+            Job selectedJob = jobListView.getSelectionModel().getSelectedItem();
+            if (selectedJob != null) {
+                selectionStage.close();
+                performSkillGapAnalysis(selectedJob);
+            }
+        });
+        
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setOnAction(e -> selectionStage.close());
+        
+        buttonBox.getChildren().addAll(selectButton, cancelButton);
+        
+        // Enable select button when an item is selected
+        jobListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            selectButton.setDisable(newVal == null);
+        });
+        
+        vbox.getChildren().addAll(titleLabel, jobListView, buttonBox);
+        
+        Scene scene = new Scene(vbox, 550, 400);
+        selectionStage.setScene(scene);
+        selectionStage.show();
+    }
+    
+    /**
+     * Perform skill gap analysis for the selected job
+     */
+    private void performSkillGapAnalysis(Job selectedJob) {
+        Stage progressStage = new Stage();
+        progressStage.setTitle("Skill Gap Analysis");
+        progressStage.initModality(Modality.APPLICATION_MODAL);
+        if (stage != null) {
+            progressStage.initOwner(stage);
+        }
+        progressStage.setResizable(false);
+        progressStage.setOnCloseRequest(e -> e.consume());
+        
+        VBox vbox = new VBox(20);
+        vbox.setPadding(new Insets(30));
+        vbox.setAlignment(Pos.CENTER);
+        
+        Label progressLabel = new Label("Extracting skills from profile and resume...");
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        progressIndicator.setPrefSize(50, 50);
+        
+        vbox.getChildren().addAll(progressLabel, progressIndicator);
+        
+        Scene scene = new Scene(vbox, 400, 200);
+        progressStage.setScene(scene);
+        progressStage.show();
+        
+        new Thread(() -> {
+            try {
+                System.out.println("\n************************************************");
+                System.out.println("[TADashboard] Skill Gap Analysis 开始");
+                System.out.println("************************************************");
+                
+                // Step 1: Build profile text from user's personal information
+                StringBuilder profileText = new StringBuilder();
+                profileText.append("Name: ").append(user.getName()).append("\n");
+                profileText.append("Department: ").append(user.getDepartment()).append("\n");
+                profileText.append("Grade: ").append(user.getGrade()).append("\n");
+                profileText.append("Available Time: ").append(user.getAvailableTime() != null ? user.getAvailableTime() : "Not specified").append("\n");
+                profileText.append("Skills: ").append(user.getSkills() != null ? String.join(", ", user.getSkills()) : "None").append("\n");
+                profileText.append("Experience: ").append(user.getExperience() != null ? user.getExperience() : "None").append("\n");
+                profileText.append("Language Skills: ").append(user.getLanguageSkills() != null ? user.getLanguageSkills() : "None").append("\n");
+                profileText.append("Other Skills: ").append(user.getOtherSkills() != null ? user.getOtherSkills() : "None").append("\n");
+                
+                System.out.println("\n[Step 1] 用户Profile信息已构建");
+                System.out.println("- 姓名: " + user.getName());
+                System.out.println("- 院系: " + user.getDepartment());
+                System.out.println("- 年级: " + user.getGrade());
+                System.out.println("- 技能: " + (user.getSkills() != null ? String.join(", ", user.getSkills()) : "None"));
+                
+                // Step 2: Extract resume content if available
+                String resumeContent = "";
+                String resumePath = user.getResumePath();
+                if (resumePath != null && !resumePath.isEmpty()) {
+                    System.out.println("\n[Step 2] 检测到简历文件，开始提取...");
+                    System.out.println("简历路径: " + resumePath);
+                    resumeContent = PDFResumeParserService.extractContentFromFile(resumePath, 2000);
+                    if (resumeContent != null && !resumeContent.isEmpty()) {
+                        profileText.append("\nResume Content:\n").append(resumeContent);
+                        System.out.println("简历内容提取成功，长度: " + resumeContent.length() + " 字符");
+                    } else {
+                        System.out.println("简历内容为空或提取失败");
+                    }
+                } else {
+                    System.out.println("\n[Step 2] 未检测到简历文件，跳过简历提取");
                 }
                 
-                // Generate skill improvement suggestions
-                String suggestions = AIService.generateSkillSuggestions(missingSkills);
-                analysis.append("\n" + suggestions);
+                // Step 3: Build job requirements text
+                StringBuilder jobRequirementsText = new StringBuilder();
+                jobRequirementsText.append("Job Title: ").append(selectedJob.getTitle()).append("\n");
+                jobRequirementsText.append("Department: ").append(selectedJob.getDepartment()).append("\n");
+                jobRequirementsText.append("Job Type: ").append(selectedJob.getType()).append("\n");
+                jobRequirementsText.append("Work Time: ").append(selectedJob.getWorkTime()).append("\n");
+                jobRequirementsText.append("Description: ").append(selectedJob.getDescription() != null ? selectedJob.getDescription() : "None").append("\n");
+                jobRequirementsText.append("Required Skills: ").append(selectedJob.getSkills() != null ? String.join(", ", selectedJob.getSkills()) : "None").append("\n");
                 
-                Alert analysisAlert = new Alert(AlertType.INFORMATION);
-                analysisAlert.setTitle("Skill Gap Identification");
-                analysisAlert.setHeaderText("Analysis Result");
-                analysisAlert.setContentText(analysis.toString());
-                analysisAlert.initModality(Modality.APPLICATION_MODAL);
-                analysisAlert.showAndWait();
+                System.out.println("\n[Step 3] 岗位要求信息已构建");
+                System.out.println("- 岗位: " + selectedJob.getTitle());
+                System.out.println("- 部门: " + selectedJob.getDepartment());
+                System.out.println("- 所需技能: " + (selectedJob.getSkills() != null ? String.join(", ", selectedJob.getSkills()) : "None"));
+                
+                // Step 4: Call AI API to extract structured skills and perform analysis
+                final Job finalSelectedJob = selectedJob;
+                final String finalProfileText = profileText.toString();
+                final String finalJobRequirementsText = jobRequirementsText.toString();
+                
+                System.out.println("\n[Step 4] 准备调用AI API进行技能差距分析...");
+                
+                String tempResultJson;
+                try {
+                    tempResultJson = SkillGapAnalysisService.analyzeSkillGapFromProfileAndJob(finalProfileText, finalJobRequirementsText);
+                    System.out.println("\n[Step 5] AI API调用成功!");
+                } catch (Exception apiEx) {
+                    // If API fails, fall back to local analysis
+                    System.out.println("\n[!] AI API调用失败: " + apiEx.getMessage());
+                    System.out.println("[!] 切换到本地分析模式...");
+                    tempResultJson = performLocalSkillGapAnalysis(finalProfileText, finalJobRequirementsText, finalSelectedJob);
+                    System.out.println("[Step 5] 本地分析完成");
+                }
+                
+                final String finalResultJson = tempResultJson;
+                
+                System.out.println("\n[Step 6] 分析结果:");
+                System.out.println("-----------------------------------");
+                System.out.println(finalResultJson.length() > 300 ? finalResultJson.substring(0, 300) + "..." : finalResultJson);
+                System.out.println("-----------------------------------");
+                System.out.println("\n************************************************");
+                System.out.println("[TADashboard] Skill Gap Analysis 完成");
+                System.out.println("************************************************\n");
+                
+                javafx.application.Platform.runLater(() -> {
+                    progressStage.close();
+                    displaySkillGapResult(finalResultJson, finalSelectedJob.getTitle());
+                });
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+                javafx.application.Platform.runLater(() -> {
+                    progressStage.close();
+                    Alert alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("Skill Gap Analysis Failed");
+                    alert.setContentText("Failed to perform skill gap analysis: " + e.getMessage());
+                    alert.initModality(Modality.APPLICATION_MODAL);
+                    alert.showAndWait();
+                });
             }
+        }).start();
+    }
+    
+    /**
+     * Perform local skill gap analysis when AI API is unavailable
+     */
+    private String performLocalSkillGapAnalysis(String profileText, String jobRequirementsText, Job selectedJob) {
+        ProfileInfo profileInfo = new ProfileInfo();
+        profileInfo.setProfileUrl("User Profile");
+        
+        // Extract skills from profile text
+        List<String> profileSkills = extractSkillsFromText(profileText);
+        for (String skill : profileSkills) {
+            profileInfo.getCurrentSkills().add(new SkillInfo(skill, ProficiencyLevel.INTERMEDIATE));
+        }
+        
+        // Add work experience
+        if (user.getExperience() != null && !user.getExperience().isEmpty()) {
+            profileInfo.getWorkExperience().add(user.getExperience());
+        }
+        
+        // Add education background
+        profileInfo.getEducationBackground().add(user.getGrade() + ", " + user.getDepartment());
+        
+        // Build job requirements
+        List<JobSkillRequirement> requirements = new ArrayList<>();
+        if (selectedJob.getSkills() != null) {
+            for (String skill : selectedJob.getSkills()) {
+                requirements.add(new JobSkillRequirement(skill, ProficiencyLevel.INTERMEDIATE, true));
+            }
+        }
+        
+        return SkillGapAnalysisService.analyzeSkillGapLocal(profileInfo, requirements);
+    }
+    
+    /**
+     * Extract skills from text using simple pattern matching
+     */
+    private List<String> extractSkillsFromText(String text) {
+        List<String> skills = new ArrayList<>();
+        
+        if (text == null || text.isEmpty()) {
+            return skills;
+        }
+        
+        // Common technical skills to look for
+        String[] commonSkills = {"Java", "Python", "SQL", "JavaScript", "C++", "C#", "HTML", "CSS", 
+            "Machine Learning", "Deep Learning", "AI", "Git", "Linux", "Docker", "Spring", 
+            "React", "Node.js", "MySQL", "PostgreSQL", "MongoDB", "TensorFlow", "PyTorch"};
+        
+        for (String skill : commonSkills) {
+            if (text.toLowerCase().contains(skill.toLowerCase())) {
+                skills.add(skill);
+            }
+        }
+        
+        // Also extract skills from Skills field
+        int skillsStart = text.indexOf("Skills: ");
+        if (skillsStart != -1) {
+            int skillsEnd = text.indexOf("\n", skillsStart + 8);
+            if (skillsEnd == -1) skillsEnd = text.length();
+            String skillsStr = text.substring(skillsStart + 8, skillsEnd).trim();
+            String[] skillArray = skillsStr.split("[,;、，；]");
+            for (String skill : skillArray) {
+                String trimmedSkill = skill.trim();
+                if (!trimmedSkill.isEmpty() && !trimmedSkill.equalsIgnoreCase("None") && !skills.contains(trimmedSkill)) {
+                    skills.add(trimmedSkill);
+                }
+            }
+        }
+        
+        return skills;
+    }
+    
+    /**
+     * Display the skill gap analysis result
+     */
+    private void displaySkillGapResult(String resultJson, String jobTitle) {
+        try {
+            com.google.gson.JsonObject result = new com.google.gson.Gson().fromJson(resultJson, com.google.gson.JsonObject.class);
+            
+            StringBuilder message = new StringBuilder();
+            message.append("=== Skill Gap Analysis Report ===\n\n");
+            message.append("Target Job: ").append(jobTitle).append("\n\n");
+            
+            // Section 1: Your Existing Skills
+            message.append("[1. Your Existing Skills]\n");
+            boolean hasMatchedSkills = false;
+            if (result.has("matchedSkills") && result.get("matchedSkills").isJsonArray()) {
+                com.google.gson.JsonArray matchedArray = result.getAsJsonArray("matchedSkills");
+                if (matchedArray.size() > 0) {
+                    hasMatchedSkills = true;
+                    for (int i = 0; i < matchedArray.size(); i++) {
+                        message.append(" ✓ ").append(matchedArray.get(i).getAsString()).append("\n");
+                    }
+                }
+            }
+            if (!hasMatchedSkills) {
+                message.append("  No matched skills\n");
+            }
+            message.append("\n");
+            
+            // Section 2: Areas for Improvement
+            message.append("[2. Areas for Improvement]\n");
+            boolean hasImprovementAreas = false;
+            
+            // Missing Skills
+            if (result.has("missingSkills") && result.get("missingSkills").isJsonArray()) {
+                com.google.gson.JsonArray missingArray = result.getAsJsonArray("missingSkills");
+                if (missingArray.size() > 0) {
+                    hasImprovementAreas = true;
+                    message.append(" ▶ Missing Skills:\n");
+                    for (int i = 0; i < missingArray.size(); i++) {
+                        com.google.gson.JsonObject skillObj = missingArray.get(i).getAsJsonObject();
+                        String skillName = skillObj.has("skillName") ? skillObj.get("skillName").getAsString() : "Unknown";
+                        String priority = skillObj.has("priority") ? skillObj.get("priority").getAsString() : "Low";
+                        message.append("    - ").append(skillName).append(" (Priority: ").append(priority).append(")\n");
+                        
+                        // Add improvement suggestions
+                        if (skillObj.has("improvementSuggestions") && skillObj.get("improvementSuggestions").isJsonArray()) {
+                            com.google.gson.JsonArray suggestionsArray = skillObj.getAsJsonArray("improvementSuggestions");
+                            for (int j = 0; j < suggestionsArray.size(); j++) {
+                                message.append("      → ").append(suggestionsArray.get(j).getAsString()).append("\n");
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Insufficient Skills (Proficiency Gap)
+            if (result.has("insufficientSkills") && result.get("insufficientSkills").isJsonArray()) {
+                com.google.gson.JsonArray insufficientArray = result.getAsJsonArray("insufficientSkills");
+                if (insufficientArray.size() > 0) {
+                    hasImprovementAreas = true;
+                    message.append(" ▶ Insufficient Skills:\n");
+                    for (int i = 0; i < insufficientArray.size(); i++) {
+                        com.google.gson.JsonObject skillObj = insufficientArray.get(i).getAsJsonObject();
+                        String skillName = skillObj.has("skillName") ? skillObj.get("skillName").getAsString() : "Unknown";
+                        String currentProf = skillObj.has("currentProficiency") ? skillObj.get("currentProficiency").getAsString() : "Unknown";
+                        String requiredProf = skillObj.has("requiredProficiency") ? skillObj.get("requiredProficiency").getAsString() : "Unknown";
+                        String priority = skillObj.has("priority") ? skillObj.get("priority").getAsString() : "Low";
+                        message.append("    - ").append(skillName).append(": Current ").append(currentProf).append(" → Required ").append(requiredProf);
+                        message.append(" (Priority: ").append(priority).append(")\n");
+                        
+                        // Add improvement suggestions
+                        if (skillObj.has("improvementSuggestions") && skillObj.get("improvementSuggestions").isJsonArray()) {
+                            com.google.gson.JsonArray suggestionsArray = skillObj.getAsJsonArray("improvementSuggestions");
+                            for (int j = 0; j < suggestionsArray.size(); j++) {
+                                message.append("      → ").append(suggestionsArray.get(j).getAsString()).append("\n");
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (!hasImprovementAreas) {
+                message.append("  No areas for improvement needed. You meet all requirements!\n");
+            }
+            message.append("\n");
+            
+            // Section 3: Overall Assessment and Recommendations
+            message.append("[3. Overall Assessment and Recommendations]\n");
+            if (result.has("summary")) {
+                message.append(result.get("summary").getAsString()).append("\n");
+            } else {
+                message.append("Please refer to the analysis above and improve relevant skills accordingly.\n");
+            }
+            
+            // Create result window
+            Stage resultsStage = new Stage();
+            resultsStage.setTitle("Skill Gap Analysis Result");
+            resultsStage.initModality(Modality.APPLICATION_MODAL);
+            if (stage != null) {
+                resultsStage.initOwner(stage);
+            }
+            resultsStage.setResizable(true);
+            
+            VBox vbox = new VBox(20);
+            vbox.setPadding(new Insets(30));
+            vbox.setAlignment(Pos.TOP_LEFT);
+            
+            TextArea resultsTextArea = new TextArea(message.toString());
+            resultsTextArea.setEditable(false);
+            resultsTextArea.setWrapText(true);
+            resultsTextArea.setPrefSize(600, 500);
+            
+            Button closeButton = new Button("Close");
+            closeButton.setOnAction(e -> resultsStage.close());
+            
+            HBox buttonBox = new HBox();
+            buttonBox.setAlignment(Pos.CENTER);
+            buttonBox.getChildren().add(closeButton);
+            
+            vbox.getChildren().addAll(resultsTextArea, buttonBox);
+            VBox.setMargin(buttonBox, new Insets(10, 0, 0, 0));
+            
+            Scene resultsScene = new Scene(vbox, 700, 600);
+            resultsStage.setScene(resultsScene);
+            resultsStage.show();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("Failed to display result");
+            alert.setContentText("Failed to parse skill gap analysis result: " + e.getMessage());
+            alert.initModality(Modality.APPLICATION_MODAL);
+            alert.showAndWait();
         }
     }
     
@@ -1809,29 +1692,32 @@ public class TADashboardController {
     @FXML
     private void handleUpdateProfile(ActionEvent event) {
         try {
+            if (user == null) {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("User Not Found");
+                alert.setContentText("User information is not available. Please log in again.");
+                alert.initModality(Modality.APPLICATION_MODAL);
+                alert.showAndWait();
+                return;
+            }
+            
+            // 清除缓存并重新获取用户数据
+            service.CacheService.invalidate("ta_profile_" + user.getId());
+            model.TA updatedUser = service.UserService.getTAProfile(user.getId());
+            if (updatedUser != null) {
+                user = updatedUser;
+            }
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAProfileEdit.fxml"));
             Parent root = loader.load();
             TAProfileEditController controller = loader.getController();
             controller.setUser(user);
             
             // Get current stage
-            Stage stage = null;
-            if (event.getSource() instanceof Button) {
+            Stage stage = this.stage;
+            if (stage == null && event.getSource() instanceof Button) {
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            } else {
-                // If event not triggered from Button, use other way to get stage
-                // Simplified processing here, assume there is a visible stage
-                stage = (Stage) tasksTable.getScene().getWindow();
-            }
-            if (stage == null) {
-                if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
-                    stage = (Stage) pendingTaskListContainer.getScene().getWindow();
-                } else if (openPositionsLabel != null && openPositionsLabel.getScene() != null) {
-                    stage = (Stage) openPositionsLabel.getScene().getWindow();
-                }
-            }
-            if (stage == null) {
-                throw new IllegalStateException("Stage is not available.");
             }
             if (stage == null) {
                 if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
@@ -1874,22 +1760,9 @@ public class TADashboardController {
             controller.setUser(user);
             
             // Get current stage
-            Stage stage = null;
-            if (event.getSource() instanceof Button) {
+            Stage stage = this.stage;
+            if (stage == null && event.getSource() instanceof Button) {
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            } else {
-                // If event not triggered from Button, use other way to get stage
-                stage = (Stage) tasksTable.getScene().getWindow();
-            }
-            if (stage == null) {
-                if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
-                    stage = (Stage) pendingTaskListContainer.getScene().getWindow();
-                } else if (openPositionsLabel != null && openPositionsLabel.getScene() != null) {
-                    stage = (Stage) openPositionsLabel.getScene().getWindow();
-                }
-            }
-            if (stage == null) {
-                throw new IllegalStateException("Stage is not available.");
             }
             if (stage == null) {
                 if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
@@ -2021,7 +1894,11 @@ public class TADashboardController {
             TAApplicationHistoryController controller = loader.getController();
             controller.setUser(user);
 
-            Stage stage = (Stage) tasksTable.getScene().getWindow();
+            Stage stage = this.stage;
+            if (stage == null) {
+                // If stage is not set, get it from the event source
+                stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+            }
             controller.setStage(stage);
 
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
@@ -2050,17 +1927,7 @@ public class TADashboardController {
     // Handle task table click
     @FXML
     private void handleTaskClick(MouseEvent event) {
-        Task selectedTask = tasksTable.getSelectionModel().getSelectedItem();
-        if (selectedTask != null) {
-            // Execute corresponding action based on task name
-            if (selectedTask.getName().equals("Complete Personal Profile")) {
-                handleUpdateProfile(new ActionEvent());
-            } else if (selectedTask.getName().equals("Upload Resume")) {
-                handleUploadResume(new ActionEvent());
-            } else if (selectedTask.getName().equals("Apply for Position")) {
-                handleApplyForJob(new ActionEvent());
-            }
-        }
+        // Task click handling is now handled directly in FXML
     }
     
     // Handle home button click
@@ -2116,21 +1983,9 @@ public class TADashboardController {
             controller.setUser(user, model.UserRole.TA);
 
             // Get current stage
-            Stage stage = null;
-            if (event.getSource() instanceof Button) {
+            Stage stage = this.stage;
+            if (stage == null && event.getSource() instanceof Button) {
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            } else {
-                stage = (Stage) tasksTable.getScene().getWindow();
-            }
-            if (stage == null) {
-                if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
-                    stage = (Stage) pendingTaskListContainer.getScene().getWindow();
-                } else if (openPositionsLabel != null && openPositionsLabel.getScene() != null) {
-                    stage = (Stage) openPositionsLabel.getScene().getWindow();
-                }
-            }
-            if (stage == null) {
-                throw new IllegalStateException("Stage is not available.");
             }
             if (stage == null) {
                 if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
@@ -2148,7 +2003,7 @@ public class TADashboardController {
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Job Requirements");
+            stage.setTitle("BUPT International School TA Recruitment System - Job Board");
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -2171,21 +2026,9 @@ public class TADashboardController {
             controller.setUser(user);
             
             // Get current stage
-            Stage stage = null;
-            if (event.getSource() instanceof Button) {
+            Stage stage = this.stage;
+            if (stage == null && event.getSource() instanceof Button) {
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            } else {
-                stage = (Stage) tasksTable.getScene().getWindow();
-            }
-            if (stage == null) {
-                if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
-                    stage = (Stage) pendingTaskListContainer.getScene().getWindow();
-                } else if (openPositionsLabel != null && openPositionsLabel.getScene() != null) {
-                    stage = (Stage) openPositionsLabel.getScene().getWindow();
-                }
-            }
-            if (stage == null) {
-                throw new IllegalStateException("Stage is not available.");
             }
             if (stage == null) {
                 if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
@@ -2217,8 +2060,6 @@ public class TADashboardController {
             alert.showAndWait();
         }
     }
-<<<<<<< Updated upstream
-=======
     
     // Handle add task button click
     @FXML
@@ -2317,8 +2158,4 @@ public class TADashboardController {
         public boolean isCompleted() { return completed; }
         public void setCompleted(boolean completed) { this.completed = completed; }
     }
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
 }
