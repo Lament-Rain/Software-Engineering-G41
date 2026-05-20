@@ -17,7 +17,10 @@ import model.User;
 import service.JobService;
 import service.ApplicationService;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 import service.UserService;
 import service.KeyboardShortcutService;
 import service.ToastService;
@@ -445,6 +448,7 @@ public class JobListController {
 
         for (Job job : jobs) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             // Get publisher name
             String publisher = job.getPublisherName();
             if (publisher == null || publisher.isEmpty()) {
@@ -454,6 +458,9 @@ public class JobListController {
                     publisher = "Module Organizer";
                 }
             }
+=======
+            String publisher = resolveMoAccount(job);
+>>>>>>> Stashed changes
 =======
             String publisher = resolveMoAccount(job);
 >>>>>>> Stashed changes
@@ -558,6 +565,109 @@ public class JobListController {
         } catch (Exception e) {
             e.printStackTrace();
             showAlert("Error", "Failed to load page: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handleJobRequirements() {
+        // Already on TA job requirements page
+    }
+
+    @FXML
+    private void handleApplicationManagement() {
+        if (!(currentUser instanceof TA)) {
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAApplicationHistory.fxml"));
+            Parent root = loader.load();
+            TAApplicationHistoryController controller = loader.getController();
+            controller.setUser((TA) currentUser);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Application History");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open application management: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handlePersonalCenter() {
+        try {
+            if (currentUser instanceof TA) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAProfileView.fxml"));
+                Parent root = loader.load();
+                TAProfileViewController controller = loader.getController();
+                controller.setUser((TA) currentUser);
+                controller.setStage(stage);
+
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - Personal Center");
+            } else if (currentUser instanceof MO) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOProfileView.fxml"));
+                Parent root = loader.load();
+                MOProfileViewController controller = loader.getController();
+                controller.setUser((MO) currentUser);
+                controller.setStage(stage);
+
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - MO Personal Center");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open personal center: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handleReviewApplications() {
+        if (!(currentUser instanceof MO)) {
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOApplicationReview.fxml"));
+            Parent root = loader.load();
+            MOApplicationReviewController controller = loader.getController();
+            controller.setUser((MO) currentUser);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Application Review");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open application review: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+    @FXML
+    private void handleMyJobs() {
+        if (!(currentUser instanceof MO)) {
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOMyJobs.fxml"));
+            Parent root = loader.load();
+            MOMyJobsController controller = loader.getController();
+            controller.setUser((MO) currentUser);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - My Jobs");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to open my jobs: " + e.getMessage(), ToastService.ToastType.ERROR);
         }
     }
 

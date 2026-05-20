@@ -29,6 +29,9 @@
             <HBox spacing="16" alignment="CENTER_RIGHT" style="-fx-padding: 0 24px; -fx-fill-width: true; -fx-alignment: center-right;">
                 <Label fx:id="welcomeLabel" style="-fx-text-fill: white; -fx-font-size: 14px;" />
                 <Button text="Back to Dashboard" styleClass="btn btn-secondary" onAction="#handleHome" style="-fx-min-width: 140px;" accessibleText="Return to dashboard" />
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             </HBox>
         </HBox>
@@ -52,6 +55,7 @@
                         <ComboBox fx:id="departmentComboBox" promptText="Select department" styleClass="form-field" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                         <Label text="Work Time" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
                         <TextField fx:id="workTimeField" promptText="Example: 10 hours per week" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="3" />
 
@@ -67,6 +71,8 @@
                         <Label text="Skills" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="5" />
                         <TextArea fx:id="skillsArea" promptText="Enter skills separated by commas" styleClass="form-field" style="-fx-min-height: 80px;" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.columnSpan="3" />
 =======
+=======
+>>>>>>> Stashed changes
                         <Label text="Weekly Schedule" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <VBox spacing="6" GridPane.columnIndex="3" GridPane.rowIndex="1">
                             <GridPane hgap="8" vgap="6">

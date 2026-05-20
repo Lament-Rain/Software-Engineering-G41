@@ -7,11 +7,14 @@
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MOApplicationReviewController">
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
             <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
             <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;" />
             <Button text="Back to MO Dashboard" styleClass="navbar-menu" onAction="#handleBack" />
 =======
+=======
+>>>>>>> Stashed changes
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
             <Label text="BUPT TA System" styleClass="navbar-title" />
             <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
@@ -29,6 +32,9 @@
                 <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
                 <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" accessibleText="Log out" />
             </HBox>
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         </HBox>
     </VBox>
@@ -63,9 +69,12 @@
             <HBox spacing="24" alignment="TOP_LEFT">
                 <VBox styleClass="card shadow-md" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 20px; -fx-spacing: 16; -fx-pref-width: 770px;">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     <Label text="Applicant List" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
                     <TableView fx:id="applicantsTable" style="-fx-pref-height: 500px;">
 =======
+=======
+>>>>>>> Stashed changes
                     <HBox style="-fx-spacing: 12; -fx-alignment: center-left;">
                     <Label text="Applicant List" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #495057;" />
                     <Label text="Sort by" style="-fx-font-size: 13px; -fx-text-fill: #6c757d;" />

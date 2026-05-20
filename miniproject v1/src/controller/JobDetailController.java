@@ -232,6 +232,12 @@ public class JobDetailController {
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+
+            root.requestLayout();
+            stage.sizeToScene();
+>>>>>>> Stashed changes
 =======
 
             root.requestLayout();

@@ -14,6 +14,7 @@
     <!-- 导航栏 -->
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
             <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
             <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;">
@@ -29,6 +30,8 @@
                 <Separator orientation="VERTICAL" styleClass="navbar-separator" />
                 <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" />
 =======
+=======
+>>>>>>> Stashed changes
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
             <Label text="BUPT TA System" styleClass="navbar-title" />
             <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
@@ -46,11 +49,15 @@
                 <Button text="Approval Center" styleClass="navbar-menu" onAction="#handleApprovalCenter" accessibleText="Review pending approvals" />
                 <Button text="Analytics" styleClass="navbar-menu" onAction="#handleStatisticsAnalysis" accessibleText="View system analytics" />
                 <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" accessibleText="Log out of the system" />
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             </HBox>
         </HBox>
     </VBox>
     <!-- 主内容区 -->
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     <VBox style="-fx-padding: 32px; -fx-spacing: 32px; -fx-fill-width: true; -fx-background-color: #f8f9fa; -fx-alignment: center;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
         <!-- 页面标题 -->
@@ -59,6 +66,8 @@
                 <Label text="Admin Dashboard" styleClass="section-title" />
                 <Label text="Manage users, jobs, and core system settings" textFill="#6c757d" style="-fx-font-size: 14px;" />
 =======
+=======
+>>>>>>> Stashed changes
     <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
         <VBox style="-fx-padding: 48px 24px 48px 24px; -fx-spacing: 48px; -fx-fill-width: true; -fx-background-color: #f9fafb; -fx-alignment: center; -fx-pref-width: 1240px;">
             <!-- 页面标题 -->

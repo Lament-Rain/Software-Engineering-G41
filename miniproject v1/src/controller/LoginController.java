@@ -23,6 +23,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.prefs.Preferences;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import model.*;
 import service.UserService;
@@ -59,6 +62,7 @@ public class LoginController {
     }
 
     @FXML
+<<<<<<< Updated upstream
     private void initialize() {
         roleComboBox.getItems().addAll("TA Applicant", "Module Organizer", "System Admin");
         roleComboBox.getSelectionModel().selectFirst();
@@ -66,6 +70,16 @@ public class LoginController {
             if (newValue != null) {
                 roleComboBox.setValue(newValue);
 =======
+=======
+    private VBox loginCard;
+    
+    private Stage stage;
+    private static final String PREF_NODE = "ta_recruitment_login";
+    private static final String PREF_REMEMBER = "remember_me";
+    private static final String PREF_USERNAME = "remembered_username";
+    private static final String PREF_ROLE = "remembered_role";
+
+>>>>>>> Stashed changes
     @FXML
     public void initialize() {
         // ???????

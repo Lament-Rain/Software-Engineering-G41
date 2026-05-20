@@ -38,6 +38,9 @@ public class MOApplicationReviewController {
     private static final String SORT_AI = "AI Ranking (Recommendation Score)";
     private static final String SORT_TIME = "Application Time (Newest First)";
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     @FXML
     private ComboBox<MOJobReviewViewModel> jobSelector;
@@ -596,6 +599,44 @@ public class MOApplicationReviewController {
         }
     }
 
+<<<<<<< Updated upstream
+    private void handleBackAction() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
+            Parent root = loader.load();
+            MODashboardController controller = loader.getController();
+=======
+    @FXML
+    private void handlePersonalCenter(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOProfileView.fxml"));
+            Parent root = loader.load();
+            MOProfileViewController controller = loader.getController();
+>>>>>>> Stashed changes
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+<<<<<<< Updated upstream
+            root.requestLayout();
+            stage.sizeToScene();
+            stage.setTitle("BUPT International School TA Recruitment System - MO Dashboard");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to go back: " + e.getMessage(), ToastService.ToastType.ERROR);
+        }
+    }
+
+=======
+            stage.setTitle("BUPT International School TA Recruitment System - MO Personal Center");
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to load personal center page", ToastService.ToastType.ERROR);
+        }
+    }
+
     private void handleBackAction() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
@@ -616,6 +657,7 @@ public class MOApplicationReviewController {
         }
     }
 
+>>>>>>> Stashed changes
     @FXML
     private void handleLogout() {
         try {

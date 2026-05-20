@@ -10,6 +10,7 @@
     <!-- Navigation Bar -->
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
             <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
             <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;">
@@ -23,6 +24,8 @@
                 <Button text="Back to TA Dashboard" styleClass="navbar-menu" onAction="#handleBack" />
                 <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" />
 =======
+=======
+>>>>>>> Stashed changes
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
             <Label text="BUPT TA System" styleClass="navbar-title" />
             <Region HBox.hgrow="ALWAYS" />
@@ -32,6 +35,9 @@
                 <Button text="Application Management" styleClass="navbar-menu" onAction="#handleApplicationManagement" accessibleText="Manage your applications" />
                 <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
                 <Button text="Back to Dashboard" styleClass="navbar-menu" onAction="#handleBack" accessibleText="Return to TA dashboard" />
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             </HBox>
         </HBox>
@@ -62,8 +68,13 @@
     </VBox>
 <<<<<<< Updated upstream
 </AnchorPane>
+<<<<<<< Updated upstream
 =======
 </AnchorPane>
+
+
+>>>>>>> Stashed changes
+=======
 
 
 >>>>>>> Stashed changes

@@ -91,10 +91,13 @@
                         <PasswordField fx:id="passwordField" promptText="Please enter password" styleClass="form-field" style="-fx-pref-width: 400px; -fx-min-width: 400px; -fx-min-height: 44px;" />
                     </VBox>
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                     <VBox spacing="8" style="-fx-pref-width: 100%;">
                         <Label text="Role" styleClass="form-label" />
                         <ComboBox fx:id="roleComboBox" promptText="Please select role" styleClass="form-field" style="-fx-pref-width: 400px; -fx-min-width: 400px; -fx-min-height: 44px;" />
 =======
+=======
+>>>>>>> Stashed changes
                     <VBox spacing="4" style="-fx-pref-width: 100%;" fillWidth="true">
                         <Label text="Role" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
                         <ComboBox fx:id="roleComboBox" promptText="Please select your role" style="-fx-font-family: 'Noto Sans SC', 'Inter', sans-serif; -fx-font-size: 14px; -fx-pref-width: 100%; -fx-max-width: Infinity; -fx-min-width: 0; -fx-min-height: 44px; -fx-background-color: #ffffff; -fx-border-color: #d1d5db; -fx-border-width: 1px; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-text-fill: #1f2937; -fx-prompt-text-fill: #9ca3af;" />

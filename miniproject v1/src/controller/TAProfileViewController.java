@@ -25,6 +25,9 @@ import service.NavigationHistory;
 import service.WorkloadService;
 import service.AdminConfigService;
 import model.AdminConfig;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 public class TAProfileViewController {
@@ -47,6 +50,9 @@ public class TAProfileViewController {
     private Label emailLabel;
     @FXML
     private Label phoneLabel;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     @FXML
     private Label skillsLabel;
@@ -213,6 +219,9 @@ public class TAProfileViewController {
 =======
             emailLabel.setText(user.getEmail() != null ? user.getEmail() : "");
             phoneLabel.setText(user.getPhone() != null ? user.getPhone() : "");
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             
             // Convert skills list to string

@@ -6,6 +6,7 @@
 
 <AnchorPane fx:id="moDashboardPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MODashboardController">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
             <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
@@ -19,6 +20,8 @@
                 <Separator orientation="VERTICAL" styleClass="navbar-separator" />
                 <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" />
 =======
+=======
+>>>>>>> Stashed changes
     <!-- ????-->    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true; -fx-min-height: 64px;">
             <Label text="BUPT TA System" styleClass="navbar-title" />
@@ -36,11 +39,15 @@
                 <Button text="Application Review" styleClass="navbar-menu" onAction="#handleApplicationManagement" accessibleText="Review applications" />
                 <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
                 <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" accessibleText="Log out of the system" />
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             </HBox>
         </HBox>
     </VBox>
 
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     <ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
         <VBox style="-fx-padding: 32px; -fx-spacing: 32px; -fx-fill-width: true; -fx-background-color: #f8f9fa; -fx-alignment: center; -fx-pref-width: 1240px;">
@@ -78,6 +85,8 @@
                 </HBox>
                 <TableView fx:id="jobsTable" style="-fx-pref-height: 250px; -fx-fixed-cell-size: 36px; -fx-font-size: 12px;">
 =======
+=======
+>>>>>>> Stashed changes
     <!-- ???? -->
     <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="64.0">
         <VBox style="-fx-padding: 48px 24px 48px 24px; -fx-spacing: 48px; -fx-fill-width: true; -fx-background-color: #f9fafb; -fx-alignment: center; -fx-pref-width: 1240px;">
@@ -119,6 +128,9 @@
                 </HBox>
 
                 <TableView fx:id="jobsTable" styleClass="job-list-table" style="-fx-pref-height: 360px; -fx-fixed-cell-size: 52px; -fx-font-size: 12px; -fx-background-color: transparent; -fx-border-color: transparent;" accessibleText="List of your posted jobs">
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
                     <columns>
                         <TableColumn text="Title" prefWidth="280">
@@ -194,4 +206,7 @@
     </ScrollPane>
 </AnchorPane>
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes

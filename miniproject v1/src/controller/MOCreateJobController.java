@@ -9,6 +9,9 @@ import javafx.scene.control.Alert;
 =======
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -114,6 +117,9 @@ public class MOCreateJobController {
 =======
     private KeyboardShortcutService shortcutService;
     private static final DateTimeFormatter UI_DATE_FORMATTER = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     public void setUser(MO user) {
@@ -613,6 +619,7 @@ public class MOCreateJobController {
         String skills = skillsArea.getText();
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         if (title.isEmpty() || type == null || department == null || workTime.isEmpty() || recruitNumStr.isEmpty() || deadline.isEmpty() || description.isEmpty() || skills.isEmpty()) {
             errorMessage.setText("Please fill in all required fields.");
             return;
@@ -625,6 +632,8 @@ public class MOCreateJobController {
                 errorMessage.setText("The number of openings must be greater than 0.");
                 return;
 =======
+=======
+>>>>>>> Stashed changes
         Integer weeklyWorkload = computeWeeklyWorkload();
         if (weeklyWorkload == null) {
             FormValidationService.showError(monHoursField, workTimeError, "Select weekdays and enter valid periods (1-14, comma-separated) for each selected day");
@@ -712,6 +721,30 @@ public class MOCreateJobController {
         } else {
             errorMessage.setText("Failed to publish the job. Please try again later.");
         }
+    }
+
+    private String buildScheduleSummary(String startDateText, String endDateText) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Schedule[");
+        appendDay(sb, "Mon", monCheckBox, monHoursField);
+        appendDay(sb, "Tue", tueCheckBox, tueHoursField);
+        appendDay(sb, "Wed", wedCheckBox, wedHoursField);
+        appendDay(sb, "Thu", thuCheckBox, thuHoursField);
+        appendDay(sb, "Fri", friCheckBox, friHoursField);
+        appendDay(sb, "Sat", satCheckBox, satHoursField);
+        appendDay(sb, "Sun", sunCheckBox, sunHoursField);
+        sb.append("; Start=").append(startDateText).append("; End=").append(endDateText).append("]");
+        return sb.toString();
+    }
+
+    private void appendDay(StringBuilder sb, String day, CheckBox checkBox, TextField field) {
+        if (!checkBox.isSelected()) {
+            return;
+        }
+        if (sb.charAt(sb.length() - 1) != '[') {
+            sb.append(", ");
+        }
+        sb.append(day).append(":").append(field.getText().trim()).append("h");
     }
 
     private String buildScheduleSummary(String startDateText, String endDateText) {

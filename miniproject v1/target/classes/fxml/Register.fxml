@@ -7,6 +7,7 @@
 <?import javafx.scene.text.*?>
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 <AnchorPane fx:id="registerPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
     <VBox alignment="CENTER" spacing="0" styleClass="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <HBox prefHeight="8">
@@ -16,6 +17,8 @@
             <Region styleClass="bg-success" style="-fx-pref-width: 25%;" />
         </HBox>
 =======
+=======
+>>>>>>> Stashed changes
 <ScrollPane fx:id="registerScrollPane" onScroll="#handleScrollFast" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegisterController">
     <stylesheets>
         <URL value="@../css/register.css" />
@@ -45,9 +48,15 @@
                         <Label text="Select Role" styleClass="form-label" />
                         <HBox spacing="16" alignment="CENTER" style="-fx-pref-width: 100%;">
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
                             <ToggleButton fx:id="taToggle" text="TA Applicant" styleClass="btn btn-secondary" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
                             <ToggleButton fx:id="moToggle" text="Module Organizer" styleClass="btn btn-secondary" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
                             <ToggleButton fx:id="adminToggle" text="System Admin" styleClass="btn btn-secondary" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px;" />
+=======
+                            <ToggleButton fx:id="taToggle" text="TA Applicant" toggleGroup="$roleToggleGroup" selected="true" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500;" accessibleText="Register as Teaching Assistant applicant" />
+                            <ToggleButton fx:id="moToggle" text="Module Organizer" toggleGroup="$roleToggleGroup" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500;" accessibleText="Register as Module Organizer" />
+                            <ToggleButton fx:id="adminToggle" text="System Admin" toggleGroup="$roleToggleGroup" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500;" accessibleText="Register as System Administrator" />
+>>>>>>> Stashed changes
 =======
                             <ToggleButton fx:id="taToggle" text="TA Applicant" toggleGroup="$roleToggleGroup" selected="true" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500;" accessibleText="Register as Teaching Assistant applicant" />
                             <ToggleButton fx:id="moToggle" text="Module Organizer" toggleGroup="$roleToggleGroup" style="-fx-pref-width: 160px; -fx-min-height: 44px; -fx-font-size: 14px; -fx-font-weight: 500;" accessibleText="Register as Module Organizer" />

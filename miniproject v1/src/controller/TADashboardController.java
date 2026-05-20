@@ -12,6 +12,9 @@ import javafx.scene.layout.VBox;
 =======
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.AnchorPane;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -49,9 +52,12 @@ import service.ApplicationService;
 import service.JobService;
 import service.AIService;
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import service.UserService;
 import java.util.List;
 =======
+=======
+>>>>>>> Stashed changes
 import service.WorkloadNotificationService;
 import controller.SkillGapAnalysisController;
 import service.SkillGapAnalysisService;
@@ -64,6 +70,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -79,6 +88,7 @@ public class TADashboardController {
     private Label pendingActionsLabel;
     @FXML
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private TableView<Task> tasksTable;
     @FXML
     private VBox emptyTasksBox;
@@ -86,6 +96,8 @@ public class TADashboardController {
     private TA user;
     private boolean showWelcomeGuideOnInit = false;
 =======
+=======
+>>>>>>> Stashed changes
     private Label workloadLabel;
     @FXML
     private Label workloadBandLabel;
@@ -111,6 +123,9 @@ public class TADashboardController {
     private String[][] scheduleStatuses;
     private final Set<Region> selectedCells = new HashSet<>();
     private final List<TaskItem> dashboardTasks = new ArrayList<>();
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     
     public void setUser(TA user) {
@@ -124,6 +139,13 @@ public class TADashboardController {
         this.showWelcomeGuideOnInit = showWelcomeGuide;
         initializeDashboard();
         showPendingWorkloadNotifications();
+<<<<<<< Updated upstream
+=======
+    }
+    
+    public void setStage(Stage stage) {
+        this.stage = stage;
+>>>>>>> Stashed changes
     }
     
     private void initializeDashboard() {
@@ -205,6 +227,7 @@ public class TADashboardController {
         }
         if (user.getResumePath() == null || user.getResumePath().isEmpty()) {
             dashboardTasks.add(new TaskItem(SYSTEM_RESUME, "2026-04-25", true, false));
+<<<<<<< Updated upstream
         }
 
         boolean hasSkillInfo = user.getSkills() != null && !user.getSkills().isEmpty()
@@ -578,6 +601,359 @@ public class TADashboardController {
         pendingActionsLabel.setText(String.valueOf(pendingTasksCount));
 =======
 >>>>>>> Stashed changes
+=======
+        }
+
+        boolean hasSkillInfo = user.getSkills() != null && !user.getSkills().isEmpty()
+                && user.getExperience() != null && !user.getExperience().trim().isEmpty();
+        if (!hasSkillInfo) {
+            dashboardTasks.add(new TaskItem(SYSTEM_SKILL, "2026-05-05", true, false));
+        }
+
+        // User custom tasks
+        dashboardTasks.addAll(loadCustomTasksFromAvailableTime());
+
+        // Remove completed tasks from visible list
+        dashboardTasks.removeIf(TaskItem::isCompleted);
+
+        pendingActionsLabel.setText(String.valueOf(dashboardTasks.size()));
+        renderPendingTasks();
+    }
+
+    private void renderPendingTasks() {
+        if (pendingTaskListContainer == null) {
+            return;
+        }
+
+        pendingTaskListContainer.getChildren().clear();
+        if (dashboardTasks.isEmpty()) {
+            Label empty = new Label("No pending tasks. Great job!");
+            empty.setStyle("-fx-font-size: 13px; -fx-text-fill: #6b7280; -fx-padding: 8 4;");
+            pendingTaskListContainer.getChildren().add(empty);
+            return;
+        }
+
+        for (TaskItem task : dashboardTasks) {
+            HBox row = new HBox();
+            row.setSpacing(12);
+            row.setStyle("-fx-padding: 10px 12px; -fx-background-color: #f8f9fa; -fx-background-radius: 8px;");
+
+            VBox info = new VBox();
+            info.setSpacing(3);
+            Label title = new Label(task.getTitle());
+            title.setStyle("-fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #333333;");
+            Label due = new Label("Due: " + task.getDueDate());
+            due.setStyle("-fx-font-size: 12px; -fx-text-fill: #666666;");
+            info.getChildren().addAll(title, due);
+            HBox.setHgrow(info, javafx.scene.layout.Priority.ALWAYS);
+
+            if (task.isSystemTask()) {
+                Label tag = new Label("PENDING");
+                tag.setStyle("-fx-font-size: 12px; -fx-font-weight: 500; -fx-text-fill: #ff9f43; -fx-background-color: rgba(255, 159, 67, 0.1); -fx-padding: 4 8; -fx-background-radius: 12px;");
+                row.getChildren().addAll(info, tag);
+
+                row.setOnMouseClicked(e -> {
+                    if (e.getClickCount() == 2) {
+                        jumpToTask(task.getTitle());
+                    }
+                });
+            } else {
+                CheckBox done = new CheckBox();
+                done.setStyle("-fx-font-size: 14px;");
+                done.setOnAction(e -> {
+                    task.setCompleted(done.isSelected());
+                    saveCustomTasksToAvailableTime();
+                    loadPendingTasks();
+                });
+                row.getChildren().addAll(info, done);
+            }
+
+            pendingTaskListContainer.getChildren().add(row);
+        }
+    }
+
+    private void jumpToTask(String title) {
+        if (SYSTEM_PROFILE.equals(title) || SYSTEM_SKILL.equals(title) || "Profile Under Review".equals(title)) {
+            handleUpdateProfile(new ActionEvent());
+            return;
+        }
+        if (SYSTEM_RESUME.equals(title)) {
+            handleUploadResume(new ActionEvent());
+        }
+    }
+
+    private List<TaskItem> loadCustomTasksFromAvailableTime() {
+        List<TaskItem> customTasks = new ArrayList<>();
+        String available = user.getAvailableTime();
+        if (available == null || !available.contains(TASK_PREFIX)) {
+            return customTasks;
+        }
+
+        int idx = available.indexOf(TASK_PREFIX);
+        String payload = available.substring(idx + TASK_PREFIX.length());
+        if (payload.trim().isEmpty()) {
+            return customTasks;
+        }
+
+        String[] items = payload.split(";;");
+        for (String item : items) {
+            if (item.trim().isEmpty()) continue;
+            String[] parts = item.split("\\|", 3);
+            if (parts.length < 3) continue;
+            boolean completed = "1".equals(parts[2]);
+            customTasks.add(new TaskItem(parts[0], parts[1], false, completed));
+        }
+        return customTasks;
+    }
+
+    private void saveCustomTasksToAvailableTime() {
+        if (user == null) return;
+
+        List<TaskItem> custom = new ArrayList<>();
+        for (TaskItem t : dashboardTasks) {
+            if (!t.isSystemTask()) {
+                custom.add(t);
+            }
+        }
+
+        StringBuilder taskPart = new StringBuilder(TASK_PREFIX);
+        for (int i = 0; i < custom.size(); i++) {
+            TaskItem t = custom.get(i);
+            taskPart.append(t.getTitle()).append("|").append(t.getDueDate()).append("|").append(t.isCompleted() ? "1" : "0");
+            if (i < custom.size() - 1) taskPart.append(";;");
+        }
+
+        String available = user.getAvailableTime() == null ? "" : user.getAvailableTime();
+        String schedulePart = available;
+        int taskIdx = schedulePart.indexOf(TASK_PREFIX);
+        if (taskIdx >= 0) {
+            schedulePart = schedulePart.substring(0, taskIdx);
+        }
+
+        user.setAvailableTime(schedulePart + taskPart);
+        UserService.updateTAProfile(user);
+    }
+
+
+    private void initializeScheduleGrid() {
+        if (scheduleGrid == null) {
+            return;
+        }
+
+        scheduleGrid.getChildren().clear();
+
+        String[] days = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+        String[] periodTimes = {
+                "08:00-08:45", "08:50-09:35", "09:50-10:35", "10:40-11:25",
+                "11:30-12:15", "13:00-13:45", "13:50-14:35", "14:45-15:30",
+                "15:40-16:25", "16:35-17:20", "18:00-18:45", "18:50-19:35",
+                "19:40-20:25", "20:30-21:15"
+        };
+
+        for (int col = 0; col < 7; col++) {
+            Label dayLabel = new Label(days[col]);
+            dayLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #475569;");
+            dayLabel.setMaxWidth(Double.MAX_VALUE);
+            dayLabel.setAlignment(Pos.CENTER);
+            scheduleGrid.add(dayLabel, col + 1, 0);
+        }
+
+        for (int row = 0; row < 14; row++) {
+            Label periodLabel = new Label((row + 1) + "\n" + periodTimes[row]);
+            periodLabel.setStyle("-fx-font-size: 10px; -fx-text-fill: #64748b;");
+            periodLabel.setAlignment(Pos.CENTER_RIGHT);
+            periodLabel.setPrefWidth(68);
+            scheduleGrid.add(periodLabel, 0, row + 1);
+        }
+
+        scheduleCells = new Region[14][7];
+        scheduleStatuses = new String[14][7];
+
+        for (int row = 0; row < 14; row++) {
+            for (int col = 0; col < 7; col++) {
+                Region cell = new Region();
+                cell.setMinSize(52, 24);
+                cell.setPrefSize(52, 24);
+
+                final int r = row;
+                final int c = col;
+                scheduleStatuses[row][col] = STATUS_FREE;
+                applyStatusToCell(cell, STATUS_FREE);
+
+                cell.setOnMouseClicked(event -> {
+                    if (event.getButton() != MouseButton.PRIMARY) {
+                        return;
+                    }
+                    handleScheduleCellClick(r, c, event.isControlDown());
+                });
+
+                scheduleCells[row][col] = cell;
+                scheduleGrid.add(cell, col + 1, row + 1);
+            }
+        }
+
+        loadScheduleFromUserAvailableTime();
+    }
+
+    private void handleScheduleCellClick(int row, int col, boolean controlDown) {
+        Region cell = scheduleCells[row][col];
+        if (cell == null) {
+            return;
+        }
+
+        if (controlDown) {
+            toggleCellSelection(cell);
+            return;
+        }
+
+        List<String> options = List.of(STATUS_FREE, STATUS_OCCUPIED, STATUS_BUSY);
+        ChoiceDialog<String> dialog = new ChoiceDialog<>(scheduleStatuses[row][col], options);
+        dialog.setTitle("Set Slot Status");
+        dialog.setHeaderText(selectedCells.isEmpty()
+                ? "Select status for this class slot"
+                : "Select status for selected class slots");
+        dialog.setContentText("Status:");
+
+        Optional<String> result = dialog.showAndWait();
+        result.ifPresent(status -> {
+            if (selectedCells.isEmpty()) {
+                applyStatusByCoordinates(row, col, status);
+            } else {
+                applyStatusToSelectedCells(status);
+            }
+            saveScheduleToUserAvailableTime();
+        });
+    }
+
+    private void toggleCellSelection(Region cell) {
+        if (selectedCells.contains(cell)) {
+            selectedCells.remove(cell);
+            updateCellVisual(cell);
+        } else {
+            selectedCells.add(cell);
+            String originalStyle = cell.getStyle();
+            cell.setStyle(originalStyle + " -fx-border-width: 2; -fx-border-color: #1d4ed8;");
+        }
+    }
+
+    private void applyStatusToSelectedCells(String status) {
+        for (int row = 0; row < 14; row++) {
+            for (int col = 0; col < 7; col++) {
+                Region cell = scheduleCells[row][col];
+                if (selectedCells.contains(cell)) {
+                    applyStatusByCoordinates(row, col, status);
+                }
+            }
+        }
+        clearSelection();
+    }
+
+    private void clearSelection() {
+        for (Region cell : selectedCells) {
+            updateCellVisual(cell);
+        }
+        selectedCells.clear();
+    }
+
+    private void applyStatusByCoordinates(int row, int col, String status) {
+        String normalized = normalizeStatus(status);
+        scheduleStatuses[row][col] = normalized;
+        applyStatusToCell(scheduleCells[row][col], normalized);
+    }
+
+    private void applyStatusToCell(Region cell, String status) {
+        String normalized = normalizeStatus(status);
+        cell.setStyle(styleForStatus(normalized));
+
+        String tooltipText;
+        switch (normalized) {
+            case STATUS_OCCUPIED:
+                tooltipText = "Occupied";
+                break;
+            case STATUS_BUSY:
+                tooltipText = "Busy";
+                break;
+            case STATUS_FREE:
+            default:
+                tooltipText = "Free";
+                break;
+        }
+        Tooltip.install(cell, new Tooltip(tooltipText));
+    }
+
+    private void updateCellVisual(Region cell) {
+        for (int row = 0; row < 14; row++) {
+            for (int col = 0; col < 7; col++) {
+                if (scheduleCells[row][col] == cell) {
+                    applyStatusToCell(cell, scheduleStatuses[row][col]);
+                    return;
+                }
+            }
+        }
+    }
+
+    private String normalizeStatus(String status) {
+        if (status == null) {
+            return STATUS_FREE;
+        }
+        String normalized = status.toLowerCase();
+        if (!STATUS_OCCUPIED.equals(normalized) && !STATUS_BUSY.equals(normalized) && !STATUS_FREE.equals(normalized)) {
+            return STATUS_FREE;
+        }
+        return normalized;
+    }
+
+    private void saveScheduleToUserAvailableTime() {
+        if (user == null || scheduleStatuses == null) {
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder(AVAILABLE_TIME_PREFIX);
+        for (int row = 0; row < 14; row++) {
+            for (int col = 0; col < 7; col++) {
+                sb.append(scheduleStatuses[row][col]);
+                if (!(row == 13 && col == 6)) {
+                    sb.append(',');
+                }
+            }
+        }
+
+        user.setAvailableTime(sb.toString());
+        UserService.updateTAProfile(user);
+    }
+
+    private void loadScheduleFromUserAvailableTime() {
+        if (user == null || user.getAvailableTime() == null || !user.getAvailableTime().startsWith(AVAILABLE_TIME_PREFIX)) {
+            return;
+        }
+
+        String payload = user.getAvailableTime().substring(AVAILABLE_TIME_PREFIX.length());
+        String[] parts = payload.split(",");
+        if (parts.length != 98) {
+            return;
+        }
+
+        int idx = 0;
+        for (int row = 0; row < 14; row++) {
+            for (int col = 0; col < 7; col++) {
+                String status = normalizeStatus(parts[idx++]);
+                scheduleStatuses[row][col] = status;
+                applyStatusToCell(scheduleCells[row][col], status);
+            }
+        }
+    }
+
+    private String styleForStatus(String status) {
+        switch (status) {
+            case STATUS_OCCUPIED:
+                return "-fx-background-color: #fde68a; -fx-background-radius: 4; -fx-border-color: #f59e0b; -fx-border-radius: 4;";
+            case STATUS_BUSY:
+                return "-fx-background-color: #fecaca; -fx-background-radius: 4; -fx-border-color: #ef4444; -fx-border-radius: 4;";
+            case STATUS_FREE:
+            default:
+                return "-fx-background-color: #dbeafe; -fx-background-radius: 4; -fx-border-color: #93c5fd; -fx-border-radius: 4;";
+        }
+>>>>>>> Stashed changes
     }
     
     private void showPendingWorkloadNotifications() {
@@ -650,6 +1026,7 @@ public class TADashboardController {
         }
         
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         // Build recommended jobs information
         StringBuilder message = new StringBuilder("=== Recommended Jobs ===\n\n");
         for (int i = 0; i < recommendedJobs.size(); i++) {
@@ -669,6 +1046,8 @@ public class TADashboardController {
         alert4.initModality(Modality.APPLICATION_MODAL);
         alert4.showAndWait();
 =======
+=======
+>>>>>>> Stashed changes
         // Allow user to close this progress window if needed
         
         VBox vbox = new VBox(20);
@@ -1454,6 +1833,16 @@ public class TADashboardController {
             if (stage == null) {
                 throw new IllegalStateException("Stage is not available.");
             }
+            if (stage == null) {
+                if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
+                    stage = (Stage) pendingTaskListContainer.getScene().getWindow();
+                } else if (openPositionsLabel != null && openPositionsLabel.getScene() != null) {
+                    stage = (Stage) openPositionsLabel.getScene().getWindow();
+                }
+            }
+            if (stage == null) {
+                throw new IllegalStateException("Stage is not available.");
+            }
             
             controller.setStage(stage);
             
@@ -1491,6 +1880,16 @@ public class TADashboardController {
             } else {
                 // If event not triggered from Button, use other way to get stage
                 stage = (Stage) tasksTable.getScene().getWindow();
+            }
+            if (stage == null) {
+                if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
+                    stage = (Stage) pendingTaskListContainer.getScene().getWindow();
+                } else if (openPositionsLabel != null && openPositionsLabel.getScene() != null) {
+                    stage = (Stage) openPositionsLabel.getScene().getWindow();
+                }
+            }
+            if (stage == null) {
+                throw new IllegalStateException("Stage is not available.");
             }
             if (stage == null) {
                 if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
@@ -1733,6 +2132,16 @@ public class TADashboardController {
             if (stage == null) {
                 throw new IllegalStateException("Stage is not available.");
             }
+            if (stage == null) {
+                if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
+                    stage = (Stage) pendingTaskListContainer.getScene().getWindow();
+                } else if (openPositionsLabel != null && openPositionsLabel.getScene() != null) {
+                    stage = (Stage) openPositionsLabel.getScene().getWindow();
+                }
+            }
+            if (stage == null) {
+                throw new IllegalStateException("Stage is not available.");
+            }
 
             controller.setStage(stage);
 
@@ -1767,6 +2176,16 @@ public class TADashboardController {
                 stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
             } else {
                 stage = (Stage) tasksTable.getScene().getWindow();
+            }
+            if (stage == null) {
+                if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
+                    stage = (Stage) pendingTaskListContainer.getScene().getWindow();
+                } else if (openPositionsLabel != null && openPositionsLabel.getScene() != null) {
+                    stage = (Stage) openPositionsLabel.getScene().getWindow();
+                }
+            }
+            if (stage == null) {
+                throw new IllegalStateException("Stage is not available.");
             }
             if (stage == null) {
                 if (pendingTaskListContainer != null && pendingTaskListContainer.getScene() != null) {
@@ -1898,5 +2317,8 @@ public class TADashboardController {
         public boolean isCompleted() { return completed; }
         public void setCompleted(boolean completed) { this.completed = completed; }
     }
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 }

@@ -16,15 +16,28 @@ public class DataStorage {
     private static final String JOBS_FILE = new File(DATA_DIR, "jobs.txt").getAbsolutePath();
     private static final String APPLICATIONS_FILE = new File(DATA_DIR, "applications.txt").getAbsolutePath();
     private static final String LOGS_FILE = new File(DATA_DIR, "logs.txt").getAbsolutePath();
+<<<<<<< Updated upstream
+=======
+
+    private static final Object usersLock = new Object();
+    private static final Object jobsLock = new Object();
+    private static final Object applicationsLock = new Object();
+    private static final Object logsLock = new Object();
+>>>>>>> Stashed changes
 
     // Initialize data storage
     public static void initialize() {
         try {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             // Ensure the data directory exists
             File dataDir = new File("src/data");
             if (!dataDir.exists()) {
                 dataDir.mkdirs();
+=======
+            if (!DATA_DIR.exists()) {
+                DATA_DIR.mkdirs();
+>>>>>>> Stashed changes
 =======
             if (!DATA_DIR.exists()) {
                 DATA_DIR.mkdirs();

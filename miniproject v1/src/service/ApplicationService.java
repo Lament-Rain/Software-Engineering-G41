@@ -8,6 +8,9 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.Set;
 import java.util.HashSet;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 public class ApplicationService {
@@ -146,7 +149,10 @@ public class ApplicationService {
 
         DataStorage.saveApplications(applications);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
         job.setCurrentNum(currentNumBaseline + 1);
         JobService.updateJob(job);
         IndexService.indexApplicationUpdate(targetApp);
@@ -493,6 +499,9 @@ public class ApplicationService {
         return result;
     }
 
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
     public static boolean isDeadlinePassed(String deadline) {
         if (deadline == null || deadline.trim().isEmpty() || "null".equalsIgnoreCase(deadline.trim())) {

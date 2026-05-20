@@ -21,6 +21,9 @@ import service.KeyboardShortcutService;
 import service.ToastService;
 import service.NavigationHistory;
 import controller.SearchBarController;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 import java.util.List;
 import javafx.collections.FXCollections;

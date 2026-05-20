@@ -104,6 +104,31 @@ public class AdminApprovalController {
         }
     }
 
+<<<<<<< Updated upstream
+=======
+    private void handleBackAction() {
+        handleHome(new ActionEvent());
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
+            Parent root = loader.load();
+            LoginController controller = loader.getController();
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError("Failed to logout: " + e.getMessage());
+        }
+    }
+
+>>>>>>> Stashed changes
     private void setupTables() {
         pendingUsernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         pendingNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -287,6 +312,10 @@ public class AdminApprovalController {
             AdminDashboardController controller = loader.getController();
             controller.setUser(user);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+            controller.setStage(stage);
+>>>>>>> Stashed changes
 =======
             controller.setStage(stage);
 >>>>>>> Stashed changes

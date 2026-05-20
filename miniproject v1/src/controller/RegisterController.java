@@ -281,10 +281,13 @@ public class RegisterController {
             controller.setStage(stage);
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Scene scene = new Scene(root, 800, 600);
             stage.setScene(scene);
             stage.setTitle("BUPT International School TA Recruitment System - Login");
 =======
+=======
+>>>>>>> Stashed changes
             boolean isFullScreen = stage.isFullScreen();
             double currentWidth = stage.getWidth();
             double currentHeight = stage.getHeight();

@@ -242,13 +242,19 @@ public class AIService {
     private static String apiKey = "";
     private static final String API_URL = "https://ark.cn-beijing.volces.com/api/v3/responses";
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     private static final String MODEL = "doubao-seed-2-0-pro-260215";
 =======
+=======
+>>>>>>> Stashed changes
     private static final String API_KEYS_FILE = "data/api_keys.txt";
     private static final String LEGACY_API_KEYS_FILE = "api_keys.txt";
     private static final String RELEASE_API_KEYS_FILE = "release/data/api_keys.txt";
     private static final int DEFAULT_CONNECT_TIMEOUT_MS = 20000;
     private static final int DEFAULT_READ_TIMEOUT_MS = 120000;
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     // 设置API密钥
@@ -402,6 +408,7 @@ public class AIService {
         requestBody.addProperty("model", MODEL);
         requestBody.addProperty("input", input);
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         
         JsonObject thinking = new JsonObject();
         thinking.addProperty("type", "enabled");
@@ -409,6 +416,8 @@ public class AIService {
         
         requestBody.addProperty("stream", true);
 =======
+=======
+>>>>>>> Stashed changes
 
         if (enableThinking) {
             JsonObject thinking = new JsonObject();

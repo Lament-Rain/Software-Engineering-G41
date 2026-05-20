@@ -218,11 +218,14 @@ public class MODashboardController {
             controller.setStage(getStage(event));
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             Scene scene = new Scene(root, 800, 600);
             Stage stage = getStage(event);
             stage.setScene(scene);
             stage.setTitle("BUPT International School TA Recruitment System - Login");
 =======
+=======
+>>>>>>> Stashed changes
             boolean isFullScreen = stage.isFullScreen();
             double currentWidth = stage.getWidth();
             double currentHeight = stage.getHeight();
@@ -232,6 +235,9 @@ public class MODashboardController {
             stage.setScene(scene);
             stage.setTitle("BUPT International School TA Recruitment System - Login");
             stage.setFullScreen(isFullScreen);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         } catch (Exception e) {
             e.printStackTrace();

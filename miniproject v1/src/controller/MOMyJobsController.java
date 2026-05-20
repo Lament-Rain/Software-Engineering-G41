@@ -66,6 +66,9 @@ public class MOMyJobsController {
 =======
     private KeyboardShortcutService shortcutService;
     private static final DateTimeFormatter UI_DATE_FORMATTER = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     @FXML
@@ -243,6 +246,25 @@ public class MOMyJobsController {
         }
     }
 >>>>>>> Stashed changes
+
+    @FXML
+    private void handlePersonalCenter() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOProfileView.fxml"));
+            Parent root = loader.load();
+            MOProfileViewController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - MO Personal Center");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to load personal center page: " + e.getMessage());
+        }
+    }
 
     @FXML
     private void handlePersonalCenter() {

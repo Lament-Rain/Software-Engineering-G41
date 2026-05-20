@@ -573,11 +573,14 @@ public class TAProfileEditController {
             return;
         }
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         if (availableTime.isEmpty()) {
             showError("Please enter available work time");
             availableTimeField.requestFocus();
             return;
         }
+=======
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         if (skillsStr.isEmpty()) {
