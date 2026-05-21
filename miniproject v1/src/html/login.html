@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUPT International School TA Recruitment System - Login</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-color: #003366;
+            --primary-light: #1a4b80;
+            --secondary-color: #7a67ee;
+            --accent-color: #ff9f43;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 51, 102, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 51, 102, 0.12), 0 2px 4px -1px rgba(0, 51, 102, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 51, 102, 0.12), 0 4px 6px -2px rgba(0, 51, 102, 0.05);
+            
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            
+            --font-sans: 'Noto Sans SC', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'Inter', monospace;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+        
+        .header-bar {
+            height: 8px;
+            display: flex;
+        }
+        
+        .header-bar div {
+            flex: 1;
+        }
+        
+        .bg-primary {
+            background-color: var(--primary-color);
+        }
+        
+        .bg-secondary {
+            background-color: var(--secondary-color);
+        }
+        
+        .bg-accent {
+            background-color: var(--accent-color);
+        }
+        
+        .bg-success {
+            background-color: var(--success-color);
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: var(--spacing-2xl);
+        }
+        
+        .login-card {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-xl);
+            text-align: center;
+        }
+        
+        .logo-section {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .logo-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .logo-subtitle {
+            font-size: 16px;
+            color: var(--gray-600);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .avatar-section {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .avatar-circle {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            background-color: var(--gray-100);
+            border: 2px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .avatar-icon {
+            font-size: 32px;
+        }
+        
+        .form-section {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .form-group {
+            margin-bottom: var(--spacing-md);
+            text-align: left;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .form-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-family: var(--font-sans);
+            transition: all 0.2s ease;
+        }
+        
+        .form-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+        }
+        
+        .form-field::placeholder {
+            color: var(--gray-400);
+        }
+        
+        .password-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-family: var(--font-sans);
+            transition: all 0.2s ease;
+        }
+        
+        .password-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+        }
+        
+        .combo-box {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-family: var(--font-sans);
+            background-color: var(--white);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .combo-box:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            margin-right: var(--spacing-sm);
+        }
+        
+        .forgot-password {
+            font-size: 14px;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .forgot-password:hover {
+            color: var(--primary-light);
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            font-family: var(--font-sans);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: var(--white);
+        }
+        
+        .btn-success:hover {
+            background-color: #059669;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .keyboard-shortcuts {
+            text-align: center;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .kbd {
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: var(--gray-100);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray-700);
+            margin: 0 var(--spacing-xs);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: var(--spacing-xl);
+        }
+        
+        .footer-text {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-lg);
+            }
+            
+            .login-card {
+                padding: var(--spacing-lg);
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <div class="bg-primary"></div>
+        <div class="bg-secondary"></div>
+        <div class="bg-accent"></div>
+        <div class="bg-success"></div>
+    </div>
+    
+    <div class="container">
+        <div class="login-card">
+            <div class="logo-section">
+                <h1 class="logo-title">BUPT International School</h1>
+                <h2 class="logo-title">TA Recruitment System</h2>
+                <p class="logo-subtitle">Please log in to access the system</p>
+            </div>
+            
+            <div class="avatar-section">
+                <div class="avatar-circle">
+                    <i class="fas fa-user-graduate avatar-icon"></i>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="username">Username</label>
+                        <input type="text" id="username" class="form-field" placeholder="Please enter username" required>
+                        <div id="usernameError" class="error-message" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" class="password-field" placeholder="Please enter password" required>
+                        <div id="passwordError" class="error-message" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="role">Role</label>
+                        <select id="role" class="combo-box" required>
+                            <option value="">Please select role</option>
+                            <option value="TA">Teaching Assistant</option>
+                            <option value="MO">Module Organizer</option>
+                            <option value="Admin">Administrator</option>
+                        </select>
+                        <div id="roleError" class="error-message" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe"> Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+                    
+                    <div id="errorMessage" class="error-message" style="display: none;"></div>
+                    
+                    <div class="button-group">
+                        <button type="button" class="btn btn-secondary" id="cancelButton">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="loginButton">Login</button>
+                        <button type="button" class="btn btn-success" id="registerButton">Register</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="keyboard-shortcuts">
+                <p>
+                    <span>Keyboard shortcuts:</span>
+                    <kbd>Enter</kbd>
+                    <span>to login</span>
+                </p>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p class="footer-text">&copy; 2026 BUPT International School. All rights reserved.</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const cancelButton = document.getElementById('cancelButton');
+            const registerButton = document.getElementById('registerButton');
+            
+            // 登录表单提交
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const role = document.getElementById('role').value;
+                
+                // 简单验证
+                let isValid = true;
+                
+                if (!username) {
+                    document.getElementById('usernameError').textContent = 'Please enter username';
+                    document.getElementById('usernameError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('usernameError').style.display = 'none';
+                }
+                
+                if (!password) {
+                    document.getElementById('passwordError').textContent = 'Please enter password';
+                    document.getElementById('passwordError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('passwordError').style.display = 'none';
+                }
+                
+                if (!role) {
+                    document.getElementById('roleError').textContent = 'Please select role';
+                    document.getElementById('roleError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('roleError').style.display = 'none';
+                }
+                
+                if (isValid) {
+                    // 根据角色跳转到不同的仪表盘
+                    if (role === 'TA') {
+                        window.location.href = 'ta-dashboard.html';
+                    } else if (role === 'MO') {
+                        window.location.href = 'mo-dashboard.html';
+                    } else if (role === 'Admin') {
+                        window.location.href = 'admin-dashboard.html';
+                    }
+                }
+            });
+            
+            // 取消按钮
+            cancelButton.addEventListener('click', function() {
+                document.getElementById('loginForm').reset();
+                document.querySelectorAll('.error-message').forEach(el => {
+                    el.style.display = 'none';
+                });
+            });
+            
+            // 注册按钮
+            registerButton.addEventListener('click', function() {
+                window.location.href = 'register.html';
+            });
+            
+            // 回车键登录
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('loginButton').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

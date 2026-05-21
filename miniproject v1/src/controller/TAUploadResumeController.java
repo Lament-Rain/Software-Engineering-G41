@@ -13,8 +13,12 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.TA;
 import service.UserService;
+import service.KeyboardShortcutService;
+import service.NavigationHistory;
+import controller.SearchBarController;
 import utils.FileUtils;
 import java.io.File;
+import java.util.List;
 
 public class TAUploadResumeController {
     @FXML
@@ -27,9 +31,118 @@ public class TAUploadResumeController {
     private Stage stage;
     private TA user;
     private File selectedFile;
+    private KeyboardShortcutService shortcutService;
     
     public void setStage(Stage stage) {
         this.stage = stage;
+        setupKeyboardShortcuts();
+    }
+    
+    private void setupKeyboardShortcuts() {
+        shortcutService = new KeyboardShortcutService(stage);
+        shortcutService.registerShortcut("ctrl+f", this::handleSearchAction);
+        shortcutService.registerShortcut("escape", this::handleBackAction);
+
+        if (stage.getScene() != null) {
+            Parent root = stage.getScene().getRoot();
+            shortcutService.setupEnterKeyNavigation(root);
+        }
+    }
+    
+    private void handleSearchAction() {
+        showSearchBar();
+    }
+
+    private void showSearchBar() {
+        try {
+            // Create list of TA features
+            List<SearchBarController.Feature> features = new java.util.ArrayList<>();
+            features.add(new SearchBarController.Feature("Job Requirements", () -> handleJobRequirements(new ActionEvent())));
+            features.add(new SearchBarController.Feature("My Applications", () -> handleApplicationManagement(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Update Profile", () -> handleUpdateProfile(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Upload Resume", () -> handleUpload(new ActionEvent())));
+            features.add(new SearchBarController.Feature("Personal Center", () -> handlePersonalCenter(new ActionEvent())));
+
+            // Load search bar
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SearchBar.fxml"));
+            Parent root = loader.load();
+            SearchBarController controller = loader.getController();
+
+            // Create stage for search bar
+            Stage searchStage = new Stage();
+            searchStage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            searchStage.initOwner(stage);
+            searchStage.setTitle("Search Features");
+
+            // Set up controller
+            controller.setStage(searchStage);
+            controller.setFeatures(features);
+            controller.setOnFeatureSelected(featureName -> {
+                // Find and execute the selected feature
+                for (SearchBarController.Feature feature : features) {
+                    if (feature.getName().equals(featureName)) {
+                        feature.getAction().run();
+                        break;
+                    }
+                }
+            });
+
+            // Create scene
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            searchStage.setScene(scene);
+
+            // Show search bar
+            searchStage.showAndWait();
+        } catch (Exception e) {
+            e.printStackTrace();
+            messageLabel.setText("Failed to load search bar");
+        }
+    }
+
+    private void handleUpdateProfile(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TAProfileEdit.fxml"));
+            Parent root = loader.load();
+            TAProfileEditController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("TAProfileEdit", () -> {
+                try {
+                    FXMLLoader resumeLoader = new FXMLLoader(getClass().getResource("/fxml/TAUploadResume.fxml"));
+                    Parent resumeRoot = resumeLoader.load();
+                    TAUploadResumeController resumeController = resumeLoader.getController();
+                    resumeController.setUser(user);
+                    resumeController.setStage(stage);
+                    
+                    Scene scene = new Scene(resumeRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Upload Resume");
+                    
+                    // Force layout update to ensure components resize properly
+                    resumeRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    messageLabel.setText("Failed to load upload resume page");
+                }
+            });
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Update Profile");
+        } catch (Exception e) {
+            e.printStackTrace();
+            messageLabel.setText("Failed to load profile edit page");
+        }
+    }
+
+    private void handleBackAction() {
+        handleBack(new ActionEvent());
     }
     
     public void setUser(TA user) {
@@ -135,6 +248,29 @@ public class TAUploadResumeController {
             controller.setUser(user, model.UserRole.TA);
             controller.setStage(stage);
 
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("JobList", () -> {
+                try {
+                    FXMLLoader resumeLoader = new FXMLLoader(getClass().getResource("/fxml/TAUploadResume.fxml"));
+                    Parent resumeRoot = resumeLoader.load();
+                    TAUploadResumeController resumeController = resumeLoader.getController();
+                    resumeController.setUser(user);
+                    resumeController.setStage(stage);
+                    
+                    Scene scene = new Scene(resumeRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Upload Resume");
+                    
+                    // Force layout update to ensure components resize properly
+                    resumeRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    messageLabel.setText("Failed to load upload resume page");
+                }
+            });
+
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
@@ -153,6 +289,29 @@ public class TAUploadResumeController {
             TAApplicationHistoryController controller = loader.getController();
             controller.setUser(user);
             controller.setStage(stage);
+
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("TAApplicationHistory", () -> {
+                try {
+                    FXMLLoader resumeLoader = new FXMLLoader(getClass().getResource("/fxml/TAUploadResume.fxml"));
+                    Parent resumeRoot = resumeLoader.load();
+                    TAUploadResumeController resumeController = resumeLoader.getController();
+                    resumeController.setUser(user);
+                    resumeController.setStage(stage);
+                    
+                    Scene scene = new Scene(resumeRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Upload Resume");
+                    
+                    // Force layout update to ensure components resize properly
+                    resumeRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    messageLabel.setText("Failed to load upload resume page");
+                }
+            });
 
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
@@ -173,6 +332,29 @@ public class TAUploadResumeController {
             controller.setUser(user);
             controller.setStage(stage);
 
+            // Add navigation entry for back functionality
+            NavigationHistory.getInstance().addEntry("TAProfileView", () -> {
+                try {
+                    FXMLLoader resumeLoader = new FXMLLoader(getClass().getResource("/fxml/TAUploadResume.fxml"));
+                    Parent resumeRoot = resumeLoader.load();
+                    TAUploadResumeController resumeController = resumeLoader.getController();
+                    resumeController.setUser(user);
+                    resumeController.setStage(stage);
+                    
+                    Scene scene = new Scene(resumeRoot, stage.getWidth(), stage.getHeight());
+                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                    stage.setScene(scene);
+                    stage.setTitle("BUPT International School TA Recruitment System - Upload Resume");
+                    
+                    // Force layout update to ensure components resize properly
+                    resumeRoot.requestLayout();
+                    stage.sizeToScene();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    messageLabel.setText("Failed to load upload resume page");
+                }
+            });
+
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
@@ -190,7 +372,8 @@ public class TAUploadResumeController {
             Parent root = loader.load();
             TADashboardController controller = loader.getController();
             controller.setUser(user, false);
-            
+            controller.setStage(stage);
+
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
@@ -203,6 +386,7 @@ public class TAUploadResumeController {
     
     @FXML
     private void handleLogout(ActionEvent event) {
+        NavigationHistory.getInstance().clear();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
@@ -217,9 +401,32 @@ public class TAUploadResumeController {
             
             controller.setStage(currentStage);
             
-            Scene scene = new Scene(root, 800, 600);
+            // Save current window state
+            boolean isFullScreen = currentStage.isFullScreen();
+            double currentWidth = currentStage.getWidth();
+            double currentHeight = currentStage.getHeight();
+            
+            // Create new scene without hardcoded size
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            
+            // Apply saved window state
             currentStage.setScene(scene);
+            if (isFullScreen) {
+                currentStage.setFullScreen(true);
+            } else if (currentWidth > 0 && currentHeight > 0) {
+                currentStage.setWidth(currentWidth);
+                currentStage.setHeight(currentHeight);
+            } else {
+                // Default size if no previous size
+                currentStage.setWidth(800);
+                currentStage.setHeight(600);
+            }
             currentStage.setTitle("BUPT International School TA Recruitment System - Login");
+                
+                // Force layout update to ensure components resize properly
+
+
         } catch (Exception e) {
             e.printStackTrace();
             messageLabel.setText("Failed to load page");

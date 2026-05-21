@@ -1,0 +1,12 @@
+package model;
+
+public enum Permission {
+    // TA permissions
+    TA_VIEW_PROFILE, TA_EDIT_PROFILE, TA_UPLOAD_RESUME, TA_APPLY_JOB, TA_VIEW_APPLICATIONS,
+    
+    // MO permissions
+    MO_CREATE_JOB, MO_VIEW_MY_JOBS, MO_REVIEW_APPLICATIONS, MO_EXPORT_DATA,
+    
+    // Admin permissions
+    ADMIN_MANAGE_USERS, ADMIN_APPROVE_JOBS, ADMIN_VIEW_LOGS, ADMIN_MANAGE_SYSTEM
+}

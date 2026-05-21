@@ -8,16 +8,17 @@
 <AnchorPane fx:id="createJobPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MOCreateJobController">
     <VBox alignment="CENTER" spacing="0" styleClass="root" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <HBox styleClass="navbar" spacing="24" alignment="CENTER_LEFT" style="-fx-padding: 0 24px;">
-            <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
+            <Label text="BUPT TA System" styleClass="navbar-title" />
             <HBox spacing="16" alignment="CENTER_LEFT" style="-fx-padding: 0 24px;">
-                <Button text="Home" styleClass="navbar-menu" onAction="#handleHome" />
-                <Button text="Create Job" styleClass="navbar-menu active" />
-                <Button text="Application Review" styleClass="navbar-menu" />
-                <Button text="Job Board" styleClass="navbar-menu" />
+                <Button text="Home" styleClass="navbar-menu" onAction="#handleHome" accessibleText="Go to home page" />
+                <Button text="Create Job" styleClass="navbar-menu active" accessibleText="Create a new job posting" />
+                <Button text="Application Review" styleClass="navbar-menu" accessibleText="Review job applications" />
+                <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
+                <Button text="Job Board" styleClass="navbar-menu" accessibleText="Browse job board" />
             </HBox>
             <HBox spacing="16" alignment="CENTER_RIGHT" style="-fx-padding: 0 24px; -fx-fill-width: true; -fx-alignment: center-right;">
                 <Label fx:id="welcomeLabel" style="-fx-text-fill: white; -fx-font-size: 14px;" />
-                <Button text="Logout" styleClass="btn btn-secondary" onAction="#handleLogout" style="-fx-min-width: 80px;" />
+                <Button text="Back to Dashboard" styleClass="btn btn-secondary" onAction="#handleHome" style="-fx-min-width: 140px;" accessibleText="Return to dashboard" />
             </HBox>
         </HBox>
 
@@ -28,41 +29,152 @@
                     <Label text="Fill in the details below to publish a new opening" styleClass="subtitle" />
                 </VBox>
 
-                <VBox styleClass="container shadow-lg" maxWidth="800" style="-fx-pref-width: 90%; -fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 32px;" spacing="24">
+                <VBox styleClass="container shadow-lg" maxWidth="900" style="-fx-pref-width: 90%; -fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 32px;" spacing="24">
                     <GridPane hgap="16" vgap="16" style="-fx-pref-width: 100%;">
+                        <columnConstraints>
+                            <ColumnConstraints minWidth="120" prefWidth="150" />
+                            <ColumnConstraints hgrow="ALWAYS" minWidth="200" />
+                            <ColumnConstraints minWidth="120" prefWidth="150" />
+                            <ColumnConstraints hgrow="ALWAYS" minWidth="200" />
+                        </columnConstraints>
+
                         <Label text="Job Title" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="titleField" promptText="Enter the job title" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.columnSpan="3" />
+                        <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                            <TextField fx:id="titleField"
+                                       promptText="Enter the job title"
+                                       styleClass="form-field"
+                                       accessibleText="Enter job title"
+                                       focusTraversable="true" />
+                            <Label fx:id="titleError" styleClass="form-error" visible="false" managed="false" />
+                        </VBox>
 
-                        <Label text="Job Type" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="typeComboBox" promptText="Select job type" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Job Type" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                        <VBox spacing="4" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                            <ComboBox fx:id="typeComboBox"
+                                      promptText="Select job type"
+                                      styleClass="combo-box"
+                                      accessibleText="Select job type"
+                                      focusTraversable="true" />
+                            <Label fx:id="typeError" styleClass="form-error" visible="false" managed="false" />
+                        </VBox>
 
-                        <Label text="Department" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <ComboBox fx:id="departmentComboBox" promptText="Select department" styleClass="form-field" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label text="Department" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                            <ComboBox fx:id="departmentComboBox"
+                                      promptText="Select department"
+                                      styleClass="combo-box"
+                                      accessibleText="Select department"
+                                      focusTraversable="true" />
+                            <Label fx:id="departmentError" styleClass="form-error" visible="false" managed="false" />
+                        </VBox>
 
-                        <Label text="Work Time" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                        <TextField fx:id="workTimeField" promptText="Example: 10 hours per week" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="3" />
+                        <Label text="Weekly Schedule" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <VBox spacing="6" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                            <GridPane hgap="8" vgap="6">
+                                <columnConstraints>
+                                    <ColumnConstraints minWidth="70" prefWidth="70" />
+                                    <ColumnConstraints minWidth="120" prefWidth="140" hgrow="ALWAYS" />
+                                </columnConstraints>
+
+                                <CheckBox fx:id="monCheckBox" text="Mon" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <TextField fx:id="monHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                <CheckBox fx:id="tueCheckBox" text="Tue" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                <TextField fx:id="tueHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <CheckBox fx:id="wedCheckBox" text="Wed" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                <TextField fx:id="wedHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                <CheckBox fx:id="thuCheckBox" text="Thu" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                <TextField fx:id="thuHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                <CheckBox fx:id="friCheckBox" text="Fri" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                <TextField fx:id="friHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                <CheckBox fx:id="satCheckBox" text="Sat" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                <TextField fx:id="satHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                <CheckBox fx:id="sunCheckBox" text="Sun" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                                <TextField fx:id="sunHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                            </GridPane>
+                            <Label fx:id="workTimeError" styleClass="form-error" visible="false" managed="false" />
+                        </VBox>
+
+                        <Label text="Start Date" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                            <TextField fx:id="startDateField"
+                                       promptText="MM-DD-YYYY"
+                                       styleClass="form-field"
+                                       accessibleText="Enter start date in format MM-DD-YYYY"
+                                       focusTraversable="true" />
+                            <Label fx:id="startDateError" styleClass="form-error" visible="false" managed="false" />
+                        </VBox>
+
+                        <Label text="End Date" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <VBox spacing="4" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                            <TextField fx:id="deadlineField"
+                                       promptText="MM-DD-YYYY"
+                                       styleClass="form-field"
+                                       accessibleText="Enter end date in format MM-DD-YYYY"
+                                       focusTraversable="true" />
+                            <Label fx:id="deadlineError" styleClass="form-error" visible="false" managed="false" />
+                            <Label text="Format: MM-DD-YYYY" styleClass="form-hint" />
+                        </VBox>
 
                         <Label text="Openings" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-                        <TextField fx:id="recruitNumField" promptText="Enter number of openings" styleClass="form-field" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-                        <Label text="Deadline" styleClass="form-label" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <TextField fx:id="deadlineField" promptText="Example: 2026-04-30" styleClass="form-field" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                            <TextField fx:id="recruitNumField"
+                                       promptText="Enter number of openings"
+                                       styleClass="form-field"
+                                       accessibleText="Enter number of positions available"
+                                       focusTraversable="true" />
+                            <Label fx:id="recruitNumError" styleClass="form-error" visible="false" managed="false" />
+                        </VBox>
 
                         <Label text="Job Description" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-                        <TextArea fx:id="descriptionArea" promptText="Describe the responsibilities and expectations" styleClass="form-field" style="-fx-min-height: 120px;" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.columnSpan="3" />
+                        <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.columnSpan="3">
+                            <TextArea fx:id="descriptionArea"
+                                      promptText="Describe the responsibilities and expectations"
+                                      styleClass="text-area"
+                                      style="-fx-min-height: 120px;"
+                                      accessibleText="Enter job description and responsibilities"
+                                      focusTraversable="true" />
+                            <Label fx:id="descriptionError" styleClass="form-error" visible="false" managed="false" />
+                        </VBox>
 
-                        <Label text="Skills" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="5" />
-                        <TextArea fx:id="skillsArea" promptText="Enter skills separated by commas" styleClass="form-field" style="-fx-min-height: 80px;" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.columnSpan="3" />
+                        <Label text="Required Skills" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                        <VBox spacing="4" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.columnSpan="3">
+                            <TextArea fx:id="skillsArea"
+                                      promptText="Enter skills separated by commas (e.g., Java, Python, Machine Learning)"
+                                      styleClass="text-area"
+                                      style="-fx-min-height: 80px;"
+                                      accessibleText="Enter required skills separated by commas"
+                                      focusTraversable="true" />
+                            <Label fx:id="skillsError" styleClass="form-error" visible="false" managed="false" />
+                            <Label text="Separate skills with commas" styleClass="form-hint" />
+                        </VBox>
                     </GridPane>
 
-                    <Label fx:id="errorMessage" styleClass="error-message" />
-
                     <HBox spacing="16" alignment="CENTER" style="-fx-pref-width: 100%;">
-                        <Button fx:id="cancelButton" text="Cancel" styleClass="btn btn-secondary" onAction="#handleCancel" style="-fx-pref-width: 120px;" />
-                        <Button fx:id="submitButton" text="Publish Job" styleClass="btn btn-primary" onAction="#handleSubmit" style="-fx-pref-width: 120px;" />
+                        <Button fx:id="cancelButton"
+                                text="Cancel"
+                                styleClass="btn btn-secondary"
+                                onAction="#handleCancel"
+                                style="-fx-pref-width: 120px;"
+                                accessibleText="Cancel and go back" />
+                        <Button fx:id="submitButton"
+                                text="Publish Job"
+                                styleClass="btn btn-primary"
+                                onAction="#handleSubmit"
+                                style="-fx-pref-width: 140px;"
+                                accessibleText="Publish the job position" />
+                    </HBox>
+
+                    <HBox spacing="16" alignment="CENTER">
+                        <Label text="Keyboard shortcuts:" style="-fx-font-size: 12px; -fx-text-fill: #9e9e9e;" />
+                        <Label text="Ctrl+S" styleClass="kbd" />
+                        <Label text="to save" style="-fx-font-size: 12px; -fx-text-fill: #9e9e9e;" />
+                        <Region style="-fx-pref-width: 16px;" />
+                        <Label text="Esc" styleClass="kbd" />
+                        <Label text="to cancel" style="-fx-font-size: 12px; -fx-text-fill: #9e9e9e;" />
                     </HBox>
                 </VBox>
             </VBox>
         </ScrollPane>
     </VBox>
 </AnchorPane>
+
