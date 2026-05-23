@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="moDashboardPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MODashboardController">
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-fill-width: true; -fx-min-height: 72px;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <StackPane styleClass="user-avatar mo">
+                    <Label text="MO" style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #ffffff;" />
+                </StackPane>
+                <Label text="Welcome, Module Organizer" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 4; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu active" onAction="#handleHome" />
+                <Button text="Job Board" styleClass="navbar-menu" onAction="#handleJobManagement" />
+                <Button text="My Jobs" styleClass="navbar-menu" onAction="#handleViewMyJobs" />
+                <Button text="Applications" styleClass="navbar-menu" onAction="#handleApplicationManagement" />
+                <Button text="Profile" styleClass="navbar-menu" onAction="#handlePersonalCenter" />
+                <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 100px;" onAction="#handleLogout" />
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
+        <VBox style="-fx-padding: 48px 24px; -fx-spacing: 48px; -fx-fill-width: true; -fx-alignment: center;">
+            <VBox style="-fx-spacing: 8; -fx-alignment: center-left; -fx-fill-width: true;">
+                <Label text="Module Organizer Dashboard" styleClass="page-title" />
+                <Label text="Manage job postings and review applications" styleClass="page-subtitle" />
+            </VBox>
+            
+            <HBox style="-fx-spacing: 24; -fx-fill-width: true; -fx-alignment: center;">
+                <VBox styleClass="stat-card">
+                    <Label text="📁" style="-fx-font-size: 36px;" />
+                    <Label fx:id="publishedJobsLabel" text="8" styleClass="stat-value" />
+                    <Label text="My Jobs" styleClass="stat-label" />
+                </VBox>
+                <VBox styleClass="stat-card">
+                    <Label text="👥" style="-fx-font-size: 36px;" />
+                    <Label fx:id="totalApplicationsLabel" text="42" styleClass="stat-value" />
+                    <Label text="Total Applications" styleClass="stat-label" />
+                </VBox>
+                <VBox styleClass="stat-card">
+                    <Label text="✓" style="-fx-font-size: 36px;" />
+                    <Label fx:id="acceptedApplicationsLabel" text="15" styleClass="stat-value" />
+                    <Label text="Accepted Applicants" styleClass="stat-label" />
+                </VBox>
+            </HBox>
+            
+            <VBox styleClass="card" maxWidth="Infinity">
+                <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true; -fx-padding: 0 0 16 0;">
+                    <VBox style="-fx-spacing: 4;" HBox.hgrow="ALWAYS">
+                        <Label text="My Posted Jobs" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #374151;" />
+                        <Label text="Review every position you created. Click a row to open job details." style="-fx-font-size: 12px; -fx-text-fill: #6b7280;" />
+                    </VBox>
+                    <Label fx:id="resultCountLabel" text="Results: 0 positions" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;" />
+                    <Label text="Double-click for details" style="-fx-font-size: 12px; -fx-text-fill: #9ca3af; -fx-padding: 4px 10px; -fx-background-color: #f3f4f6; -fx-background-radius: 6px;" />
+                </HBox>
+
+                <TableView fx:id="jobsTable" styleClass="table-view" style="-fx-pref-height: 450px; -fx-min-height: 300px; -fx-max-height: 500px;">
+                    <columns>
+                        <TableColumn fx:id="titleCol" text="Job Title" prefWidth="180" />
+                        <TableColumn fx:id="departmentCol" text="Department" prefWidth="180" />
+                        <TableColumn fx:id="jobTypeCol" text="Job Type" prefWidth="140" />
+                        <TableColumn fx:id="requirementsCol" text="Requirements" prefWidth="280" />
+                        <TableColumn fx:id="deadlineCol" text="Deadline" prefWidth="120" />
+                        <TableColumn fx:id="statusCol" text="Status" prefWidth="120" />
+                        <TableColumn fx:id="appCountCol" text="Applications" prefWidth="100" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                    <placeholder>
+                        <VBox alignment="CENTER" style="-fx-spacing: 10; -fx-padding: 48px;">
+                            <Label text="No jobs created yet" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #4b5563;" />
+                            <Label text="Use Create Job below to publish your first opening" style="-fx-font-size: 13px; -fx-text-fill: #6b7280;" />
+                        </VBox>
+                    </placeholder>
+                </TableView>
+            </VBox>
+            
+            <VBox styleClass="card" style="-fx-fill-width: true;">
+                <Label text="Quick Actions" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #374151; -fx-padding: 0 0 16 0;" />
+                <HBox style="-fx-spacing: 12; -fx-alignment: center-left; -fx-fill-width: true;">
+                    <Button text="Create Job" styleClass="btn btn-primary" onAction="#handleCreateJob" />
+                    <Button text="My Jobs" styleClass="btn btn-secondary" onAction="#handleViewMyJobs" />
+                    <Button text="Application Review" styleClass="btn btn-secondary" onAction="#handleViewApplications" />
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button text="Export Data" styleClass="btn btn-outline" onAction="#handleExportData" />
+                </HBox>
+            </VBox>
+            
+            <HBox styleClass="keyboard-shortcuts">
+                <Label text="Keyboard shortcuts:" />
+                <Label text="Ctrl+N" styleClass="kbd" />
+                <Label text="to create job" />
+                <Region style="-fx-pref-width: 16px;" />
+                <Label text="Ctrl+F" styleClass="kbd" />
+                <Label text="to search" />
+                <Region style="-fx-pref-width: 16px;" />
+                <Label text="Esc" styleClass="kbd" />
+                <Label text="to go home" />
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>

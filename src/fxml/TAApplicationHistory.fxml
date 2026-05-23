@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TAApplicationHistoryController">
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 4; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu" onAction="#handleBack" accessibleText="Go to home page" />
+                <Button text="Job Board" styleClass="navbar-menu" onAction="#handleJobRequirements" accessibleText="View job requirements" />
+                <Button text="Applications" styleClass="navbar-menu active" onAction="#handleApplicationManagement" accessibleText="Manage your applications" />
+                <Button text="Profile" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
+                <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" accessibleText="Log out" />
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <ScrollPane fitToWidth="true" style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="64.0">
+        <VBox style="-fx-padding: 32px; -fx-spacing: 24px; -fx-background-color: #f8f9fa; -fx-pref-width: 1220px;">
+            <VBox style="-fx-spacing: 8;">
+                <Label text="My Application History" styleClass="page-title" />
+                <Label text="Track submitted applications, review results and withdraw an active application before the deadline." styleClass="page-subtitle" />
+            </VBox>
+
+            <HBox spacing="20" alignment="CENTER_LEFT">
+                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 16px; -fx-border-color: #e5e7eb; -fx-border-width: 1px; -fx-padding: 24px; -fx-spacing: 14; -fx-pref-width: 200px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);" accessibleText="Total number of applications">
+                    <HBox style="-fx-spacing: 10; -fx-alignment: center-left;">
+                        <Label style="-fx-font-size: 32px;">📊</Label>
+                        <Label text="Total Applications" style="-fx-font-size: 13px; -fx-text-fill: #4b5563; -fx-font-weight: 500;" />
+                    </HBox>
+                    <Label fx:id="totalApplicationsLabel" text="0" style="-fx-font-size: 44px; -fx-font-weight: 800; -fx-text-fill: #1f2937;" />
+                    <Label text="Total applications submitted" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" />
+                </VBox>
+                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 16px; -fx-border-color: #e5e7eb; -fx-border-width: 1px; -fx-padding: 24px; -fx-spacing: 14; -fx-pref-width: 220px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);" accessibleText="Number of active applications">
+                    <HBox style="-fx-spacing: 10; -fx-alignment: center-left;">
+                        <Label style="-fx-font-size: 32px;">✨</Label>
+                        <Label text="Active Applications" style="-fx-font-size: 13px; -fx-text-fill: #4b5563; -fx-font-weight: 500;" />
+                    </HBox>
+                    <Label fx:id="activeApplicationsLabel" text="0" style="-fx-font-size: 44px; -fx-font-weight: 800; -fx-text-fill: #1f2937;" />
+                    <Label text="Pending review or processing" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" />
+                </VBox>
+                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 16px; -fx-border-color: #e5e7eb; -fx-border-width: 1px; -fx-padding: 24px; -fx-spacing: 14; -fx-pref-width: 240px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);" accessibleText="Application result summary">
+                    <HBox style="-fx-spacing: 10; -fx-alignment: center-left;">
+                        <Label style="-fx-font-size: 32px;">🎯</Label>
+                        <Label text="Result Summary" style="-fx-font-size: 13px; -fx-text-fill: #4b5563; -fx-font-weight: 500;" />
+                    </HBox>
+                    <HBox style="-fx-spacing: 12;">
+                        <VBox style="-fx-spacing: 4;">
+                            <Label text="Accepted" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" />
+                            <Label fx:id="acceptedLabel" text="0" style="-fx-font-size: 32px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
+                        </VBox>
+                        <Label text="|" style="-fx-text-fill: #d1d5db;" />
+                        <VBox style="-fx-spacing: 4;">
+                            <Label text="Rejected" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" />
+                            <Label fx:id="rejectedLabel" text="0" style="-fx-font-size: 32px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
+                        </VBox>
+                    </HBox>
+                    <Label text="Application outcomes" style="-fx-font-size: 11px; -fx-text-fill: #6b7280;" />
+                </VBox>
+                <Region HBox.hgrow="ALWAYS" />
+                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 16px; -fx-padding: 24px; -fx-spacing: 16; -fx-pref-width: 250px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);">
+                    <Label text="Filters" style="-fx-font-size: 15px; -fx-font-weight: 600; -fx-text-fill: #1f2937;" />
+                    <ComboBox fx:id="statusFilter" onAction="#handleFilterChange" promptText="All Status" style="-fx-pref-width: 200px; -fx-background-color: #f3f4f6; -fx-border-color: #e5e7eb; -fx-border-width: 1px; -fx-border-radius: 8px; -fx-padding: 8px 12px;" accessibleText="Filter by application status" />
+                    <ComboBox fx:id="departmentFilter" onAction="#handleFilterChange" promptText="All Departments" style="-fx-pref-width: 200px; -fx-background-color: #f3f4f6; -fx-border-color: #e5e7eb; -fx-border-width: 1px; -fx-border-radius: 8px; -fx-padding: 8px 12px;" accessibleText="Filter by department" />
+                </VBox>
+            </HBox>
+
+            <HBox spacing="24" alignment="TOP_LEFT">
+                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 16px; -fx-padding: 28px; -fx-spacing: 20; -fx-pref-width: 850px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 4);">
+                    <HBox style="-fx-spacing: 16; -fx-alignment: center-left;">
+                        <Label text="Submitted Applications" style="-fx-font-size: 19px; -fx-font-weight: 600; -fx-text-fill: #1f2937;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label fx:id="applicationCountLabel" text="0 applications" style="-fx-font-size: 13px; -fx-text-fill: #6b7280; -fx-background-color: #f3f4f6; -fx-padding: 4px 12px; -fx-background-radius: 6px;" />
+                    </HBox>
+                    <TableView fx:id="applicationsTable" style="-fx-pref-height: 400px; -fx-background-color: #fafafa; -fx-background-radius: 12px; -fx-border-color: #e5e7eb; -fx-border-width: 1px;" accessibleText="List of your submitted applications">
+                        <columns>
+                            <TableColumn fx:id="jobTitleColumn" text="Job Title" prefWidth="190" />
+                            <TableColumn fx:id="departmentColumn" text="Department" prefWidth="140" />
+                            <TableColumn fx:id="appliedAtColumn" text="Applied At" prefWidth="170" />
+                            <TableColumn fx:id="statusColumn" text="Status" prefWidth="120" />
+                            <TableColumn fx:id="reviewTimeColumn" text="Review Time" prefWidth="170" />
+                            <TableColumn fx:id="matchScoreColumn" text="Match Score" prefWidth="120" />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                        <placeholder>
+                            <VBox alignment="CENTER" style="-fx-spacing: 16; -fx-padding: 60px;">
+                                <Label style="-fx-font-size: 56px;">📋</Label>
+                                <Label text="No applications found" style="-fx-font-size: 17px; -fx-font-weight: 600; -fx-text-fill: #374151;" />
+                                <Label text="Start applying for positions to see your application history" style="-fx-font-size: 13px; -fx-text-fill: #6b7280;" />
+                            </VBox>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+
+                <VBox style="-fx-background-color: #ffffff; -fx-background-radius: 16px; -fx-padding: 28px; -fx-spacing: 20; -fx-pref-width: 370px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 12, 0, 0, 4);">
+                    <Label text="Application Detail" style="-fx-font-size: 19px; -fx-font-weight: 600; -fx-text-fill: #1f2937;" />
+                    <VBox style="-fx-spacing: 20;">
+                        <VBox style="-fx-spacing: 6;">
+                            <Label text="Job" style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: 500;" />
+                            <Label fx:id="detailTitleLabel" text="No application selected" wrapText="true" style="-fx-font-size: 17px; -fx-font-weight: 600; -fx-text-fill: #1f2937;" />
+                        </VBox>
+                        <Separator style="-fx-background-color: #e5e7eb; -fx-pref-height: 1px;" />
+                        <VBox style="-fx-spacing: 16;">
+                            <HBox style="-fx-spacing: 12;">
+                                <Label text="Status" style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: 500; -fx-min-width: 95px;" />
+                                <Label fx:id="detailStatusLabel" text="-" style="-fx-font-weight: 500; -fx-text-fill: #374151;" />
+                            </HBox>
+                            <HBox style="-fx-spacing: 12;">
+                                <Label text="Applied At" style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: 500; -fx-min-width: 95px;" />
+                                <Label fx:id="detailAppliedAtLabel" text="-" style="-fx-text-fill: #374151;" />
+                            </HBox>
+                            <HBox style="-fx-spacing: 12;">
+                                <Label text="Review Time" style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: 500; -fx-min-width: 95px;" />
+                                <Label fx:id="detailReviewTimeLabel" text="-" style="-fx-text-fill: #374151;" />
+                            </HBox>
+                            <HBox style="-fx-spacing: 12;">
+                                <Label text="Match Score" style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: 500; -fx-min-width: 95px;" />
+                                <Label fx:id="detailMatchScoreLabel" text="-" style="-fx-font-weight: 700; -fx-text-fill: #059669;" />
+                            </HBox>
+                        </VBox>
+                        <Separator style="-fx-background-color: #e5e7eb; -fx-pref-height: 1px;" />
+                        <VBox style="-fx-spacing: 6;">
+                            <Label text="Feedback" style="-fx-font-size: 12px; -fx-text-fill: #6b7280; -fx-font-weight: 500;" />
+                            <TextArea fx:id="detailCommentArea" text="Select an application to view feedback." editable="false" wrapText="true" style="-fx-min-height: 130px; -fx-background-color: #f9fafb; -fx-background-radius: 10px; -fx-border-color: #e5e7eb; -fx-border-width: 1px; -fx-padding: 14px; -fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                        </VBox>
+                    </VBox>
+                    <Button fx:id="withdrawButton" text="Withdraw Application" style="-fx-background-color: #dc2626; -fx-text-fill: #ffffff; -fx-font-weight: 600; -fx-font-size: 14px; -fx-pref-width: 100%; -fx-min-width: 200px; -fx-padding: 12px; -fx-background-radius: 10px;" onAction="#handleWithdrawApplication" accessibleText="Withdraw the selected application" />
+                </VBox>
+            </HBox>
+
+            <HBox spacing="16" alignment="CENTER">
+                <Label text="Keyboard shortcuts:" style="-fx-font-size: 12px; -fx-text-fill: #9e9e9e;" />
+                <Label text="Ctrl+F" styleClass="kbd" />
+                <Label text="to filter" style="-fx-font-size: 12px; -fx-text-fill: #9e9e9e;" />
+                <Region style="-fx-pref-width: 16px;" />
+                <Label text="Esc" styleClass="kbd" />
+                <Label text="to go back" style="-fx-font-size: 12px; -fx-text-fill: #9e9e9e;" />
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>
+
+

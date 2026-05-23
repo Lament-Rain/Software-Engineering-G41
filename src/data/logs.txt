@@ -1,0 +1,651 @@
+Log{id='4fc926c5-c443-4e70-8b8e-0884edd4f75c', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-12T12:54:14.667296200', ip='null'}
+Log{id='d90cde68-141a-480d-aa60-f829e29f4e44', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T17:44:50.309565200', ip='unknown'}
+Log{id='4d4ab381-3c5b-4a42-9706-c113810d349e', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T17:45:28.291542', ip='unknown'}
+Log{id='b661ca7b-04c2-465b-9761-8cb8c7b3e910', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T17:47:40.093407', ip='unknown'}
+Log{id='5083d703-716f-451d-8eff-99b18b715ad5', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T17:48:11.327839600', ip='unknown'}
+Log{id='4f8df1c5-9f2e-4fcd-aa66-63dd106e75dd', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T17:49:26.316438800', ip='unknown'}
+Log{id='3b04848d-8f49-4cb4-9a21-e51e513d936d', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T17:50:39.379869', ip='unknown'}
+Log{id='e13dae75-1465-4c71-bd2c-b3f7cb52df17', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T17:51:03.232924200', ip='unknown'}
+Log{id='22c1fcdf-3051-4d15-82d1-30295a539268', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T17:52:21.176170200', ip='unknown'}
+Log{id='b1c88ac0-15dd-446d-85ac-166c8ef7447b', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T17:54:04.894116900', ip='unknown'}
+Log{id='3ead88a9-9a8b-4cfa-972e-2b30e2408357', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T18:18:21.345136900', ip='unknown'}
+Log{id='df2cc14b-1026-4980-b1f3-0617d1e8eb83', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-18T18:20:30.836576600', ip='unknown'}
+Log{id='e1dd83cc-feaa-4c0d-8f44-b6a867f29434', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T18:51:04.580291500', ip='unknown'}
+Log{id='aec31be3-ab80-442b-9ff4-95ae1b76d8ee', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T18:53:19.523278600', ip='unknown'}
+Log{id='164154a6-9d78-452b-a83d-73d9cf876de0', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T19:47:07.125945700', ip='unknown'}
+Log{id='8eaffa2a-0a8d-4888-9619-18cbd08b0ef7', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T20:02:35.828247600', ip='unknown'}
+Log{id='4782d828-4183-468a-b668-28a811d93b23', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T20:17:34.278397400', ip='unknown'}
+Log{id='698ee087-306f-4fe0-b768-8043be9e2961', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T20:18:28.547760600', ip='unknown'}
+Log{id='92ca35d3-cc40-4f94-ae86-ffdde40b2ad1', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T20:19:14.553843600', ip='unknown'}
+Log{id='ba8a1d2e-2522-49b6-9c3c-b43357b39b34', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T20:42:52.756899800', ip='unknown'}
+Log{id='8252210d-33f2-45da-9745-cb1bb870e6b5', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T21:40:27.333910800', ip='unknown'}
+Log{id='f3f3bfe5-1e38-4823-9bb7-8c19842e4425', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T21:41:08.511206200', ip='unknown'}
+Log{id='ab167d31-4337-4206-aa4e-fab91c267b48', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T21:46:20.669011700', ip='unknown'}
+Log{id='16ec7d9b-5e6a-4954-a026-71cf47dcfda5', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-18T21:47:14.908881600', ip='unknown'}
+Log{id='ffe596a9-1980-42ef-aed9-79aded13e615', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-18T21:47:20.221176200', ip='unknown'}
+Log{id='ea751ba9-a6d0-4acf-8463-5baa6eb0c9f3', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-18T21:48:03.451752700', ip='unknown'}
+Log{id='76f9a7c2-ccb6-4b42-a452-1ffc0e892732', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-18T21:48:06.571838700', ip='unknown'}
+Log{id='c2ccb0bf-0162-4208-baa0-3f1e41237ce7', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-18T23:24:39.418079800', ip='unknown'}
+Log{id='c15f9006-82e7-4550-9470-652ec546766c', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T00:33:48.714934100', ip='unknown'}
+Log{id='ecc79e8c-2abe-4e77-b43a-285921e3f0f3', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T00:38:43.512490700', ip='unknown'}
+Log{id='92e18927-9a83-4c19-b121-dda361486fbd', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T00:44:02.159120100', ip='unknown'}
+Log{id='73ab36a3-ac89-46ff-a263-18402ffa479f', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T01:00:49.808453200', ip='unknown'}
+Log{id='cc81feb4-7972-441c-a58e-b4339a756c85', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T01:09:10.854342600', ip='unknown'}
+Log{id='40b9b79a-9704-4ab5-9e05-8159bfc497a1', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T15:06:45.896875900', ip='unknown'}
+Log{id='6be1f441-f0ab-47f3-9d7d-92200d3831f0', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T15:15:59.407374800', ip='unknown'}
+Log{id='ee08f2fd-400a-4635-bc78-f28835464ab5', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T15:28:12.802898700', ip='unknown'}
+Log{id='88864e3b-f08d-4fd0-b788-341dafb845d0', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T15:53:05.843140', ip='unknown'}
+Log{id='3157840a-4628-41ea-a9d0-bc9778dec3aa', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T15:55:13.321948200', ip='unknown'}
+Log{id='84bf4300-aa05-4a18-bff3-a319bf944d4c', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T16:17:39.474041300', ip='unknown'}
+Log{id='35f2fdc4-4876-46c8-90cc-f5b022dd0e89', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T16:19:52.064704300', ip='unknown'}
+Log{id='24d95416-0e93-46bd-a992-43fed5b451e7', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T16:35:25.923292', ip='unknown'}
+Log{id='f47c773c-eedd-4156-b92a-cf0cadaf45a4', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T16:46:25.231609700', ip='unknown'}
+Log{id='740d6a08-51fd-474e-b420-0d547fe03fa4', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T16:53:22.061338600', ip='unknown'}
+Log{id='42bf6bca-b49f-4ba7-be9e-38916c7514db', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T17:34:19.149780700', ip='unknown'}
+Log{id='06258cfd-78aa-4caf-8a9f-2b3d33946a21', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T17:51:21.493979700', ip='unknown'}
+Log{id='b610a350-1bf5-42fe-ad0e-3fd14757ec19', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T17:59:31.299546', ip='unknown'}
+Log{id='5eb2fe33-ff54-4199-8f02-8aa3c4a73873', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T18:18:07.036343', ip='unknown'}
+Log{id='7e09b65e-54c1-411d-8b27-3a2a4e7cb8e2', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T20:01:55.237789900', ip='unknown'}
+Log{id='977110aa-1ea4-4e5d-8cae-b365a30dc6dc', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T20:08:39.933063400', ip='unknown'}
+Log{id='349a20bf-3184-42ca-bcb1-370a1d711600', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T20:11:25.473840', ip='unknown'}
+Log{id='7f00f91c-71dc-4478-b787-c512cfe358ab', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T20:11:56.318315600', ip='unknown'}
+Log{id='4a50fceb-c008-4c4c-bf0a-c0d865ae9b5f', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T20:16:32.178627300', ip='unknown'}
+Log{id='a9dd6d99-8deb-49cd-8efe-24e0554acdc6', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T20:16:53.720100900', ip='unknown'}
+Log{id='920ac556-c001-474a-89c6-bc15d1755ab2', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-19T21:36:12.938571900', ip='unknown'}
+Log{id='a2b9784e-09ca-4e74-8cf3-ebb14d7f5307', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-19T21:41:28.621132900', ip='unknown'}
+Log{id='dc94d189-26a8-4d37-b3e6-f15c89e5c8c7', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-19T22:41:34.495020200', ip='unknown'}
+Log{id='e68d4c0d-e531-4daf-8b8c-bc660dd9c658', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-19T22:50:40.240667300', ip='unknown'}
+Log{id='6a3835f4-367e-4e55-8fd7-ad557ff73407', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-19T23:33:24.617848600', ip='unknown'}
+Log{id='bfb6508a-8350-4923-88f7-2580482cf6ab', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-19T23:39:05.928375500', ip='unknown'}
+Log{id='ff76aca2-b0a1-4a36-a4a5-ade41184cac0', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-19T23:39:08.790369900', ip='unknown'}
+Log{id='d81bf3bd-884e-4ad9-9e2c-53afeb115566', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-19T23:48:50.426633100', ip='unknown'}
+Log{id='73a2e749-4c31-4d54-9dcd-2cfe462138c1', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T00:01:46.906027200', ip='unknown'}
+Log{id='f6db2ac1-cc33-404d-83af-07d2906d11ac', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T00:48:29.484147800', ip='unknown'}
+Log{id='c9608149-35f2-48b5-82e7-8592becab1d4', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T01:32:51.671079900', ip='unknown'}
+Log{id='88078704-b061-4513-9707-d37bb2f7cfc8', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T01:38:20.511262800', ip='unknown'}
+Log{id='71830f46-3efa-4d7f-bd72-4970818c68b8', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T01:40:43.008013700', ip='unknown'}
+Log{id='3722a295-2416-4010-9d43-a3d759b488bd', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T10:17:02.455490400', ip='unknown'}
+Log{id='a337b0fc-506c-48e9-9e8a-80d880e39c6a', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T10:35:12.294316500', ip='unknown'}
+Log{id='6300f2fe-6d98-4423-aa8d-6582337f79e3', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T10:46:08.505322900', ip='unknown'}
+Log{id='6deb82bd-c070-457d-811e-b6b8edd7b430', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T11:09:53.866490200', ip='unknown'}
+Log{id='ea724746-9bab-41c3-8c78-4e498221e270', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T11:54:18.263278200', ip='unknown'}
+Log{id='da466415-93b1-43c9-a895-a85e261a98d2', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T12:07:41.207550700', ip='unknown'}
+Log{id='e572d0d3-b505-4760-8f78-8bbdec1605ae', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T13:09:10.783373700', ip='unknown'}
+Log{id='610056e3-f296-482e-a651-ac207cdda016', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T13:10:28.902159200', ip='unknown'}
+Log{id='f173a742-04c6-4f01-a290-47b9872964df', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T13:12:57.611709600', ip='unknown'}
+Log{id='603f9e7c-8ea3-4ef7-b016-bcd2e87d0616', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T13:47:37.047581', ip='unknown'}
+Log{id='9769ead5-e6f8-4305-aec5-107e29c5836a', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T13:51:16.110440500', ip='unknown'}
+Log{id='d98f0121-63ad-469f-8598-657a90dbd98c', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-20T13:52:24.175964800', ip='unknown'}
+Log{id='67bafa48-d044-4e27-8c15-cedc89d5e7c8', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-20T13:53:24.179383300', ip='unknown'}
+Log{id='098f6d9d-8144-491b-98c9-0608719462ea', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-20T13:54:24.177199500', ip='unknown'}
+Log{id='6c1d74b0-8048-4c19-a335-20e0ad29b4e4', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-20T13:55:24.180180800', ip='unknown'}
+Log{id='d8d773b1-e0a9-4f4c-853b-7e06a07e7ae9', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-20T13:55:58.787380800', ip='unknown'}
+Log{id='d7fdac69-09d8-470b-8a70-e262d32b6dae', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-20T13:56:26.942471600', ip='unknown'}
+Log{id='32d9bb25-2bde-4696-abb4-01fd598fabbe', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T13:56:47.986762200', ip='unknown'}
+Log{id='79f0869a-0c9c-4f35-b196-6b88bd6e0987', action='REVIEW_TA_PROFILE', user='admin', details='TA profile reviewed: hcyy - APPROVED', timestamp='2026-04-20T13:57:03.039411500', ip='unknown'}
+Log{id='4064acf5-f009-4168-aba2-e7b0e0247423', action='REVIEW_TA_PROFILE', user='admin', details='TA profile reviewed: hcyy - APPROVED', timestamp='2026-04-20T13:57:08.760110900', ip='unknown'}
+Log{id='cfe6bbb2-470a-4a76-a236-30614a035616', action='REVIEW_TA_PROFILE', user='admin', details='TA profile reviewed: hcyy - APPROVED', timestamp='2026-04-20T13:57:10.508382900', ip='unknown'}
+Log{id='d1310072-dd8b-49f0-8e77-17ea6b6039be', action='REVIEW_TA_PROFILE', user='admin', details='TA profile reviewed: hcyy - APPROVED', timestamp='2026-04-20T13:57:25.846534400', ip='unknown'}
+Log{id='73d48e46-3d5f-4932-ac1a-6fb8811dd8f4', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T13:57:48.963241700', ip='unknown'}
+Log{id='4ef2cf03-54c3-4bf1-96f8-1ab309bbc96d', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T14:01:28.266161300', ip='unknown'}
+Log{id='de280f48-8162-4804-80dd-287d73128642', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T14:04:57.598944100', ip='unknown'}
+Log{id='0eb9dfdb-40c9-4c56-8335-a2d00115ec01', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-20T14:06:01.133806900', ip='unknown'}
+Log{id='6132650a-3b51-4e8f-a5e6-42b40cee3c63', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-20T14:07:01.140398200', ip='unknown'}
+Log{id='64f7713a-b025-4c46-9344-4c70956bf0b8', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-20T14:08:01.146379100', ip='unknown'}
+Log{id='51577b96-4a07-4bcb-b778-a1af1ab1266c', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-20T14:09:01.156202900', ip='unknown'}
+Log{id='4414b61d-8d86-41d1-b8a2-0a7426ee0205', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-20T14:10:01.158459600', ip='unknown'}
+Log{id='33ccd64e-5c61-468d-acd1-06714a6db1cc', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T14:10:30.139264400', ip='unknown'}
+Log{id='c41dd92e-ff57-44ca-a3b6-98e988e8166b', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-20T14:10:37.606327100', ip='unknown'}
+Log{id='d4858f15-4e12-4f79-b3d0-62956e9d8254', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T14:10:59.354062800', ip='unknown'}
+Log{id='e379fb2d-a75e-4db3-a345-7fdd515f8e04', action='REVIEW_TA_PROFILE', user='admin', details='TA profile reviewed: hcyy - APPROVED', timestamp='2026-04-20T14:11:04.170849700', ip='unknown'}
+Log{id='c33bbe29-79b2-4344-b804-7eb7813ae6a7', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T14:11:23.067266', ip='unknown'}
+Log{id='b0b9a531-2900-422f-82f1-516d351f8237', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T14:12:04.196692600', ip='unknown'}
+Log{id='fe23466f-d666-4f92-89a6-6f3179c71feb', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-04-20T14:13:22.261776600', ip='unknown'}
+Log{id='1d20f188-0c27-41ec-ada0-23a3114ed1b3', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: test1', timestamp='2026-04-20T14:15:43.370052400', ip='unknown'}
+Log{id='e983cdb0-b8e7-4cf3-80b7-57567f376473', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: test1', timestamp='2026-04-20T14:15:47.405303900', ip='unknown'}
+Log{id='3526ddea-76cd-4650-a1f5-33f0d4e8f05e', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: test4', timestamp='2026-04-20T14:17:55.445825600', ip='unknown'}
+Log{id='a7412987-4cfb-4010-8489-e63839c890e1', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: test4', timestamp='2026-04-20T14:18:40.498898800', ip='unknown'}
+Log{id='a36844db-cd06-4147-9509-f39d34f52951', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: test2', timestamp='2026-04-20T14:22:10.948563500', ip='unknown'}
+Log{id='16f547d1-f3f5-4940-b0af-e106c4e67f15', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-04-20T14:37:39.189865400', ip='unknown'}
+Log{id='a609c896-4705-4ea6-a8bf-cbf5b5e6ee37', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-04-20T14:38:28.356026400', ip='unknown'}
+Log{id='d60a612f-caab-406d-bb33-8722c9d793be', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T14:38:42.723142600', ip='unknown'}
+Log{id='3e483604-d89b-472a-9439-e9d179446e64', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T15:01:07.830483200', ip='unknown'}
+Log{id='05c05afa-5476-4dc4-9f3c-07eecb664952', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-04-20T15:04:00.022126800', ip='unknown'}
+Log{id='b7847164-be53-44a4-aaba-d8451416b3dc', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T15:04:38.760491300', ip='unknown'}
+Log{id='87603f09-4fa8-41e4-bd18-10bf737a545e', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T15:15:27.270940400', ip='unknown'}
+Log{id='443dc496-388f-4836-abb7-db2afc6fbc64', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T15:20:36.640786300', ip='unknown'}
+Log{id='1372a0e4-78c3-4770-8d68-c6072f9ed5fe', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T15:25:11.854807800', ip='unknown'}
+Log{id='103474bb-977f-484a-ad47-ff01242c28ac', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T16:03:48.139535900', ip='unknown'}
+Log{id='2305ff4e-6e4e-4bda-a877-eab99f73d753', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T16:55:11.460040800', ip='unknown'}
+Log{id='a2dc1658-da2a-4d99-9a89-aa896f274fba', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T17:11:48.995305600', ip='unknown'}
+Log{id='86274710-cee0-41f0-aa3d-b8a5a3262b19', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T17:15:46.457808400', ip='unknown'}
+Log{id='34b69261-5b70-4d25-8224-df13d34f1d97', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T17:23:26.643800900', ip='unknown'}
+Log{id='66950169-31a1-45ae-ae9e-f1a14b78f145', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T17:30:40.738161900', ip='unknown'}
+Log{id='dab52aa7-948a-4475-9173-a61b72489281', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T17:45:23.845062900', ip='unknown'}
+Log{id='4a85ade2-99c5-4e7a-bc2a-8a5e19c363d6', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T17:49:25.942430400', ip='unknown'}
+Log{id='6899ac7e-927c-472c-8c5e-2c5355b465dd', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T17:58:29.717166700', ip='unknown'}
+Log{id='1bd5d0fe-3573-41ea-8d6c-b514a4de1bd5', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T18:07:21.763188200', ip='unknown'}
+Log{id='b9fcc965-a4df-4db7-a882-48ef911378f7', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T18:17:12.303386100', ip='unknown'}
+Log{id='ea60fa11-afa8-46af-a841-d6ce15dc44a0', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T18:21:31.513219800', ip='unknown'}
+Log{id='865688db-683e-4e30-b1e5-58501152c9b6', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T18:27:25.158924600', ip='unknown'}
+Log{id='151026bb-e139-48cb-8fab-595e6595db17', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T18:35:56.743361400', ip='unknown'}
+Log{id='a05919d3-bfee-4a1d-8587-529e2468acf5', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T18:40:53.139453900', ip='unknown'}
+Log{id='d7ae1758-33c7-4c0f-948e-5a6301a72238', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T18:47:52.133030300', ip='unknown'}
+Log{id='0ed6786a-74a9-4b3d-8e35-33af7e9c9667', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T18:52:36.315448800', ip='unknown'}
+Log{id='402ffa66-3f06-45a7-892d-35add19326c4', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T18:56:01.462803600', ip='unknown'}
+Log{id='e5b4da59-dea8-4d4a-8b7b-c4108c18928a', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T18:58:57.794844700', ip='unknown'}
+Log{id='e2863e53-f769-4534-a032-79fa00c2841f', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T19:01:41.276990300', ip='unknown'}
+Log{id='2a84b48c-bbbb-4271-9d81-a9edfc71feb8', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T19:05:48.701328700', ip='unknown'}
+Log{id='4e5a99d0-2739-457b-a398-c1a1f21c8b78', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T19:09:20.181204', ip='unknown'}
+Log{id='df455dd5-7a72-463a-8018-84ac8abb736e', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T19:14:32.898722', ip='unknown'}
+Log{id='08c096ec-92f7-4dc2-8392-0b3ca2d6b438', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T19:19:09.668148500', ip='unknown'}
+Log{id='3e6d1cdf-ad25-449c-b44d-5c02322362fb', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T19:21:56.205740100', ip='unknown'}
+Log{id='579c81c8-9c94-44c7-ae2a-b6bda3f43e8e', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T19:27:27.619028800', ip='unknown'}
+Log{id='5eb8fd98-6dd8-4c9b-a9da-84bdf37faee2', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T19:32:04.773005400', ip='unknown'}
+Log{id='af83fa77-1adb-4d89-bcc6-7d3bf1195ac4', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T19:37:53.451826300', ip='unknown'}
+Log{id='98287345-1029-4f7b-9aec-d1e9e6771615', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T19:41:57.940003800', ip='unknown'}
+Log{id='5837bfa5-a799-4d1c-a338-691b506deb52', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T23:33:12.317868900', ip='unknown'}
+Log{id='8631cef6-7dbb-4cab-9dd6-1e9f1300a235', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-20T23:59:32.534365600', ip='unknown'}
+Log{id='12bda98f-8e60-43aa-ad1a-416637598614', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-21T00:25:57.753821100', ip='unknown'}
+Log{id='6be8325c-7431-4707-b6d2-b70c9aac2c5d', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-21T00:30:02.917271900', ip='unknown'}
+Log{id='67cf180f-d40c-48b7-b1f7-ebb2b53ddb32', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-21T00:42:56.257877200', ip='unknown'}
+Log{id='6bf0a4ad-fa5d-44dc-8445-ce6dacb2b9d1', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-21T00:58:08.201085500', ip='unknown'}
+Log{id='07d162c4-d847-4e9e-9b7a-2ba10c66aae7', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-21T01:20:32.369568800', ip='unknown'}
+Log{id='8439cb80-75be-4ba1-ab35-575a923b1211', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-21T01:27:03.960628900', ip='unknown'}
+Log{id='c76de89d-a497-4449-9b47-9f045c3ef281', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-21T01:33:12.547165800', ip='unknown'}
+Log{id='fc342730-2615-442c-9761-a338933ddd30', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-21T01:33:50.540214700', ip='unknown'}
+Log{id='dcae881e-f716-4a5e-89b7-adc0b9a41ad0', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-04-21T01:35:16.686196600', ip='unknown'}
+Log{id='062765d7-3dbd-49a7-868b-357769f5ce43', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-21T01:56:12.380922800', ip='unknown'}
+Log{id='58470ea8-a9f5-40c8-bcce-88d39430a25c', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-21T02:05:55.392539900', ip='unknown'}
+Log{id='943aa181-ed48-43bf-8244-832e145ad98e', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-22T11:46:36.783148400', ip='unknown'}
+Log{id='020a708c-a348-445b-8f1b-172204833f1c', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-22T11:58:10.082576600', ip='unknown'}
+Log{id='0d4ea44e-3e3b-44fc-8d83-4943883c2cb5', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-22T15:33:19.168565700', ip='unknown'}
+Log{id='7b33c15a-971f-4f18-8097-37c1b9f515df', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-22T15:41:31.898867', ip='unknown'}
+Log{id='05611442-3d5c-48cf-86af-06192364bfb2', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-22T15:45:15.078432500', ip='unknown'}
+Log{id='46a1dffc-3dc9-428c-b258-e714c6c7e99b', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-22T16:07:59.370392700', ip='unknown'}
+Log{id='a903abf2-83ef-46fc-b7e2-3c450c570924', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-22T16:17:38.296014100', ip='unknown'}
+Log{id='a023882d-4a2b-4b27-a3f1-f7afac06598c', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-22T16:22:53.529340900', ip='unknown'}
+Log{id='537fb4a0-59ae-4949-a29b-ab2a1710faea', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-22T16:24:22.202612800', ip='unknown'}
+Log{id='59487b7e-f46f-4fe6-888a-d2ad854b6636', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-04-27T13:27:28.932697300', ip='unknown'}
+Log{id='93964d24-69fb-4fec-8dbd-d12eb9c73ef3', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-06T19:35:40.665728100', ip='unknown'}
+Log{id='a943d575-9203-45a0-92dc-649cbf4e5a16', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-06T20:36:56.708962800', ip='unknown'}
+Log{id='99be9fd1-ce4b-48fa-9749-c11b198b3b60', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-06T23:25:50.558024200', ip='unknown'}
+Log{id='7a68fe53-bc04-4a71-9b0a-43e225c9028b', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-06T23:34:56.581443600', ip='unknown'}
+Log{id='1cea6f79-c751-40c9-bce6-7fc4b7a4fb9e', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-06T23:44:12.555875900', ip='unknown'}
+Log{id='54c47383-3cc1-4f54-ba3c-23d7978d2f18', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-06T23:50:16.316345600', ip='unknown'}
+Log{id='af84e171-a564-4264-8f20-72e77ea06a0b', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-07T00:07:08.058145', ip='unknown'}
+Log{id='464337ec-0db0-4603-85d0-ba7ec62ffedb', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-07T01:07:42.877384900', ip='unknown'}
+Log{id='76bb2adc-5f2c-4199-9886-23874febb520', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-07T01:22:50.645690500', ip='unknown'}
+Log{id='d14d94f1-8cad-427f-b945-356367bd6882', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-07T01:42:46.786854700', ip='unknown'}
+Log{id='e2e2c94f-c9cc-4cc3-9b73-2c80e201133a', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-07T23:18:16.326442300', ip='unknown'}
+Log{id='c6a5c3a1-ef17-4ea2-a3bd-8d9a4ff28b37', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-08T01:05:56.859845600', ip='unknown'}
+Log{id='bbe10022-3893-4c97-8608-cc62e42dbb73', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T01:18:30.757271100', ip='unknown'}
+Log{id='c0058b7f-4a6f-4a76-b469-3ef238b8762a', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T01:37:41.696819500', ip='unknown'}
+Log{id='3f3783f2-47cf-4dfb-8636-553e81b58358', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T02:00:47.073493200', ip='unknown'}
+Log{id='5a08de0f-5197-425f-857e-25f47088f2ef', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T02:01:04.949097400', ip='unknown'}
+Log{id='8a35bbaf-8b0e-4f4c-af15-7685c56f0755', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T02:01:16.238279400', ip='unknown'}
+Log{id='8b848ff6-1ab2-454f-9cbc-525aa0ebd3d0', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T02:01:31.772422500', ip='unknown'}
+Log{id='b6b73a28-c629-4bfe-8710-d141147d5b87', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T02:06:37.997977300', ip='unknown'}
+Log{id='92e9529a-c2ec-45ba-b1e3-d1652d7c1528', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T02:06:56.077196800', ip='unknown'}
+Log{id='9fd6d004-65dd-41d8-b98b-05597a00925c', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-14T02:10:59.075133400', ip='unknown'}
+Log{id='d6eab889-65ef-487c-a33d-5241f93741e3', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-14T02:12:22.243531300', ip='unknown'}
+Log{id='fc0d7944-9fd8-47a5-9864-dc00055b71f4', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-14T02:17:26.177133600', ip='unknown'}
+Log{id='1ae05641-aa3a-412b-9a69-d2d1ced443fe', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-14T02:17:29.215161700', ip='unknown'}
+Log{id='9406e253-fc95-49ea-b7fc-2c06bebe0999', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T02:17:38.190725500', ip='unknown'}
+Log{id='ea3c98a8-8421-4034-8d66-b8a3f656b92b', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T02:17:40.197396200', ip='unknown'}
+Log{id='e0f509bf-d976-4f07-86e5-5aa1a26d3a0a', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-14T02:18:42.092487300', ip='unknown'}
+Log{id='9c351057-15b5-48b1-a5f6-e89192a9b8fc', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-14T02:18:49.654209100', ip='unknown'}
+Log{id='c9d65b61-3cb0-41bc-b25f-fb86df81bfd7', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-14T02:19:42.095134200', ip='unknown'}
+Log{id='098c14d4-3385-4230-a25d-156dec38751f', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-14T02:19:49.654798900', ip='unknown'}
+Log{id='222c873e-f5d0-4b64-9467-b9b41198fcfe', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-14T02:20:42.094432900', ip='unknown'}
+Log{id='96da39d4-0219-4d98-9592-7a6174c05fcc', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-14T02:20:49.655808300', ip='unknown'}
+Log{id='409219f6-de42-4493-aeeb-a1bb30d97cd4', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-14T02:21:42.095310100', ip='unknown'}
+Log{id='250f6e83-ba7b-47af-a496-1ef3dd3db921', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-14T02:21:49.656099900', ip='unknown'}
+Log{id='c8217667-355d-4d3a-b4a1-7181230339d1', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-14T02:22:08.859152700', ip='unknown'}
+Log{id='494dda64-295c-4511-88fc-aae1c6e07df4', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-14T02:22:14.973400500', ip='unknown'}
+Log{id='6495ef11-2ee2-46a5-ae52-875c8369176d', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T02:40:40.077085700', ip='unknown'}
+Log{id='0c9550b7-9e51-4eaf-807b-234e7c1f0616', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T02:41:09.561592500', ip='unknown'}
+Log{id='7511ffe3-e778-451f-a128-c93a2112f78f', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T02:45:11.613251', ip='unknown'}
+Log{id='453790be-4b24-43f9-88e5-d60ffad53477', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T02:45:26.944519400', ip='unknown'}
+Log{id='2db5337a-1983-4c80-aa42-4a77a3f1508c', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T02:50:29.115257300', ip='unknown'}
+Log{id='2083756e-6005-4fd9-8e59-9c586fbd8d34', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T02:59:16.083729', ip='unknown'}
+Log{id='d356adb2-5d01-460f-9b38-921c01b1565c', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T03:00:11.077055100', ip='unknown'}
+Log{id='48cb041d-562a-477b-a2f8-e41256d91985', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T03:00:47.453235400', ip='unknown'}
+Log{id='971501e8-f72b-4c27-a50b-7175cb845231', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-14T03:02:51.638772', ip='unknown'}
+Log{id='c4ac9e5f-c8e1-4f19-a3dc-6ed5bb48a84a', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-14T03:08:36.191888400', ip='unknown'}
+Log{id='c1e1419f-d3ee-49fb-a042-9790764df26b', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:08:58.927084500', ip='unknown'}
+Log{id='ae5fc3cc-70cb-4398-85f7-612350919dc9', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:09:01.398668500', ip='unknown'}
+Log{id='db5a0844-6bc4-4f93-84dd-ff343009e590', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:09:01.560075300', ip='unknown'}
+Log{id='1ed1c72c-4d36-484a-8a93-6d611a3f80d5', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:13:44.689946900', ip='unknown'}
+Log{id='15e4c6f9-3030-4433-96a4-0cada8c1c35b', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:20:52.199721500', ip='unknown'}
+Log{id='263c9d56-e133-4263-87ca-22b62ee04fb5', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:20:52.920668700', ip='unknown'}
+Log{id='1a2da2d1-2c03-45ba-9945-2e6b7705894b', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:23:22.528282300', ip='unknown'}
+Log{id='c6f339d6-4e0d-4283-80e3-467252d93d62', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T03:23:30.483844100', ip='unknown'}
+Log{id='b2f93122-7f67-4fe4-ba1a-99c66b06e06b', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-14T03:23:46.472807700', ip='unknown'}
+Log{id='7dd401ca-f449-4a31-8430-fd8108144c4a', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-14T03:23:49.009042300', ip='unknown'}
+Log{id='7505d25a-fedf-4916-a837-b6afd3c4ee6d', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:26:47.309100700', ip='unknown'}
+Log{id='b3bc8666-decd-4bed-a059-f4ff47ca74e2', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:28:09.957552800', ip='unknown'}
+Log{id='05a3243d-7706-48a4-b05f-5b55faf4d4e3', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:28:44.338877', ip='unknown'}
+Log{id='b8bd0554-d588-4d5d-8bf0-3cefcf2b1567', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:30:49.232233700', ip='unknown'}
+Log{id='375f7ad5-eca1-428f-b0f3-44b96fbc0fc1', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:43:26.734698100', ip='unknown'}
+Log{id='1d29c86f-99f8-4aa2-b4c4-cbe8a6009fa5', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-14T03:49:38.600735400', ip='unknown'}
+Log{id='bdb76e76-cfbb-4f85-8628-79cd6753b713', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-14T03:51:00.169118200', ip='unknown'}
+Log{id='9a9c0c56-ba00-4f2b-a017-17e05b60e536', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-17T16:37:56.179998400', ip='unknown'}
+Log{id='5317f244-f4e6-4fe7-8d8e-9cf63f6e5519', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-17T17:25:51.064930800', ip='unknown'}
+Log{id='39b8e2cf-1072-4f7e-9b80-483a197cb697', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-17T17:26:23.666335800', ip='unknown'}
+Log{id='94efec7d-00ee-4323-ac56-29ccb2fc4dec', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-17T18:51:13.290194800', ip='unknown'}
+Log{id='9ac420d5-11c9-445e-9241-d93c05d57e61', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-17T18:51:32.566248900', ip='unknown'}
+Log{id='65aac600-5659-46e9-84a4-1d728ae92e1d', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-17T18:51:35.079441', ip='unknown'}
+Log{id='dd6d5287-8354-4339-bf72-7f03f07ed36b', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-17T18:56:01.089809800', ip='unknown'}
+Log{id='44b7cb3c-a189-4dc1-b0cc-04319043cce6', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-17T18:59:58.751194800', ip='unknown'}
+Log{id='ff19a693-ecf4-4265-9d5e-a796bd45a708', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-17T19:05:11.705351600', ip='unknown'}
+Log{id='6d5848e0-c5cf-454a-a638-d4d72ac6e181', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-17T19:06:08.757578', ip='unknown'}
+Log{id='3dc3b7e8-9393-4bd6-888a-dc04772ee2c2', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-17T19:45:55.488608200', ip='unknown'}
+Log{id='353a8212-dfeb-4282-9ae7-bbc81a820f21', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-17T20:36:23.584221', ip='unknown'}
+Log{id='93f1359c-acbe-4519-9c30-507ee21248ff', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-17T20:36:41.166727800', ip='unknown'}
+Log{id='7dd25f97-c7ce-4c4d-914a-c31327c5dce0', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-17T20:37:08.462664600', ip='unknown'}
+Log{id='60936e6d-fa32-44be-986c-f52ca942ea0c', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-17T20:50:31.922338700', ip='unknown'}
+Log{id='c09e1688-ca4f-4849-8dde-604eeb15773c', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-17T20:51:50.573576200', ip='unknown'}
+Log{id='e25db002-2e4b-4b6e-a423-d2c86995a1b2', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-18T15:41:41.098876900', ip='unknown'}
+Log{id='899322c5-5afb-4029-983d-93a2a2c37ab7', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-18T15:43:36.139859500', ip='unknown'}
+Log{id='ade925ba-f47d-45c1-896c-cfb48eb0a111', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-18T15:44:30.290449700', ip='unknown'}
+Log{id='9f3f2c7b-572d-4b57-ada5-1db9bdbbc4ea', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-18T15:44:32.970651', ip='unknown'}
+Log{id='67b193a4-7cef-4c51-a924-18366d63836a', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-18T15:59:25.083471900', ip='unknown'}
+Log{id='936ba386-1cc2-40f4-93d7-0a7df5a0f0bd', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-18T15:59:58.738523400', ip='unknown'}
+Log{id='dd886b1e-0d47-49eb-bb61-adcfa044bf61', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-18T16:05:05.699985', ip='unknown'}
+Log{id='428f7749-57b6-4962-a57d-f9d3c426e62f', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-18T16:13:53.051014900', ip='unknown'}
+Log{id='9ae3ec4f-424c-4bbe-b60e-a9b9474aa9e8', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-18T16:14:44.294353', ip='unknown'}
+Log{id='d02b0e21-e41f-4a10-a9b5-673fc4a94733', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-18T16:14:58.913341200', ip='unknown'}
+Log{id='3236a13d-6b94-49a6-8034-96493c9486c7', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-18T16:15:00.893390800', ip='unknown'}
+Log{id='10405688-cf7a-4595-8774-95bd9f05cf23', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-18T22:32:53.389274200', ip='unknown'}
+Log{id='afb9604b-1cd8-4a83-b350-9614864347e9', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T00:03:15.311705400', ip='unknown'}
+Log{id='9027fd27-8acb-4f08-b76c-53efe0aeae40', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T00:04:01.164025800', ip='unknown'}
+Log{id='26e5f488-8a86-426b-bfa5-dd2c8e6284cd', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T00:23:24.964776900', ip='unknown'}
+Log{id='90c10d57-5239-40b6-855d-8d4437f7a263', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T00:52:26.274078', ip='unknown'}
+Log{id='41a35429-a070-4f75-800c-d2c3a77463ec', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T01:14:29.645696400', ip='unknown'}
+Log{id='558c9faf-5950-43c0-aff3-da713cc9b768', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T01:17:04.801321700', ip='unknown'}
+Log{id='85015b1a-d69a-4bd0-89f2-96d637a0577e', action='UPDATE_USER', user='hhccyy', details='User updated: hhccyy', timestamp='2026-05-19T01:17:28.413673200', ip='unknown'}
+Log{id='1a6815dc-587f-44c2-ac30-b046e29b8a90', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T01:25:46.421758400', ip='unknown'}
+Log{id='370375ba-37e3-40d4-b105-c43f6bfa1c85', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T01:27:17.277116600', ip='unknown'}
+Log{id='1005beb6-7eee-4927-ac35-18655f80e773', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T01:27:20.020939700', ip='unknown'}
+Log{id='db0e6926-6ebe-4a94-8b81-d2b3651d635d', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T01:49:48.622473100', ip='unknown'}
+Log{id='7ea432fd-b908-4df0-b6e3-0580a63bc2a1', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T01:50:06.013413600', ip='unknown'}
+Log{id='781e581a-38d8-4a7a-93fb-4acb7f0d2076', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T02:04:02.458741300', ip='unknown'}
+Log{id='3e8d78c1-50ca-4e48-85c9-d00408b7349c', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T02:13:22.649119500', ip='unknown'}
+Log{id='db3d3d7a-620f-4703-806d-039e5873ab49', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T03:14:30.429481400', ip='unknown'}
+Log{id='db61ca75-b8fd-491d-8538-be9a199cacb7', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T03:28:27.471502100', ip='unknown'}
+Log{id='7646500b-0770-458f-980d-5d8e92a21306', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T03:57:58.854456800', ip='unknown'}
+Log{id='0ce5b3e4-d3a2-4bd7-8911-b69c8737f16a', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T03:59:52.657422500', ip='unknown'}
+Log{id='84598057-5f94-4d22-aa8f-beef92a59b2b', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T04:07:53.202206700', ip='unknown'}
+Log{id='ff789db5-8249-4229-8369-db77f537ea1b', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T04:11:43.278632900', ip='unknown'}
+Log{id='3b0c34c9-e5ec-402a-843d-26bcdd379691', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T04:12:00.798281300', ip='unknown'}
+Log{id='b9961d26-5916-46e9-b5d5-7a0f1b121d55', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T04:15:09.289073200', ip='unknown'}
+Log{id='95536eff-a22c-4e0f-9f3c-6bb596cc4353', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T04:16:08.469013400', ip='unknown'}
+Log{id='c43586cf-c97b-460c-b4c9-acb79fb9888d', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T14:19:59.177181200', ip='unknown'}
+Log{id='05323344-f7ae-4cdc-a05b-f04c7b6cb630', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T14:20:46.972635800', ip='unknown'}
+Log{id='d2e03707-8205-4506-b0b6-4113c6a114f3', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T14:31:30.508930900', ip='unknown'}
+Log{id='e1e49a54-22c6-4d6c-b54a-8638be02c0ae', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T14:31:31.911864200', ip='unknown'}
+Log{id='59b7920a-bd4b-40a7-8a83-c343c93d1ae0', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T14:52:17.661087', ip='unknown'}
+Log{id='8f03adff-ed94-4bd8-b717-05eb70d4b9e4', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T14:53:20.966445', ip='unknown'}
+Log{id='7885c3e3-6276-4429-8978-ee6adacd978b', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T14:57:47.949533700', ip='unknown'}
+Log{id='a3e4d4b0-f2a0-42b7-b347-4443dbfee2b2', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T15:08:09.777245', ip='unknown'}
+Log{id='11208921-752a-4e5a-88f7-6c3f493f8f83', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T15:12:36.135903100', ip='unknown'}
+Log{id='6071e6a6-007f-4fc1-b27f-2b7d9de13d2d', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T15:16:26.505348300', ip='unknown'}
+Log{id='3916b597-a941-47fa-900e-cd198e2a95cb', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T15:17:25.912560900', ip='unknown'}
+Log{id='50b04803-2fac-4974-8b2a-eb3d91a2f907', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T15:18:03.937402', ip='unknown'}
+Log{id='01641f58-8a11-40f3-97a0-6ddd761ba178', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T15:18:06.317448400', ip='unknown'}
+Log{id='824ec39f-ca74-4109-abbd-470532ff0a0d', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T15:50:53.099146500', ip='unknown'}
+Log{id='daaa1271-1ceb-46c0-a6de-12d6cb775733', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T17:59:43.775447900', ip='unknown'}
+Log{id='698a3c92-d2aa-4953-805e-ce14aa9aa709', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T18:00:08.888758700', ip='unknown'}
+Log{id='3133013e-d06c-4d81-9d66-c907c90322f7', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T18:00:22.360623', ip='unknown'}
+Log{id='eddb67ad-a643-4df1-9ac6-69cfddda8539', action='UPDATE_USER', user='hcyyy', details='User updated: hcyyy', timestamp='2026-05-19T18:00:38.649196200', ip='unknown'}
+Log{id='4698688e-2689-4831-91df-0b1d2c55de20', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T18:00:57.305482700', ip='unknown'}
+Log{id='4a25728a-17d7-4b29-bf08-5987a8cfe2d7', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T18:33:30.991820100', ip='unknown'}
+Log{id='5e8319e4-04e6-47d7-86e5-fcd53217081e', action='UPDATE_USER', user='hcyyy', details='User updated: hcyyy', timestamp='2026-05-19T18:33:48.082391500', ip='unknown'}
+Log{id='3c0e7140-9e63-4fc6-88e7-67359b9c7fe2', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: newtest1', timestamp='2026-05-19T18:35:32.116405100', ip='unknown'}
+Log{id='4254ea6e-806b-4e02-8870-89b9a0540e5b', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T18:36:32.883092200', ip='unknown'}
+Log{id='97c994e4-73df-46de-b1d6-097e35584a99', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T18:36:52.638146', ip='unknown'}
+Log{id='d9c26c8a-829e-448a-a207-eba4f7e02dcf', action='TOGGLE_USER_STATUS', user='admin', details='User status changed: admin - LOCKED', timestamp='2026-05-19T18:37:22.840665500', ip='unknown'}
+Log{id='35ea1a08-efc7-45b3-a2b0-d9c62f08ac38', action='TOGGLE_USER_STATUS', user='admin', details='User status changed: admin - ACTIVE', timestamp='2026-05-19T18:37:23.832615400', ip='unknown'}
+Log{id='861202ed-ded4-49e6-995d-4ab248484867', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: test1 - CLOSED', timestamp='2026-05-19T18:37:59.308220600', ip='unknown'}
+Log{id='913cc84f-c839-42bd-9ac7-962e656a6d07', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: test1 - PUBLISHED', timestamp='2026-05-19T18:38:01.045985100', ip='unknown'}
+Log{id='101a2c3e-8d58-40ac-81d0-06026885d535', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T18:39:41.921863200', ip='unknown'}
+Log{id='58503513-c2b8-4c37-aefd-2c61782fb76a', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T18:52:16.127993100', ip='unknown'}
+Log{id='04d11679-71de-4a84-b827-c7c7eb2ea31b', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T18:59:09.491662300', ip='unknown'}
+Log{id='3ee43b3a-757a-4b24-b628-9d89017aba05', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T19:01:43.694931900', ip='unknown'}
+Log{id='f8ab0702-9cce-4b9b-b4f5-e73c753c7725', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T19:38:32.047243', ip='unknown'}
+Log{id='4b5db955-f199-4c1f-8e7d-19e1438871f0', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T20:05:06.142231100', ip='unknown'}
+Log{id='6400a8d6-d0a0-4fbe-bf0d-8ae624836a3e', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T20:12:25.788925500', ip='unknown'}
+Log{id='e6dccd40-f940-4dc0-b30c-86a14306fa34', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T20:20:24.678636100', ip='unknown'}
+Log{id='6fca566c-c67e-4b12-a300-8f35993a7f65', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T20:22:22.178572200', ip='unknown'}
+Log{id='e4bedf5b-58d5-4c92-ae67-86a920152c72', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T20:22:43.312460', ip='unknown'}
+Log{id='6f9d2767-bda5-46e3-9e3b-8acb34e8febd', action='REVIEW_TA_PROFILE', user='admin', details='TA profile reviewed: ych - APPROVED', timestamp='2026-05-19T20:22:55.394935', ip='unknown'}
+Log{id='6ca3a9b6-dc58-4227-b24a-e4609f6cca47', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T20:23:18.370112500', ip='unknown'}
+Log{id='7f9d931e-a759-477f-a229-8e7275ad2dfc', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T20:32:56.013512100', ip='unknown'}
+Log{id='3b8a1b81-6abf-4b6a-96be-cf5f7647dd5d', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T20:33:21.599660700', ip='unknown'}
+Log{id='3ebc51b8-746d-409c-8f0b-f6d73b8dae93', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T20:33:44.548218900', ip='unknown'}
+Log{id='b53dfbca-f2c5-45dd-8f88-62a5108e6246', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - PUBLISHED', timestamp='2026-05-19T20:34:00.645605', ip='unknown'}
+Log{id='717b9595-9abb-4d10-a061-be83f65fcbcb', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - CLOSED', timestamp='2026-05-19T20:34:04.482636800', ip='unknown'}
+Log{id='9ca46a28-8a0e-487f-85f3-4f0accd1179b', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - PUBLISHED', timestamp='2026-05-19T20:34:10.048548500', ip='unknown'}
+Log{id='6a0d1c48-7089-4a60-91a2-722076dd5498', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T20:42:57.345395900', ip='unknown'}
+Log{id='1ecac14b-efeb-4747-a7f6-da89039767ad', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - REJECTED', timestamp='2026-05-19T20:43:10.313952800', ip='unknown'}
+Log{id='2350451a-ce4f-4477-9ee9-fdaa1ce46726', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - PUBLISHED', timestamp='2026-05-19T20:43:14.619709600', ip='unknown'}
+Log{id='8e712c0e-893b-4ae9-9576-16c40f703d8f', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - CLOSED', timestamp='2026-05-19T20:43:16.901253600', ip='unknown'}
+Log{id='65025662-cd97-4d88-ae30-bcf11342ebf1', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - PUBLISHED', timestamp='2026-05-19T20:43:17.490567200', ip='unknown'}
+Log{id='dc85b8a7-01f7-4a9d-b156-8594cf8ccbb1', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T20:43:47.869543500', ip='unknown'}
+Log{id='4596830c-95f7-43d4-8f61-bf94d5946c70', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T20:44:03.444758200', ip='unknown'}
+Log{id='74b74a11-1ff3-439a-b64c-258873b4da5c', action='SUBMIT_APPLICATION', user='94b907e4-bbc7-4472-86f1-babb88ff7769', details='Application submitted for job: newtest1', timestamp='2026-05-19T20:44:23.226390300', ip='unknown'}
+Log{id='2d65e32b-97e9-40b7-802c-3c4c35e5078d', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T20:44:36.350253800', ip='unknown'}
+Log{id='c0221d92-a24b-4b7e-beba-6d6aa0dbd621', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T20:44:39.038430100', ip='unknown'}
+Log{id='3b85cfc1-c617-4590-a2f2-203a73c61c32', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T21:37:56.405910600', ip='unknown'}
+Log{id='325b55d6-7da3-46e5-8160-a8c62e38e247', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T21:42:41.992102200', ip='unknown'}
+Log{id='5388fd8d-a60f-49bc-9553-4426a96cc36a', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T21:44:40.928036900', ip='unknown'}
+Log{id='60d6b73b-03bc-4451-ae9c-c962136bba17', action='REGISTER', user='user84528', details='User registered: user84528', timestamp='2026-05-19T21:44:44.591598700', ip='unknown'}
+Log{id='a5c12888-f887-4963-896a-ded10c9a0e27', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - CLOSED', timestamp='2026-05-19T21:44:57.232045300', ip='unknown'}
+Log{id='fddab819-161e-4fc8-8eda-9329897e227e', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - PUBLISHED', timestamp='2026-05-19T21:44:58.491080', ip='unknown'}
+Log{id='344b09a7-6557-405f-b92d-9651d9d2bc7e', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - REJECTED', timestamp='2026-05-19T21:44:59.563304100', ip='unknown'}
+Log{id='24cf2034-f71b-4be9-99d3-ea0067c89ffc', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - PUBLISHED', timestamp='2026-05-19T21:45:00.080193900', ip='unknown'}
+Log{id='3c5a9bb0-b331-4451-b916-a79a266d030a', action='TOGGLE_USER_STATUS', user='admin', details='User status changed: admin - LOCKED', timestamp='2026-05-19T21:45:04.837869500', ip='unknown'}
+Log{id='8ab7eb4d-33bf-4a21-9493-6b561aaa9c48', action='TOGGLE_USER_STATUS', user='admin', details='User status changed: admin - ACTIVE', timestamp='2026-05-19T21:45:05.343641400', ip='unknown'}
+Log{id='a6759061-b9bb-466a-bd44-b64cb3dca99e', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T21:49:34.577857', ip='unknown'}
+Log{id='d456db55-6549-47fb-a0ce-0d2b14d3cc17', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: newtest1', timestamp='2026-05-19T21:49:46.922054600', ip='unknown'}
+Log{id='d355eb4c-0649-445d-9b2a-c3feb124ef47', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: newtest1', timestamp='2026-05-19T21:49:47.351862', ip='unknown'}
+Log{id='6425f3f1-ab0d-4c14-a059-9e5ba36056e1', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T21:57:37.817443600', ip='unknown'}
+Log{id='6dd7658e-388b-44bf-bfb4-35eb1e1eaeea', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T21:57:59.980511900', ip='unknown'}
+Log{id='11f92a0f-32bd-4bdd-bca8-e001f80f6e52', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T21:58:01.936044300', ip='unknown'}
+Log{id='9da80cb9-f764-43e4-8d4f-276c02731f1e', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T22:03:08.615875300', ip='unknown'}
+Log{id='044006a9-d777-4dce-8e38-88719be4eeae', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T22:03:11.682272500', ip='unknown'}
+Log{id='89fc7fc6-93b9-4760-a911-80db8c894b46', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-19T22:17:40.537520700', ip='unknown'}
+Log{id='8c42b7ba-eb5d-4311-adef-71fe210e2cc7', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T22:18:03.323010900', ip='unknown'}
+Log{id='1fa82fee-d935-46b8-9bb3-94877dbca14b', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T22:18:05.074732800', ip='unknown'}
+Log{id='7a97bd51-decb-430f-898a-c97b99bfb95a', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-19T22:22:51.901496500', ip='unknown'}
+Log{id='3205ea95-8909-440a-aec0-3bda28e6dda2', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T22:23:25.607489400', ip='unknown'}
+Log{id='d3d191fb-51fb-4fc4-98b1-c86d73ad36bb', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T22:43:02.061375100', ip='unknown'}
+Log{id='79505ddd-6bb5-402e-875e-06c4704011ec', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: newtest1', timestamp='2026-05-19T22:46:40.725716700', ip='unknown'}
+Log{id='6fbd5d77-4eb1-45bd-8f6c-0865fa33241b', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: newtest1', timestamp='2026-05-19T22:46:41.202489', ip='unknown'}
+Log{id='ed83e974-3347-487a-bd55-d36a43eb5678', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - REJECTED', timestamp='2026-05-19T22:46:44.215416300', ip='unknown'}
+Log{id='c79b5132-2579-402f-a58b-2b36953717af', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - PUBLISHED', timestamp='2026-05-19T22:46:44.997743400', ip='unknown'}
+Log{id='d4454b0f-93d3-4cd6-875b-9fa7d456954f', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - REJECTED', timestamp='2026-05-19T22:46:46.210411100', ip='unknown'}
+Log{id='cbb352d1-f709-46e1-807f-20ff8fbfaa73', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: test2 - PUBLISHED', timestamp='2026-05-19T22:46:47.773395400', ip='unknown'}
+Log{id='39b11e44-55fb-4b05-9592-c151a51cc767', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T22:54:48.469409500', ip='unknown'}
+Log{id='143d78f2-59e7-4ec4-97c3-5dee98f5575c', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-19T22:59:31.581033100', ip='unknown'}
+Log{id='83431a49-8364-4c99-9b44-79a6c25aea50', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T02:03:13.581094', ip='unknown'}
+Log{id='1cf9906b-d771-4cb9-8572-ca52407262dc', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T02:03:16.418055600', ip='unknown'}
+Log{id='7d64405a-c20b-43e1-870a-30606506bdb2', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-20T02:03:38.583309100', ip='unknown'}
+Log{id='f90de849-cefc-4b40-87c3-b4ddb1066c44', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T02:04:34.811224700', ip='unknown'}
+Log{id='144fd958-76e2-4051-b043-fefaf5f65d16', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T02:04:36.473419300', ip='unknown'}
+Log{id='dc94ba8b-dd7c-4eff-ae13-59c421308d27', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T02:15:49.081778600', ip='unknown'}
+Log{id='dc482362-1819-49af-b9b4-0bd868e5f5a0', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T02:20:54.030057300', ip='unknown'}
+Log{id='2e9fbec8-c092-448a-b0ff-6bb7f9fb102d', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T02:30:39.147616500', ip='unknown'}
+Log{id='4bc2e863-eea3-4ea9-b1f4-4e5e4111f8a0', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T02:38:22.451140900', ip='unknown'}
+Log{id='8081d1be-9366-4da3-b1bd-1ba9ed5a7ad3', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-20T02:38:29.671032400', ip='unknown'}
+Log{id='5abf071f-b403-4245-b48e-3ba1090f4b7d', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-20T02:38:39.412447700', ip='unknown'}
+Log{id='7ef28783-aad9-43d7-9f5b-74041207fc19', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-20T02:54:54.450279600', ip='unknown'}
+Log{id='88cf1ca6-1683-4948-927f-19168b256ffd', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-20T02:59:53.679494500', ip='unknown'}
+Log{id='e8155525-ec5c-4c07-8454-db315ff19726', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: newtest1', timestamp='2026-05-20T03:00:16.818727300', ip='unknown'}
+Log{id='e9bd337e-537b-4dce-966f-50ec1d69b21a', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T03:00:33.098870100', ip='unknown'}
+Log{id='2e1dd00f-761c-473d-839a-f1501f700ffb', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T03:00:35.278663900', ip='unknown'}
+Log{id='78a353fd-3149-44f3-b7fc-ba02069eefeb', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T03:01:59.660436400', ip='unknown'}
+Log{id='ec3b6181-75da-4fbb-a10f-11d8847ced3d', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T03:07:46.241999100', ip='unknown'}
+Log{id='cdf5a4c0-5177-4565-a4f3-1d3ba088d05f', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T03:21:25.035092800', ip='unknown'}
+Log{id='951c4423-6f5d-47c9-b05f-3292b46590d8', action='WITHDRAW_APPLICATION', user='94b907e4-bbc7-4472-86f1-babb88ff7769', details='Application withdrawn: 6ddf1de7-a96d-4845-aef6-2ec949082a75', timestamp='2026-05-20T03:22:23.938569900', ip='unknown'}
+Log{id='12264a9e-2ad8-4aa3-95e4-df3c41cd6fbb', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-20T03:23:00.006199500', ip='unknown'}
+Log{id='6c7bad62-2a6c-4a95-a3a4-034db5fb49e6', action='REVIEW_JOB', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='Job reviewed: newtest1 - PUBLISHED', timestamp='2026-05-20T03:23:22.504467800', ip='unknown'}
+Log{id='62659baa-2727-4950-b819-9ca0202ea7c1', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: newtest1', timestamp='2026-05-20T03:23:27.754979400', ip='unknown'}
+Log{id='9767a93b-c8c6-4535-ab84-445018d071fa', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: newtest1', timestamp='2026-05-20T03:23:29.285618500', ip='unknown'}
+Log{id='3045e0d9-801a-4a0b-8280-be9992edcf1f', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T03:23:42.170511800', ip='unknown'}
+Log{id='45ce15b2-4d05-466a-bad5-442a66b03ead', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T03:23:42.686510', ip='unknown'}
+Log{id='b5fdb7ac-122f-434e-be3a-3a46bfe9b115', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T03:23:45.382060', ip='unknown'}
+Log{id='c538cd50-bbcb-42b6-8e96-fa6546c5b28c', action='SUBMIT_APPLICATION', user='94b907e4-bbc7-4472-86f1-babb88ff7769', details='Application submitted for job: newtest1', timestamp='2026-05-20T03:24:04.396736200', ip='unknown'}
+Log{id='ced3ca20-373c-4302-a972-c1a27368275c', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-20T03:25:53.254176900', ip='unknown'}
+Log{id='8d28ec25-6e8a-469e-a555-16e50c47e8fc', action='UPDATE_JOB', user='11d79340-07f1-4880-863e-c597ae807692', details='Job updated: newtest1', timestamp='2026-05-20T03:26:35.685652500', ip='unknown'}
+Log{id='d5781f44-7ea9-4e58-9bdf-a34bf04f1ca6', action='UPDATE_TA_PROFILE', user='ych', details='TA profile updated: ych', timestamp='2026-05-20T03:26:35.688261', ip='unknown'}
+Log{id='85d341bd-d03a-482d-935e-08906be43225', action='ACCEPT_APPLICATION', user='11d79340-07f1-4880-863e-c597ae807692', details='Application accepted: TA 94b907e4-bbc7-4472-86f1-babb88ff7769 for job newtest1', timestamp='2026-05-20T03:26:35.689265500', ip='unknown'}
+Log{id='4a9f35f6-03d7-414a-969a-481d9ec7da30', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T03:26:58.946312700', ip='unknown'}
+Log{id='c6449106-4e84-4bb0-a1dc-a967a5770d7b', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-20T03:27:44.455408700', ip='unknown'}
+Log{id='b8075f18-8c94-41e6-9b74-fd632dda16aa', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-20T03:27:45.932144200', ip='unknown'}
+Log{id='ea3f5491-616a-4f38-be26-bb643a24efc8', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-20T03:54:51.615898600', ip='unknown'}
+Log{id='494c568f-6018-4ebd-b49e-c3ce5362b2ac', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T03:55:03.687210200', ip='unknown'}
+Log{id='1260cf9f-8413-436d-ac82-63ded13f61b9', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T03:55:07.388335100', ip='unknown'}
+Log{id='ad72ae6f-8ece-4318-bab1-8ce7202fcde0', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T04:16:46.336822300', ip='unknown'}
+Log{id='4c32542c-6757-4968-818e-18c0f615a7da', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T04:26:18.195112', ip='unknown'}
+Log{id='dda6eb9b-9d5f-4ea6-bd2a-f2b0370c77d4', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T04:40:17.004906100', ip='unknown'}
+Log{id='9265d61d-122c-4c00-9624-9c474314f6c9', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-20T04:40:44.332739200', ip='unknown'}
+Log{id='5aaf03af-f42b-48c6-b787-e5b951be9518', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-20T11:37:31.346117', ip='unknown'}
+Log{id='2b694e0b-e44f-4a6c-938b-8456c7b96a2a', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-20T11:37:33.585020900', ip='unknown'}
+Log{id='37666de7-9a59-47fc-a9b9-546d65cd4b57', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-20T11:37:35.380351900', ip='unknown'}
+Log{id='3463c04c-7911-4353-9c50-120cfdb0e5ca', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T11:37:48.053082100', ip='unknown'}
+Log{id='4b80997e-a172-45be-917d-62872b99b856', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T11:37:49.947109300', ip='unknown'}
+Log{id='2f361271-2057-49fe-aa6e-d14ebb3250d8', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T11:40:43.766580200', ip='unknown'}
+Log{id='11080b29-c337-4cf3-8ee5-1f91500a8304', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T11:50:14.523229900', ip='unknown'}
+Log{id='0f65ac79-95ea-476d-9842-37e9c7dbbd90', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-20T11:55:37.885667900', ip='unknown'}
+Log{id='709621ce-dc6e-44c1-98ae-bb681164dda5', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-20T12:05:06.968202200', ip='unknown'}
+Log{id='e0dc4c0c-6584-4d0d-a047-679daf2d4e3c', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-20T12:09:09.028968500', ip='unknown'}
+Log{id='828624ed-19e8-4997-9274-f40ac11b11a0', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-20T12:15:32.061713', ip='unknown'}
+Log{id='b461dcf6-9357-4378-8c8c-2ff89babe12b', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-20T18:33:07.969888', ip='unknown'}
+Log{id='cf557d1d-cbd6-4662-a3cc-41dcdbdcb99f', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-20T19:39:10.593475600', ip='unknown'}
+Log{id='c8266db5-76b0-44b0-84c6-1dad8cb24b6c', action='LOGIN', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='User logged in as ADMIN', timestamp='2026-05-20T19:39:10.599465200', ip='unknown'}
+Log{id='273fe611-792d-4ded-8e5d-711683fe41a7', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T19:39:33.033661200', ip='unknown'}
+Log{id='03bf7e9f-5069-4df5-bf2c-87750422fe91', action='LOGIN', user='94b907e4-bbc7-4472-86f1-babb88ff7769', details='User logged in as TA', timestamp='2026-05-20T19:39:33.036661600', ip='unknown'}
+Log{id='fb73706a-d98f-4e88-a564-afe52a6b1323', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T19:56:06.103075700', ip='unknown'}
+Log{id='ccc38f19-4174-4ec5-9920-f865134e2052', action='LOGIN', user='94b907e4-bbc7-4472-86f1-babb88ff7769', details='User logged in as TA', timestamp='2026-05-20T19:56:06.108081400', ip='unknown'}
+Log{id='669428d9-4b0c-453a-9041-7ea8b839fb6a', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-20T19:56:52.411233300', ip='unknown'}
+Log{id='5153f6e9-3500-43d5-983c-1b5426ac3932', action='LOGIN', user='94b907e4-bbc7-4472-86f1-babb88ff7769', details='User logged in as TA', timestamp='2026-05-20T19:56:52.417231400', ip='unknown'}
+Log{id='5dbf6dd5-c932-49e1-8cfb-f85d7db2c9fd', action='LOGOUT', user='94b907e4-bbc7-4472-86f1-babb88ff7769', details='User logged out from Job Board', timestamp='2026-05-20T19:56:55.575262200', ip='unknown'}
+Log{id='97b3686d-1717-43b4-b695-22d15af1d62f', action='LOGIN', user='ych', details='User logged in: ych', timestamp='2026-05-21T00:19:51.195485700', ip='unknown'}
+Log{id='7aac2612-93ac-4808-bb09-18c2a41713ec', action='LOGIN', user='94b907e4-bbc7-4472-86f1-babb88ff7769', details='User logged in as TA', timestamp='2026-05-21T00:19:51.204515700', ip='unknown'}
+Log{id='43303621-c9b6-4946-a79d-cf4877a3e17f', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T17:21:57.121264900', ip='unknown'}
+Log{id='a301fa4b-9b80-471f-92fb-c49583d35728', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T17:21:57.125019700', ip='unknown'}
+Log{id='cd8928b1-6c30-4e84-9877-3db70d06fb14', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T18:09:15.866722800', ip='unknown'}
+Log{id='4a191b71-cf0b-45b8-a89c-686c4b46069f', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T18:09:15.873226900', ip='unknown'}
+Log{id='ee507f20-d664-40b7-9435-11731a423d6d', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T18:24:21.453229800', ip='unknown'}
+Log{id='b7fcd74f-ea3c-4b20-b2e9-d3e1281809d4', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T18:24:21.462731800', ip='unknown'}
+Log{id='71027d00-3e98-4b37-b5fa-6714d5afc131', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T18:25:43.948769900', ip='unknown'}
+Log{id='578d9ed3-4e0a-4076-b0e3-c15e1ae90a25', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T18:25:43.957663700', ip='unknown'}
+Log{id='e72caed9-a69d-4cda-a23f-83ed1576eaf4', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-22T18:27:07.805247600', ip='unknown'}
+Log{id='0895e57f-1541-4d98-9f1b-0daf1b959edc', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-22T18:27:07.808268500', ip='unknown'}
+Log{id='ca55a14b-fa30-4b27-93bc-2d2e8a1886b7', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T18:48:19.761654100', ip='unknown'}
+Log{id='86288b95-a26f-4996-af0b-bb84e75e1596', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T18:48:19.769952200', ip='unknown'}
+Log{id='e2550e61-8b3f-411c-9ba1-5df491a7f5a5', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-22T18:51:39.091580800', ip='unknown'}
+Log{id='44fc224d-3cd8-4d42-a34f-036fb91961b2', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-22T18:51:39.094735800', ip='unknown'}
+Log{id='ef7cacd7-ffe6-498f-b7fc-ed1fb20d9546', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T19:16:20.759079700', ip='unknown'}
+Log{id='ebaa68f9-e3be-4f83-937e-ece846bce652', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T19:16:20.767011200', ip='unknown'}
+Log{id='70892fb4-4f37-45c3-801b-62d9ca7fb0f1', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-22T19:23:26.314664600', ip='unknown'}
+Log{id='eccfe2a9-d84a-42a1-bbff-175b8b8a35f8', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-22T19:23:26.318388300', ip='unknown'}
+Log{id='72c66b67-5d48-490e-89da-680cce41080b', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T19:32:47.294550400', ip='unknown'}
+Log{id='cc52445c-87da-491d-a448-7afd5d3d5146', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T19:32:47.306178600', ip='unknown'}
+Log{id='3d778949-d57a-4cc2-be05-e6328dc3af38', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T19:48:46.021373700', ip='unknown'}
+Log{id='3b050772-8895-49ec-bc0c-1edf339b3c35', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T19:48:46.027718800', ip='unknown'}
+Log{id='002906ad-6de2-419e-8949-35a77f688964', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T19:52:16.815424100', ip='unknown'}
+Log{id='2f4f1617-5d73-4a0c-8e0f-985abd773328', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T19:52:16.826176300', ip='unknown'}
+Log{id='9f59deea-f567-46c2-baaa-fcda040ecf54', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-22T19:53:11.857381200', ip='unknown'}
+Log{id='9e547f2e-1643-42a2-9f90-2abe09b3bf02', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-22T19:53:11.859182900', ip='unknown'}
+Log{id='7c4b80ce-c6a7-4f39-8bc9-98c33537ec0e', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T20:27:02.235210900', ip='unknown'}
+Log{id='091f1aeb-3eb6-4161-be8b-64ca46627d2f', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T20:27:02.240775400', ip='unknown'}
+Log{id='71d742a9-8b9e-498c-9a2e-bc0ee00b0fc4', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T20:36:29.646855400', ip='unknown'}
+Log{id='6899b1a7-390e-4105-9919-ddf512e308c1', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T20:36:29.651929800', ip='unknown'}
+Log{id='a1e97ca7-0b33-4612-bfe8-0d8466ca8f9b', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T20:40:34.852406100', ip='unknown'}
+Log{id='e88d4aff-1f27-4025-a46c-14ed98bab715', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T20:40:34.859530200', ip='unknown'}
+Log{id='aab9cd85-15a9-42d3-92ee-548e40a5962d', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T20:44:07.248308400', ip='unknown'}
+Log{id='4482e445-86bc-4903-b144-0c571ee02511', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T20:44:07.253054', ip='unknown'}
+Log{id='bdb6d817-6386-477e-b1f3-5944da0d5abd', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T20:48:16.035475900', ip='unknown'}
+Log{id='9e6d5184-3357-4ee8-adfa-de4aee4defc6', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T20:48:16.040702900', ip='unknown'}
+Log{id='254fd662-f8cf-4f3d-8075-29661e41053b', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T20:54:36.683587400', ip='unknown'}
+Log{id='a1d96f93-a2a4-4840-a260-713fa34935a3', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T20:54:36.689200400', ip='unknown'}
+Log{id='14acfe60-fbd0-4085-89af-4a3bbc8b4291', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-22T20:55:11.020906200', ip='unknown'}
+Log{id='dc24c40c-e176-4771-aae4-fbeb0502d378', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-22T20:55:11.024415400', ip='unknown'}
+Log{id='c498f6dc-c2b5-4266-8729-3b4d5d548c2e', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T20:57:56.132623500', ip='unknown'}
+Log{id='802c049a-0502-4839-96da-b57707c95d72', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T20:57:56.138920900', ip='unknown'}
+Log{id='e3061b6d-e18b-4722-b36c-abfecf72a466', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-22T20:58:27.312839600', ip='unknown'}
+Log{id='677973cb-8a7d-43cd-a633-0ce16f060a48', action='LOGIN', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='User logged in as ADMIN', timestamp='2026-05-22T20:58:27.316674300', ip='unknown'}
+Log{id='13e52275-ed89-4d72-937f-2bc9c512697b', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-22T20:58:35.309259800', ip='unknown'}
+Log{id='b1b9a2d9-f5fd-4845-9b9f-2f04146f3ed7', action='LOGIN', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='User logged in as ADMIN', timestamp='2026-05-22T20:58:35.310766800', ip='unknown'}
+Log{id='0d3a2be3-519d-4d9a-b9e4-d8e90f22ae6b', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-22T20:58:35.856455400', ip='unknown'}
+Log{id='12573d6d-b067-4118-841a-c4847ecd96c3', action='LOGIN', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='User logged in as ADMIN', timestamp='2026-05-22T20:58:35.858975300', ip='unknown'}
+Log{id='6d560614-8098-4e92-afb2-73e74111fe5b', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-22T20:58:36.043156900', ip='unknown'}
+Log{id='0f73d840-2ca8-4b5e-a932-daca616a888f', action='LOGIN', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='User logged in as ADMIN', timestamp='2026-05-22T20:58:36.044667', ip='unknown'}
+Log{id='df74214f-a9d3-4ed4-a1dc-2eefe55b6bfd', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-22T21:00:11.566711600', ip='unknown'}
+Log{id='0eabcde8-685d-4ea0-99b6-47e5ec57585e', action='LOGIN', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='User logged in as ADMIN', timestamp='2026-05-22T21:00:11.572119200', ip='unknown'}
+Log{id='34468de1-9b71-4039-917f-7816d3c97531', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-22T21:00:43.499596200', ip='unknown'}
+Log{id='859a07d4-9996-4acf-8544-cb1984f9f5a2', action='LOGIN', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='User logged in as ADMIN', timestamp='2026-05-22T21:00:43.502388300', ip='unknown'}
+Log{id='52611067-be39-4cf5-90f7-fb62fb53cf7d', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-22T21:01:12.061138300', ip='unknown'}
+Log{id='e9a11df1-eb2d-4f9a-8d58-541c58d17468', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-22T21:01:12.067391700', ip='unknown'}
+Log{id='555232b2-171f-4b09-a2a4-47143c9d78cf', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-22T21:43:09.041446200', ip='unknown'}
+Log{id='cec192d4-2c43-4f74-a339-072e0632edef', action='LOGIN', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='User logged in as ADMIN', timestamp='2026-05-22T21:43:09.043452700', ip='unknown'}
+Log{id='a26f589e-ebf5-46e8-b38e-21ba1687e7a2', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T22:38:55.528642', ip='unknown'}
+Log{id='e4ec8fbf-910f-405d-b916-1af07be5cda9', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T22:38:55.534994900', ip='unknown'}
+Log{id='c6838699-da5a-450b-b49e-822786f0c505', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-22T22:39:22.883558300', ip='unknown'}
+Log{id='fd9c8613-46b6-41b9-9be1-cd64d5f7f1dd', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-22T22:39:22.887115300', ip='unknown'}
+Log{id='9937976a-c5dd-410a-b89b-93668c8ed067', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-05-22T22:39:28.953393600', ip='unknown'}
+Log{id='7443c5b0-d974-44cf-a696-69155c2915d7', action='UPDATE_TA_PROFILE', user='hcyy', details='TA profile updated: hcyy', timestamp='2026-05-22T22:39:31.437186200', ip='unknown'}
+Log{id='100dfca1-9e4b-4e35-a5f4-359d176f3a78', action='LOGIN', user='hhccyy1', details='User logged in: hhccyy1', timestamp='2026-05-22T22:40:25.844521400', ip='unknown'}
+Log{id='6e3ef9bc-40a6-4a9d-9050-4cfc3180c0a4', action='LOGIN', user='a1897c62-13fb-4d38-b53f-c9f0da69f006', details='User logged in as ADMIN', timestamp='2026-05-22T22:40:25.845545100', ip='unknown'}
+Log{id='4ca1465d-70af-44ba-a215-19a1c451b89b', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T22:42:06.673332300', ip='unknown'}
+Log{id='62bca347-c3ee-4727-8922-7ed58707ed39', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T22:42:06.674740500', ip='unknown'}
+Log{id='ecc693c0-4d3a-462a-9c55-bad852e2f7d1', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T22:51:02.572014800', ip='unknown'}
+Log{id='bcb0a5e7-e975-4bbf-8a86-e32b0db43a70', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T22:51:02.577106600', ip='unknown'}
+Log{id='682c09fd-6120-4ec8-b472-5f88288bafb8', action='LOGOUT', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged out from Job Board', timestamp='2026-05-22T22:57:59.218205800', ip='unknown'}
+Log{id='172924f4-3a8c-4d0f-9cb9-f3c7cc31b8fd', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-22T22:58:12.094052800', ip='unknown'}
+Log{id='6cc68128-5ff5-41f9-9f7c-fd1537fdc164', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-22T22:58:12.095572800', ip='unknown'}
+Log{id='8b3cd3eb-2884-4041-b553-362a447037bb', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T23:37:47.853940700', ip='unknown'}
+Log{id='2d94135f-b27c-4dab-85fb-53c29190d2f0', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T23:37:47.860581100', ip='unknown'}
+Log{id='5e614a6f-2765-432e-aec2-fe2e220c77a9', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-22T23:59:19.550805900', ip='unknown'}
+Log{id='fa947fbd-caed-4135-8b92-4b167dac2d3c', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-22T23:59:19.555731100', ip='unknown'}
+Log{id='9904a161-60fc-482b-ab1d-3b24547ffcef', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T00:18:16.091921', ip='unknown'}
+Log{id='90899a8b-e010-4ec6-8d40-9c5bce1e21ea', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T00:18:16.097615', ip='unknown'}
+Log{id='ef072535-387d-4b39-995c-f8c34e49a220', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T00:22:36.109975200', ip='unknown'}
+Log{id='e02ebc5c-be92-4d41-9e44-aa3968823788', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T00:22:36.116922', ip='unknown'}
+Log{id='19b0e646-b2fb-42d4-9ce4-72bc4f358645', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T00:26:09.256061500', ip='unknown'}
+Log{id='f3233f70-2f4b-4a62-ac2a-d008a54f778a', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T00:26:09.261324900', ip='unknown'}
+Log{id='11494d9c-ffb3-4e44-af66-9a1d93583ff8', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T00:26:35.148094600', ip='unknown'}
+Log{id='2b1dc4d4-7191-4c61-9e48-f95ba979dfd7', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T00:26:35.149602300', ip='unknown'}
+Log{id='878769c7-2561-435d-983a-d2fa732ca98f', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T00:32:17.551783300', ip='unknown'}
+Log{id='26622d59-cbdb-4e77-aec6-37afd9f2bb6e', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T00:32:17.555709400', ip='unknown'}
+Log{id='de81b806-bb4e-49ab-b7cf-553ed608f279', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T00:47:09.047048900', ip='unknown'}
+Log{id='d4e73cf9-abbb-4ed5-901f-0b0f5e94cc40', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T00:47:09.051347', ip='unknown'}
+Log{id='54dec9e4-4c81-4925-830a-14d7b0933298', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T00:51:35.948838200', ip='unknown'}
+Log{id='6cb205fa-19d9-4592-87db-c63dfef8870b', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T00:51:35.953894700', ip='unknown'}
+Log{id='bd9c2e0c-fd52-47ea-bc38-0b9f2cc2ca53', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T00:53:59.830203', ip='unknown'}
+Log{id='041910f8-2e01-4c5d-ba11-4049eff962d8', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T00:53:59.834813500', ip='unknown'}
+Log{id='504269d8-e533-4051-9c69-53e8c6b5ad67', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T00:57:02.254746700', ip='unknown'}
+Log{id='a2ae2581-c427-4b94-92e8-6363838c4554', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T00:57:02.259479500', ip='unknown'}
+Log{id='3c7c1033-c525-48c0-b8d9-5a90b5740c3e', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T00:59:10.441635400', ip='unknown'}
+Log{id='fec31a7a-5340-40b4-9f9d-1055cad40ac8', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T00:59:10.445144700', ip='unknown'}
+Log{id='7e15c601-989d-4af7-9968-b6ce849b2b5c', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T01:02:53.788498200', ip='unknown'}
+Log{id='23a9e6ef-0c8d-469b-9b46-2e2b664aa8b4', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T01:02:53.793535900', ip='unknown'}
+Log{id='0e0a9c91-b81f-4125-a149-3618d25e4b84', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T01:07:06.275490600', ip='unknown'}
+Log{id='d6efe07d-f91b-44b0-94ff-e323919064a9', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T01:07:06.280869100', ip='unknown'}
+Log{id='39f5f0cd-27cb-4223-8234-6abd15482077', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T01:09:52.232533600', ip='unknown'}
+Log{id='d1e4eacd-8b80-446e-ac64-a14208f530e3', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T01:09:52.238340900', ip='unknown'}
+Log{id='9e42f8f6-29ef-4477-9b15-8d7f14b92ad6', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T01:12:14.024207200', ip='unknown'}
+Log{id='4c1a9f72-62a4-409e-af90-cbe4ae853ed5', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T01:12:14.028260700', ip='unknown'}
+Log{id='30b1108e-91ee-41d2-9237-32ed90563ea0', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:12:28.768720700', ip='unknown'}
+Log{id='ded11a47-cc97-4d62-a211-3cc1bd49af61', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:12:28.771257200', ip='unknown'}
+Log{id='2a1adb16-30cc-4e70-b831-4de12f3096f3', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:12:40.736209300', ip='unknown'}
+Log{id='6ba73657-1246-460b-8d2b-fa8ed5470739', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:12:40.737865900', ip='unknown'}
+Log{id='e2374216-8cf3-416e-9aea-0ea65b74a32e', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:19:51.807387900', ip='unknown'}
+Log{id='b60df428-16c8-42fb-82bc-68d4e9fdf509', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:19:51.811516300', ip='unknown'}
+Log{id='2cbaeed0-484e-4bd9-ab9e-828b9ab2fdc1', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:21:38.926927400', ip='unknown'}
+Log{id='fe9d1965-6b50-4140-9ee0-331ec3090f54', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:21:38.932133200', ip='unknown'}
+Log{id='5d63e8d0-06bf-4831-8d57-816cbd267422', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:23:02.331017500', ip='unknown'}
+Log{id='efbeaf0c-69f8-4f3d-b561-270200ee81f7', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:23:02.334608200', ip='unknown'}
+Log{id='b8869e3d-9995-4c86-8ad0-89081b2bac35', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:25:05.340348700', ip='unknown'}
+Log{id='0d9de9c5-4f45-4808-9043-8939f026d3a4', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:25:05.346139900', ip='unknown'}
+Log{id='0bd77288-9dc3-4d65-877b-e5dc9bd4c971', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:27:55.690698200', ip='unknown'}
+Log{id='a0aabb2a-e5d9-4b95-87d4-1560b3465295', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:27:55.695280', ip='unknown'}
+Log{id='412b2dfd-5269-44bc-ac98-3a6381817640', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:30:39.273809900', ip='unknown'}
+Log{id='d6ed598d-c767-4858-b43c-a624c10603f5', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:30:39.278405500', ip='unknown'}
+Log{id='7e2ffd69-c6d7-4979-9fe3-c8c8ae1d4472', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:34:28.724774500', ip='unknown'}
+Log{id='b2a27df4-689f-41d8-89a6-c6ffc042ba38', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:34:28.730553', ip='unknown'}
+Log{id='1920f797-bdb1-4cf6-9fb9-6b059c087a18', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:37:48.320517500', ip='unknown'}
+Log{id='c565a47d-ea0f-437d-98a7-805f5adab7fa', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:37:48.326911200', ip='unknown'}
+Log{id='50c17aa3-d981-488a-93ee-0e720c611ed5', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:40:38.700600300', ip='unknown'}
+Log{id='260b21cd-816c-40c3-9642-b285afddb196', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:40:38.706119', ip='unknown'}
+Log{id='f4063f42-609c-4d40-8dc9-37afc4bf17ee', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:41:02.497413600', ip='unknown'}
+Log{id='74b0e146-3259-40ae-9da7-52cd934759a0', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:41:02.503332500', ip='unknown'}
+Log{id='0242f5d0-e5cf-4af7-8820-6db4394c908a', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:46:19.828593600', ip='unknown'}
+Log{id='70ed5122-b9aa-4924-b7af-5965c0d17012', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:46:19.833278700', ip='unknown'}
+Log{id='c17713c5-b1db-4ba9-9aee-ac930f433df7', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:51:53.355724', ip='unknown'}
+Log{id='f9977b7a-ef79-49e4-a9d3-435beb74f8fa', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:51:53.360799500', ip='unknown'}
+Log{id='a6da86ae-b8bc-4270-ae5f-268e999d14d8', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:54:57.475481800', ip='unknown'}
+Log{id='8a5b992c-96eb-41a3-8863-fefbb235c720', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:54:57.481235700', ip='unknown'}
+Log{id='959a74e4-b5ac-4281-a14a-b2c4c1306c63', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:57:18.487124800', ip='unknown'}
+Log{id='9bd96f29-a9e1-44d2-a390-3f35fd5d5451', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:57:18.493809900', ip='unknown'}
+Log{id='21e065fa-afd1-42ac-ab0c-f97b31284765', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T01:58:52.281110', ip='unknown'}
+Log{id='6a51ec0a-c681-447d-90c5-55568cc7cd4d', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T01:58:52.287637400', ip='unknown'}
+Log{id='3fe43a6f-5e12-4a45-a2f0-a848a8071a7c', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T02:00:29.651846300', ip='unknown'}
+Log{id='2b6ed3ad-9134-4b20-a97d-ac6c7f152ef6', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T02:00:29.656930200', ip='unknown'}
+Log{id='dd028499-a55b-4a16-8ffb-19289f0495d9', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T02:00:47.508031300', ip='unknown'}
+Log{id='e63676ff-dd8e-4df3-b9e4-bf53f48e53bd', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T02:00:47.510058800', ip='unknown'}
+Log{id='001db1b9-5996-449e-8165-28b140bcf4d1', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T02:04:55.658338800', ip='unknown'}
+Log{id='6c070865-8a46-4fcc-b0d4-d1064e5813c7', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T02:04:55.663770300', ip='unknown'}
+Log{id='99c3666e-6b85-41b4-8cd4-7db1f528aad3', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T02:05:10.976234500', ip='unknown'}
+Log{id='f3ec267a-f0f2-417a-b71a-fde1c778f65c', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T02:05:10.979578700', ip='unknown'}
+Log{id='e736f969-767d-4f77-9926-76d709a82c8b', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T02:06:27.228095700', ip='unknown'}
+Log{id='a87ba69f-fc59-45da-a1de-9bdd9ed9079c', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T02:06:27.231194800', ip='unknown'}
+Log{id='a6d41b60-0614-4a4a-997e-49a565fded45', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T02:08:44.639860700', ip='unknown'}
+Log{id='cb3cd1dd-9003-41f3-b901-88ece0eb2731', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T02:08:44.644119900', ip='unknown'}
+Log{id='e6adeafd-64de-4bcf-9383-da5257d5ca71', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T02:15:29.773459100', ip='unknown'}
+Log{id='35a57f33-9e75-4df5-ad15-cad7e941606a', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T02:15:29.777510700', ip='unknown'}
+Log{id='27f125ce-762d-497c-b960-99546691471c', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T02:23:26.731735700', ip='unknown'}
+Log{id='f5d33415-aecd-4784-90e7-33352cb9dae2', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T02:23:26.735859900', ip='unknown'}
+Log{id='622e1c23-81cc-48e4-af94-d54b9236d88b', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T02:23:54.600776400', ip='unknown'}
+Log{id='f216474e-5ce9-4f9d-846c-779c05c4664b', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T02:23:54.604741400', ip='unknown'}
+Log{id='d1962ed2-c1e0-4cc0-a97a-71272727fca6', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T02:25:30.174410700', ip='unknown'}
+Log{id='8eb1ae14-b462-4d4d-b84e-0373d4d51e28', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T02:25:30.179448600', ip='unknown'}
+Log{id='1b33facf-204e-4037-8dc2-a2cb739a51e0', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T02:29:07.103665500', ip='unknown'}
+Log{id='6084725b-c7ce-4ceb-ab10-62a5023b3ae6', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T02:29:07.107744800', ip='unknown'}
+Log{id='014adc38-5141-4d5f-a0d2-9623c165d8f9', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T11:26:53.757197500', ip='unknown'}
+Log{id='6ccd1ef0-2827-40b0-9546-7abfaf83b7e1', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T11:26:53.763738700', ip='unknown'}
+Log{id='f7e09d78-ad72-482c-8cd6-61e2ab7afa10', action='LOGOUT', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged out from Job Board', timestamp='2026-05-23T11:27:00.144863800', ip='unknown'}
+Log{id='1c10a8e8-3391-468e-b158-73f57098e922', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T11:40:43.245353300', ip='unknown'}
+Log{id='18ca8086-2d86-4121-b856-0a1d9d9ef1e1', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T11:40:43.250556200', ip='unknown'}
+Log{id='c64f7295-180e-43dc-bd45-52f3b1379138', action='LOGIN', user='professor_li', details='User logged in: professor_li', timestamp='2026-05-23T11:45:20.164777700', ip='unknown'}
+Log{id='81d982c2-b9fd-40ed-be5e-a91cb9f3e4d4', action='LOGIN', user='f8a9b0c1-d2e3-4567-f678-01234567', details='User logged in as MO', timestamp='2026-05-23T11:45:20.167878', ip='unknown'}
+Log{id='1971b51d-023e-48dd-aa05-f7bd45fa432a', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T11:48:57.094517900', ip='unknown'}
+Log{id='31c0d239-7ff4-4952-86c4-12c40525ec27', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T11:48:57.098516100', ip='unknown'}
+Log{id='8f7b904a-f623-45fa-ad4c-5ab61ec60fac', action='LOGIN', user='professor_li', details='User logged in: professor_li', timestamp='2026-05-23T11:49:45.593762300', ip='unknown'}
+Log{id='75d964ab-b826-48a5-a8df-11da755a1659', action='LOGIN', user='f8a9b0c1-d2e3-4567-f678-01234567', details='User logged in as MO', timestamp='2026-05-23T11:49:45.595863400', ip='unknown'}
+Log{id='83e6ba1e-0162-4c99-9457-cfe50221dbe1', action='LOGIN', user='zhangwei', details='User logged in: zhangwei', timestamp='2026-05-23T11:50:36.865039200', ip='unknown'}
+Log{id='a4b7f71e-fdb0-4fec-be2b-7637ca7fa18c', action='LOGIN', user='e1f2a3b4-c5d6-7890-ef12-34567890', details='User logged in as TA', timestamp='2026-05-23T11:50:36.868122700', ip='unknown'}
+Log{id='5933b632-95c0-4854-aa39-ecf24ee56bc1', action='LOGOUT', user='e1f2a3b4-c5d6-7890-ef12-34567890', details='User logged out from Job Board', timestamp='2026-05-23T11:52:25.084834800', ip='unknown'}
+Log{id='82c1f4c6-c3d4-4f14-9704-c7671ca66f10', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T11:52:30.983032700', ip='unknown'}
+Log{id='917f39bb-2771-42d0-a789-0f51cb9509d1', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T11:52:30.985060500', ip='unknown'}
+Log{id='28a63c9c-63da-4310-80e3-77aff2a074bf', action='LOGOUT', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged out from Job Board', timestamp='2026-05-23T11:52:50.435224200', ip='unknown'}
+Log{id='761e0659-10dc-4277-9095-e81fc044e136', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T11:53:51.703806800', ip='unknown'}
+Log{id='eea878e8-d614-4736-ba05-7d48d0b44fe9', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T11:53:51.704821800', ip='unknown'}
+Log{id='49c2495b-e913-410f-81bf-faf9d7146d4f', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T11:57:24.178326300', ip='unknown'}
+Log{id='38ab5a14-44ff-4734-bda5-89f691b34a1f', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T11:57:24.184687200', ip='unknown'}
+Log{id='c00c7e17-80e6-4d14-8a5d-c3f3f11e4522', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:02:58.869091', ip='unknown'}
+Log{id='11341868-0157-4ea0-8b29-650d41835b70', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:02:58.873398600', ip='unknown'}
+Log{id='84a09983-9883-4338-8bc2-ea775a81329c', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:06:24.479187100', ip='unknown'}
+Log{id='d3792ef2-a062-49af-85e7-5f07fc3e47a1', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:06:24.483903600', ip='unknown'}
+Log{id='160b50c5-bee2-4ac9-ad68-04b83a78f25e', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:07:38.990238800', ip='unknown'}
+Log{id='22c5b64e-5cdb-46bc-b41d-4c104a0c170a', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:07:38.995907100', ip='unknown'}
+Log{id='1ab0e29b-8cf1-4965-9c68-cffb2c280738', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:14:56.729328500', ip='unknown'}
+Log{id='f06273ed-5460-40c4-870f-571406f8886e', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:14:56.734152500', ip='unknown'}
+Log{id='6b86a99d-83c5-4aa1-b181-df87ecb2527e', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:25:11.942793100', ip='unknown'}
+Log{id='cb8e2231-002e-4310-912a-e8be68e326c5', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:25:11.947680200', ip='unknown'}
+Log{id='10bb7925-4de9-47d1-bae3-f9927fdfe2dd', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:26:29.737840500', ip='unknown'}
+Log{id='4ad36fda-f784-4db4-85d7-51cbe657bc53', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:26:29.745166900', ip='unknown'}
+Log{id='423a8f2a-3326-49fc-b951-3066622ab247', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:30:08.105845500', ip='unknown'}
+Log{id='80e73965-0329-4576-95fe-c04bf2306ac4', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:30:08.110094500', ip='unknown'}
+Log{id='7718a0de-c03f-4b71-8b7a-f2603f42fdbe', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:34:54.507184200', ip='unknown'}
+Log{id='ca70db18-54de-4e1f-a00a-c271f5b341ee', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:34:54.512897600', ip='unknown'}
+Log{id='094f4c92-97b0-4c50-bc47-06bffdaeee84', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:40:50.666542300', ip='unknown'}
+Log{id='c16a1766-fe58-4148-8687-82f6923a172b', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:40:50.673248800', ip='unknown'}
+Log{id='71cb8e50-9c6b-4a0d-81c6-2244ca4ddc5d', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:44:22.264772700', ip='unknown'}
+Log{id='bafb6462-274c-4755-ae50-30abcf21ab91', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:44:22.269811', ip='unknown'}
+Log{id='d91e9a6c-0a96-4244-893e-e39c3c989d7f', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:44:59.640381100', ip='unknown'}
+Log{id='0cc4f95b-2e8f-4c6d-84e2-58ca0a967178', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:44:59.645486900', ip='unknown'}
+Log{id='d7813c21-3c0e-4296-8e5f-ff5abe7cf5ba', action='SUBMIT_APPLICATION', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='Application submitted for job: Computer Graphics TA', timestamp='2026-05-23T12:45:30.205663800', ip='unknown'}
+Log{id='940eea10-57fb-4fba-baf3-c966b94a9829', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:51:40.111093300', ip='unknown'}
+Log{id='5d66b431-b15d-4bc2-bbcf-4ad8dbfbdbce', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:51:40.117995600', ip='unknown'}
+Log{id='c4173c9c-2392-4e7b-8ea4-b92b0b2ce3c5', action='LOGIN', user='hcyy', details='User logged in: hcyy', timestamp='2026-05-23T12:55:16.820250800', ip='unknown'}
+Log{id='1cac574e-7299-4757-82dd-a0f31b64d580', action='LOGIN', user='ff07cec4-fcf9-46d3-88f4-9aea91e75fcb', details='User logged in as TA', timestamp='2026-05-23T12:55:16.825194700', ip='unknown'}
+Log{id='378cdc1c-04b5-4b22-ac4e-0bfa4ba8f6ba', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T12:55:31.667440', ip='unknown'}
+Log{id='5fbfc133-5712-49ed-888a-ec59de955091', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T12:55:31.669714900', ip='unknown'}
+Log{id='de16e007-366c-4397-9b5e-eb731e2e5c4a', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T13:05:04.226559100', ip='unknown'}
+Log{id='aef84de5-e947-4f98-a15a-9dc4ad8c9668', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T13:05:04.231527100', ip='unknown'}
+Log{id='4c01440b-d81d-446b-b4bf-a9c3dc5afdb4', action='LOGIN', user='hcyyy', details='User logged in: hcyyy', timestamp='2026-05-23T13:06:10.566651700', ip='unknown'}
+Log{id='5f012d3a-b542-498c-9545-d792ecad883c', action='LOGIN', user='11d79340-07f1-4880-863e-c597ae807692', details='User logged in as MO', timestamp='2026-05-23T13:06:10.571708700', ip='unknown'}

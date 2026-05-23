@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUPT International School TA Recruitment System - Email Input</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-color: #003366;
+            --primary-light: #1a4b80;
+            --secondary-color: #7a67ee;
+            --accent-color: #ff9f43;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 51, 102, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 51, 102, 0.12), 0 2px 4px -1px rgba(0, 51, 102, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 51, 102, 0.12), 0 4px 6px -2px rgba(0, 51, 102, 0.05);
+            
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            
+            --font-sans: 'Noto Sans SC', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'Inter', monospace;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+        
+        .header-bar {
+            height: 8px;
+            display: flex;
+        }
+        
+        .header-bar div {
+            flex: 1;
+        }
+        
+        .bg-primary {
+            background-color: var(--primary-color);
+        }
+        
+        .bg-secondary {
+            background-color: var(--secondary-color);
+        }
+        
+        .bg-accent {
+            background-color: var(--accent-color);
+        }
+        
+        .bg-success {
+            background-color: var(--success-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-2xl);
+        }
+        
+        .email-input-card {
+            background-color: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: var(--spacing-2xl);
+            max-width: 520px;
+            margin: 0 auto;
+        }
+        
+        .card-header {
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+        
+        .card-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .card-subtitle {
+            font-size: 18px;
+            color: var(--gray-600);
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .form-label {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+        
+        .form-field {
+            padding: 14px 20px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-family: var(--font-sans);
+            transition: all 0.2s ease;
+            height: 56px;
+        }
+        
+        .form-field:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+        }
+        
+        .form-field::placeholder {
+            color: var(--gray-400);
+        }
+        
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .captcha-label {
+            padding: 12px 24px;
+            background-color: var(--gray-100);
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: 28px;
+            font-weight: bold;
+            color: var(--gray-700);
+            min-width: 140px;
+            text-align: center;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .refresh-captcha-btn {
+            padding: 12px;
+            border: 1px solid var(--gray-300);
+            background-color: var(--white);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .refresh-captcha-btn i {
+            font-size: 18px;
+        }
+        
+        .refresh-captcha-btn:hover {
+            background-color: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+        
+        .form-error {
+            font-size: 12px;
+            color: var(--error-color);
+            display: none;
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            font-size: 14px;
+            margin-bottom: var(--spacing-md);
+            text-align: center;
+            display: none;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-2xl);
+        }
+        
+        .btn {
+            padding: 14px 32px;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            font-family: var(--font-sans);
+            min-width: 140px;
+            height: 56px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--gray-50);
+            border-color: var(--gray-400);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: var(--spacing-2xl);
+        }
+        
+        .footer-text {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: var(--spacing-lg);
+            }
+            
+            .email-input-card {
+                padding: var(--spacing-lg);
+            }
+            
+            .captcha-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .captcha-label {
+                width: 100%;
+                margin-bottom: var(--spacing-sm);
+            }
+            
+            .refresh-captcha-btn {
+                align-self: flex-start;
+            }
+            
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-bar">
+        <div class="bg-primary"></div>
+        <div class="bg-secondary"></div>
+        <div class="bg-accent"></div>
+        <div class="bg-success"></div>
+    </div>
+    
+    <div class="container">
+        <div class="email-input-card">
+            <div class="card-header">
+                <h1 class="card-title">User Registration</h1>
+                <h2 class="card-subtitle">Create your Account</h2>
+            </div>
+            
+            <form id="emailInputForm">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input type="email" id="email" class="form-field" placeholder="name@company.com" required>
+                    <div id="emailError" class="form-error">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Enter text from Image</label>
+                    <div class="captcha-container">
+                        <div class="captcha-label" id="captchaLabel">HGAK</div>
+                        <button type="button" class="refresh-captcha-btn" id="refreshCaptchaButton">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <input type="text" id="captcha" class="form-field" placeholder="Enter captcha" required>
+                    <div id="captchaError" class="form-error">Please enter the correct captcha</div>
+                </div>
+                
+                <div id="errorMessage" class="error-message">Please fix the errors above</div>
+                
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" id="backButton">Back</button>
+                    <button type="submit" class="btn btn-primary" id="nextButton">Next</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="footer">
+            <p class="footer-text">&copy; 2026 BUPT International School. All rights reserved.</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailInputForm = document.getElementById('emailInputForm');
+            const backButton = document.getElementById('backButton');
+            const refreshCaptchaButton = document.getElementById('refreshCaptchaButton');
+            const captchaLabel = document.getElementById('captchaLabel');
+            
+            // 生成随机验证码
+            function generateCaptcha() {
+                const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+                let captcha = '';
+                for (let i = 0; i < 4; i++) {
+                    captcha += characters.charAt(Math.floor(Math.random() * characters.length));
+                }
+                return captcha;
+            }
+            
+            // 刷新验证码
+            function refreshCaptcha() {
+                captchaLabel.textContent = generateCaptcha();
+                document.getElementById('captcha').value = '';
+                document.getElementById('captchaError').style.display = 'none';
+            }
+            
+            // 初始化验证码
+            refreshCaptcha();
+            
+            // 刷新验证码按钮点击事件
+            refreshCaptchaButton.addEventListener('click', refreshCaptcha);
+            
+            // 邮箱输入表单提交
+            emailInputForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const captcha = document.getElementById('captcha').value;
+                
+                // 简单验证
+                let isValid = true;
+                
+                if (!email || !email.includes('@')) {
+                    document.getElementById('emailError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('emailError').style.display = 'none';
+                }
+                
+                if (!captcha || captcha.length !== 4) {
+                    document.getElementById('captchaError').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('captchaError').style.display = 'none';
+                }
+                
+                if (isValid) {
+                    document.getElementById('errorMessage').style.display = 'none';
+                    
+                    // 模拟验证成功后跳转
+                    setTimeout(function() {
+                        window.location.href = 'email-verification.html';
+                    }, 500);
+                } else {
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            });
+            
+            // 返回按钮
+            backButton.addEventListener('click', function() {
+                window.location.href = 'login.html';
+            });
+        });
+    </script>
+</body>
+</html>
