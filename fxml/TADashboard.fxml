@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.beans.binding.*?>
+<?import javafx.beans.property.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.util.*?>
+
+<AnchorPane fx:id="taDashboardPane" styleClass="background-gradient" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TADashboardController">
+    <!-- ????-->    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true; -fx-min-height: 64px;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
+                <StackPane style="-fx-background-radius: 50%; -fx-background-color: #003366; -fx-pref-width: 36px; -fx-pref-height: 36px; -fx-alignment: center;">
+                    <Label text="TA" style="-fx-text-fill: white; -fx-font-weight: 600; -fx-font-size: 14px;" />
+                </StackPane>
+                <Label text="Welcome, TA Applicant" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu active" onAction="#handleHome" accessibleText="Go to home page" />
+                <Button text="Job Requirements" styleClass="navbar-menu" onAction="#handleJobRequirements" accessibleText="View job requirements" />
+                <Button text="Application Management" styleClass="navbar-menu" onAction="#handleApplicationManagement" accessibleText="Manage your applications" />
+                <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
+                <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" accessibleText="Log out of the system" />
+            </HBox>
+        </HBox>
+    </VBox>
+    
+    <!-- ???? -->
+    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: #f8f9fa;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="64.0">
+        <VBox style="-fx-padding: 24px; -fx-spacing: 24px; -fx-fill-width: true; -fx-background-color: #f8f9fa; -fx-pref-height: -1;">
+            <!-- ???? -->
+            <VBox style="-fx-spacing: 8;">
+                <Label text="TA Applicant Dashboard" styleClass="page-title" style="-fx-font-size: 24px; -fx-font-weight: 700; -fx-text-fill: #333333;" />
+                <Label text="View your application status and available positions" styleClass="page-subtitle" style="-fx-font-size: 14px; -fx-text-fill: #666666;" />
+            </VBox>
+
+            <!-- ???? -->
+            <HBox spacing="24" alignment="CENTER">
+                <!-- ???? -->
+                <VBox HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="stat-card" onMouseClicked="#handleJobsCardClick" style="-fx-min-width: 250px; -fx-spacing: 8; -fx-alignment: TOP_LEFT; -fx-padding: 16px; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 8, 0, 0, 4); -fx-background-color: white;" accessibleText="View available job positions">
+                    <Label text="Jobs" style="-fx-font-size: 20px; -fx-text-fill: #003366;" />
+                    <Label fx:id="openPositionsLabel" text="12" styleClass="stat-value" style="-fx-font-size: 32px; -fx-font-weight: 700; -fx-text-fill: #333333; -fx-margin: 8 0 4 0;" />
+                    <Label text="Available Positions" styleClass="stat-label" style="-fx-font-size: 14px; -fx-text-fill: #666666; -fx-margin: 0 0 8 0;" />
+                    <HBox style="-fx-spacing: 4; -fx-alignment: center;">
+                        <Label text="+" style="-fx-text-fill: #10b981;" />
+                        <Label text="+3 this week" style="-fx-font-size: 12px; -fx-text-fill: #10b981;" />
+                    </HBox>
+                </VBox>
+                
+                <!-- ???? -->
+                <VBox HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="stat-card" onMouseClicked="#handleUserCardClick" style="-fx-min-width: 250px; -fx-spacing: 8; -fx-alignment: TOP_LEFT; -fx-padding: 16px; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 8, 0, 0, 4); -fx-background-color: white;" accessibleText="View your submitted applications">
+                    <Label text="User" style="-fx-font-size: 24px; -fx-text-fill: #7a67ee;" />
+                    <Label fx:id="myApplicationsLabel" text="5" styleClass="stat-value" style="-fx-font-size: 32px; -fx-font-weight: 700; -fx-text-fill: #333333; -fx-margin: 8 0 4 0;" />
+                    <Label text="My Applications" styleClass="stat-label" style="-fx-font-size: 14px; -fx-text-fill: #666666; -fx-margin: 0 0 8 0;" />
+                    <HBox style="-fx-spacing: 4; -fx-alignment: center;">
+                        <Label text="+" style="-fx-text-fill: #10b981;" />
+                        <Label text="+2 this week" style="-fx-font-size: 12px; -fx-text-fill: #10b981;" />
+                    </HBox>
+                </VBox>
+                
+                <!-- ???? -->
+                <VBox HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="stat-card" onMouseClicked="#handlePendingTasksClick" style="-fx-min-width: 250px; -fx-spacing: 8; -fx-alignment: TOP_LEFT; -fx-padding: 16px; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 8, 0, 0, 4); -fx-background-color: white;" accessibleText="View pending tasks">
+                    <Label text="Tasks" style="-fx-font-size: 20px; -fx-text-fill: #ff9f43;" />
+                    <Label fx:id="pendingActionsLabel" text="3" styleClass="stat-value" style="-fx-font-size: 32px; -fx-font-weight: 700; -fx-text-fill: #333333; -fx-margin: 8 0 4 0;" />
+                    <Label text="Pending Tasks" styleClass="stat-label" style="-fx-font-size: 14px; -fx-text-fill: #666666; -fx-margin: 0 0 8 0;" />
+                    <HBox style="-fx-spacing: 4; -fx-alignment: center;">
+                        <Label text="-" style="-fx-text-fill: #ef4444;" />
+                        <Label text="-1 since last week" style="-fx-font-size: 12px; -fx-text-fill: #ef4444;" />
+                    </HBox>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS" maxWidth="Infinity" styleClass="stat-card" style="-fx-min-width: 250px; -fx-spacing: 8; -fx-alignment: TOP_LEFT; -fx-padding: 16px; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 8, 0, 0, 4); -fx-background-color: white;" accessibleText="Current workload status">
+                    <Label text="Workload" style="-fx-font-size: 20px; -fx-text-fill: #003366;" />
+                    <Label fx:id="workloadLabel" text="0" styleClass="stat-value" style="-fx-font-size: 32px; -fx-font-weight: 700; -fx-text-fill: #16a34a;" />
+                    <Label text="Current Workload (hours)" styleClass="stat-label" style="-fx-font-size: 14px; -fx-text-fill: #666666;" />
+                    <Label fx:id="workloadBandLabel" text="Your current workload looks healthy and manageable." style="-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #16a34a;" />
+                </VBox>
+            </HBox>
+
+            <HBox spacing="24" alignment="TOP_LEFT" style="-fx-fill-width: true;">
+                <VBox HBox.hgrow="ALWAYS" style="-fx-pref-width: 50%; -fx-spacing: 16; -fx-fill-width: true;">
+                    <VBox styleClass="card-gradient" maxWidth="Infinity" style="-fx-padding: 16px; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 8, 0, 0, 4); -fx-background-color: white;">
+                        <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true; -fx-padding: 0 0 16 0;">
+                            <VBox style="-fx-spacing: 4; -fx-fill-width: true;">
+                                <Label text="Pending Tasks" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #333333;" />
+                                <Label text="Please complete these tasks before the deadline" style="-fx-font-size: 12px; -fx-text-fill: #666666;" />
+                            </VBox>
+                            <Button text="+ Add Task" onAction="#handleAddTask" styleClass="btn btn-primary" style="-fx-padding: 8 16; -fx-background-radius: 8px; -fx-font-weight: 500; -fx-font-size: 14px;" />
+                        </HBox>
+                        <VBox fx:id="pendingTaskListContainer" style="-fx-fill-width: true; -fx-spacing: 8;" />
+                    </VBox>
+
+                    <VBox styleClass="card-glass" style="-fx-fill-width: true; -fx-padding: 16px; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 8, 0, 0, 4); -fx-background-color: white;">
+                        <Label text="Quick Actions" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #333333; -fx-padding: 0 0 16 0;" />
+                        <HBox spacing="16" alignment="CENTER_LEFT" style="-fx-fill-width: true;">
+                            <Button text="Complete Personal Profile" styleClass="btn btn-primary" onAction="#handleUpdateProfile" style="-fx-pref-width: 200px; -fx-min-width: 200px; -fx-padding: 10 16; -fx-background-radius: 8px; -fx-font-weight: 500; -fx-font-size: 14px;" accessibleText="Update your personal profile information" />
+                            <Button text="Upload Resume" styleClass="btn btn-primary" onAction="#handleUploadResume" style="-fx-pref-width: 160px; -fx-min-width: 160px; -fx-padding: 10 16; -fx-background-radius: 8px; -fx-font-weight: 500; -fx-font-size: 14px;" accessibleText="Upload or update your resume" />
+                            <Button text="AI Job Matching" styleClass="btn btn-primary" onAction="#handleAIJobMatching" style="-fx-pref-width: 160px; -fx-min-width: 160px; -fx-padding: 10 16; -fx-background-radius: 8px; -fx-font-weight: 500; -fx-font-size: 14px;" accessibleText="Find jobs that match your skills" />
+                            <Button text="Skill Gap Analysis" styleClass="btn btn-secondary" onAction="#handleIdentifyMissingSkills" style="-fx-pref-width: 180px; -fx-min-width: 180px; -fx-padding: 10 16; -fx-background-radius: 8px; -fx-font-weight: 500; -fx-font-size: 14px;" accessibleText="Analyze your skill gaps" />
+                        </HBox>
+                    </VBox>
+                </VBox>
+
+                <VBox HBox.hgrow="ALWAYS" style="-fx-pref-width: 50%; -fx-fill-width: true;">
+                    <VBox style="-fx-fill-width: true; -fx-padding: 16px; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.12), 8, 0, 0, 4); -fx-background-color: white; -fx-spacing: 12;">
+                        <Label text="Weekly Timetable" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #333333;" />
+                        <Label text="Sunday to Saturday · Period 1-14" style="-fx-font-size: 12px; -fx-text-fill: #666666;" />
+                        <Label text="Hold Ctrl to multi-select timetable cells" style="-fx-font-size: 12px; -fx-text-fill: #666666;" />
+                        <GridPane fx:id="scheduleGrid" hgap="4" vgap="4" style="-fx-padding: 8; -fx-background-color: #f8fafc; -fx-background-radius: 10;" />
+                    </VBox>
+                </VBox>
+            </HBox>
+
+            <!-- ??????-->
+            <HBox spacing="16" alignment="CENTER" style="-fx-padding: 16px; -fx-background-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 51, 102, 0.08), 4, 0, 0, 2); -fx-background-color: white;">
+                <Label text="Keyboard shortcuts: Esc to go home" style="-fx-font-size: 12px; -fx-text-fill: #666666;" />
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>
+
+
+
+

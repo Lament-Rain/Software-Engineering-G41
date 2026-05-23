@@ -1,0 +1,20 @@
+.toggle-button:selected {
+    -fx-background-color: #003366;
+    -fx-border-color: #003366;
+    -fx-text-fill: #ffffff;
+}
+
+.text-field:focused,
+.password-field:focused {
+    -fx-border-color: #003366;
+    -fx-effect: dropshadow(gaussian, rgba(0,51,102,0.1), 0, 0, 0, 3);
+}
+
+#registerButton:hover {
+    -fx-background-color: #1a4b80;
+}
+
+#backButton:hover {
+    -fx-background-color: #f9fafb;
+    -fx-border-color: #9ca3af;
+}

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.beans.binding.*?>
+<?import javafx.beans.property.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.util.*?>
+
+<!-- Admin Dashboard 主页面；fx:controller 绑定到 AdminDashboardController，页面按钮会调用对应的 handle 方法。 -->
+<AnchorPane fx:id="adminDashboardPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminDashboardController">
+    <!-- 顶部导航栏：提供 Admin 首页、用户管理、岗位管理、系统设置、审批中心等入口。 -->
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
+                <StackPane style="-fx-background-radius: 50%; -fx-background-color: #003366; -fx-pref-width: 36px; -fx-pref-height: 36px; -fx-alignment: center;">
+                    <Label text="Ad" style="-fx-text-fill: #ffffff; -fx-font-weight: 600; -fx-font-size: 14px;" />
+                </StackPane>
+                <Label text="Welcome, Admin" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu active" onAction="#handleHome" accessibleText="Go to home page" />
+                <Button text="User Management" styleClass="navbar-menu" onAction="#handleUserManagement" accessibleText="Manage system users" />
+                <Button text="Job Management" styleClass="navbar-menu" onAction="#handleJobManagement" accessibleText="Manage job postings" />
+                <Button text="System Settings" styleClass="navbar-menu" onAction="#handleSystemConfiguration" accessibleText="Configure system settings" />
+                <Button text="Approval Center" styleClass="navbar-menu" onAction="#handleApprovalCenter" accessibleText="Review pending approvals" />
+                <Button text="Analytics" styleClass="navbar-menu" onAction="#handleStatisticsAnalysis" accessibleText="View system analytics" />
+                <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" accessibleText="Log out of the system" />
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <!-- 主内容区：包含统计卡片、系统状态表、快捷操作和快捷键提示。 -->
+    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="70.0">
+        <VBox style="-fx-padding: 48px 24px 48px 24px; -fx-spacing: 48px; -fx-fill-width: true; -fx-background-color: #f9fafb; -fx-alignment: center; -fx-pref-width: 1240px;">
+            <!-- 页面标题：说明当前页面是管理员控制台。 -->
+            <VBox style="-fx-spacing: 8; -fx-alignment: center-left; -fx-fill-width: true;">
+                <Label text="Admin Dashboard" style="-fx-font-size: 32px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
+                <Label text="Manage users, jobs, and core system settings" style="-fx-font-size: 16px; -fx-text-fill: #4b5563;" />
+            </VBox>
+
+            <!-- 统计卡片：三个 fx:id 标签会在 Controller 的 loadStatistics() 中被真实数据更新。 -->
+            <HBox style="-fx-spacing: 16; -fx-fill-width: true; -fx-alignment: center; -fx-wrap-text: true;">
+                <VBox style="-fx-pref-width: 200px; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px; -fx-spacing: 12; -fx-alignment: center; -fx-effect: dropshadow(0, rgba(0, 51, 102, 0.12), 4, 0, 0, 6);" accessibleText="Total number of system users">
+                    <Label text="👥" style="-fx-font-size: 24px; -fx-text-fill: #003366;" />
+                    <Label fx:id="totalUsersLabel" text="128" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
+                    <Label text="Total Users" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                </VBox>
+                <VBox style="-fx-pref-width: 200px; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px; -fx-spacing: 12; -fx-alignment: center; -fx-effect: dropshadow(0, rgba(0, 51, 102, 0.12), 4, 0, 0, 6);" accessibleText="Total number of job postings">
+                    <Label text="📄" style="-fx-font-size: 24px; -fx-text-fill: #003366;" />
+                    <Label fx:id="totalJobsLabel" text="45" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
+                    <Label text="Total Jobs" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                </VBox>
+                <VBox style="-fx-pref-width: 200px; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px; -fx-spacing: 12; -fx-alignment: center; -fx-effect: dropshadow(0, rgba(0, 51, 102, 0.12), 4, 0, 0, 6);" accessibleText="Total number of applications">
+                    <Label text="📋" style="-fx-font-size: 24px; -fx-text-fill: #003366;" />
+                    <Label fx:id="totalApplicationsLabel" text="237" style="-fx-font-size: 28px; -fx-font-weight: 700; -fx-text-fill: #1f2937;" />
+                    <Label text="Total Applications" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                </VBox>
+            </HBox>
+
+            <!-- 系统状态表：由 Controller 的 loadSystemStatus() 填充，列名对应 SystemStatus 模型字段。 -->
+            <VBox style="-fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 32px; -fx-effect: dropshadow(0, rgba(0, 51, 102, 0.12), 4, 0, 0, 6);">
+                <VBox style="-fx-spacing: 8; -fx-padding: 0 0 24 0;">
+                    <Label text="System Status" style="-fx-font-size: 20px; -fx-font-weight: 600; -fx-text-fill: #1f2937;" />
+                    <Label text="Monitor the runtime status of core system components" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                </VBox>
+                <TableView fx:id="systemStatusTable" style="-fx-background-color: #ffffff; -fx-background-radius: 8px; -fx-border-radius: 8px; -fx-border-width: 1px; -fx-border-color: #e5e7eb;" accessibleText="System status monitor">
+                    <columns>
+                        <TableColumn text="Item" style="-fx-pref-width: 30%; -fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #374151; -fx-background-color: #f9fafb;">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="item" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn text="Status" style="-fx-pref-width: 20%; -fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #374151; -fx-background-color: #f9fafb;">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="status" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn text="Details" style="-fx-pref-width: 50%; -fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #374151; -fx-background-color: #f9fafb;">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="details" />
+                            </cellValueFactory>
+                        </TableColumn>
+                    </columns>
+                    <placeholder>
+                        <VBox alignment="CENTER" style="-fx-spacing: 8; -fx-padding: 30px;">
+                            <Label text="Loading system status..." style="-fx-font-size: 14px; -fx-text-fill: #8b97a3;" />
+                        </VBox>
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+            <!-- 快速操作区：按钮通过 onAction 跳转到配置、批量操作、工作量监控和 API 配置等功能。 -->
+            <VBox style="-fx-fill-width: true; -fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 32px; -fx-effect: dropshadow(0, rgba(0, 51, 102, 0.12), 4, 0, 0, 6);">
+                <Label text="Quick Actions" style="-fx-font-size: 20px; -fx-font-weight: 600; -fx-text-fill: #1f2937; -fx-padding: 0 0 16 0;" />
+                <HBox style="-fx-spacing: 16; -fx-wrap-text: true; -fx-alignment: center-left; -fx-fill-width: true;">
+                    <Button text="Admin Configuration" style="-fx-background-color: #003366; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 10 20 10 20; -fx-background-radius: 8px;" onAction="#handleAdminConfiguration" accessibleText="Configure admin settings" />
+                    <Button text="Bulk Operations" style="-fx-background-color: #003366; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 10 20 10 20; -fx-background-radius: 8px;" onAction="#handleBulkOperations" accessibleText="Perform bulk operations" />
+                    <Button text="AI Workload Balancing" style="-fx-background-color: #ffffff; -fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 10 20 10 20; -fx-background-radius: 8px; -fx-border-width: 1px; -fx-border-color: #d1d5db;" onAction="#handleAIWorkloadBalancing" accessibleText="Balance workload using AI" />
+                    <Button text="Model API Config" style="-fx-background-color: #ffffff; -fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 10 20 10 20; -fx-background-radius: 8px; -fx-border-width: 1px; -fx-border-color: #d1d5db;" onAction="#handleModelAPIConfig" accessibleText="Configure model API settings" />
+                    <Button text="API Key Choose" style="-fx-background-color: #ffffff; -fx-text-fill: #374151; -fx-font-size: 14px; -fx-font-weight: 500; -fx-padding: 10 20 10 20; -fx-background-radius: 8px; -fx-border-width: 1px; -fx-border-color: #d1d5db;" onAction="#handleApiKeyChoose" accessibleText="Choose API key" />
+                </HBox>
+            </VBox>
+
+            <!-- 快捷键提示：这里只负责显示说明，真正的快捷键绑定在 Controller 中完成。 -->
+            <HBox spacing="16" alignment="CENTER" style="-fx-background-color: #ffffff; -fx-background-radius: 12px; -fx-padding: 24px; -fx-effect: dropshadow(0, rgba(0, 51, 102, 0.05), 1, 0, 0, 2);">
+                <Label text="Keyboard shortcuts:" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                <Label text="Ctrl+F" style="-fx-background-color: #f3f4f6; -fx-border-width: 1px; -fx-border-color: #d1d5db; -fx-background-radius: 6px; -fx-padding: 4 8 4 8; -fx-font-family: 'Inter', monospace; -fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
+                <Label text="to search" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+                <Region style="-fx-pref-width: 16px;" />
+                <Label text="Esc" style="-fx-background-color: #f3f4f6; -fx-border-width: 1px; -fx-border-color: #d1d5db; -fx-background-radius: 6px; -fx-padding: 4 8 4 8; -fx-font-family: 'Inter', monospace; -fx-font-size: 14px; -fx-font-weight: 500; -fx-text-fill: #374151;" />
+                <Label text="to go home" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>
