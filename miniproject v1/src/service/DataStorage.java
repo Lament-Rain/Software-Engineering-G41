@@ -9,11 +9,13 @@ import java.util.stream.Collectors;
 import model.*;
 
 public class DataStorage {
+    // 数据存储中心：统一负责用户、岗位、申请和日志的读取与保存
     private static CopyOnWriteArrayList<User> users = new CopyOnWriteArrayList<>();
     private static CopyOnWriteArrayList<Job> jobs = new CopyOnWriteArrayList<>();
     private static CopyOnWriteArrayList<Application> applications = new CopyOnWriteArrayList<>();
     private static CopyOnWriteArrayList<Log> logs = new CopyOnWriteArrayList<>();
 
+    // 根据运行环境确定实际使用的 data 文件夹位置
     private static final File DATA_DIR = resolveDataDirectory();
     private static final String USERS_FILE = new File(DATA_DIR, "users.txt").getAbsolutePath();
     private static final String JOBS_FILE = new File(DATA_DIR, "jobs.txt").getAbsolutePath();
@@ -26,6 +28,7 @@ public class DataStorage {
     private static final Object logsLock = new Object();
 
     // Initialize data storage
+    // 系统启动时调用：加载所有数据、重建索引，并在没有用户时创建默认管理员
     public static void initialize() {
         try {
             if (!DATA_DIR.exists()) {
@@ -52,10 +55,12 @@ public class DataStorage {
     }
 
     // Load user data
+    // 提供当前数据目录，方便其他服务定位数据文件
     public static File getDataDirectory() {
         return DATA_DIR;
     }
 
+    // 优先使用自定义数据目录，否则在 data 和 src/data 之间自动选择
     private static File resolveDataDirectory() {
         String override = System.getProperty("app.data.dir");
         if (override != null && !override.isBlank()) {
@@ -69,6 +74,7 @@ public class DataStorage {
         return new File("src/data");
     }
 
+    // 从 users.txt 中读取 Admin、TA、MO 用户数据
     private static void loadUsers() {
         try (BufferedReader reader = new BufferedReader(new FileReader(USERS_FILE))) {
             String line;
@@ -222,6 +228,7 @@ public class DataStorage {
     }
     
     // Safe field parsing method
+    // 从 toString 格式的文本中截取指定字段，供用户、岗位、申请和日志读取复用
     private static String parseField(String line, String fieldPrefix) {
         return parseField(line, fieldPrefix, "'");
     }
@@ -240,6 +247,7 @@ public class DataStorage {
     }
 
     // Save user data
+    // 将当前内存中的用户列表写回 users.txt
     private static void saveUsers() {
         try (FileWriter writer = new FileWriter(USERS_FILE)) {
             for (User user : users) {
@@ -251,6 +259,7 @@ public class DataStorage {
     }
 
     // Load job data
+    // 从 jobs.txt 中读取岗位数据，包括岗位状态和审核信息
     private static void loadJobs() {
         try (BufferedReader reader = new BufferedReader(new FileReader(JOBS_FILE))) {
             String line;
@@ -427,6 +436,7 @@ public class DataStorage {
     }
 
     // Load application data
+    // 从 applications.txt 中读取 TA 申请记录和申请状态
     private static void loadApplications() {
         try (BufferedReader reader = new BufferedReader(new FileReader(APPLICATIONS_FILE))) {
             String line;
@@ -516,6 +526,7 @@ public class DataStorage {
     }
 
     // Load log data
+    // 从 logs.txt 中读取系统操作日志，供管理员查看
     private static void loadLogs() {
         try (BufferedReader reader = new BufferedReader(new FileReader(LOGS_FILE))) {
             String line;
@@ -574,6 +585,7 @@ public class DataStorage {
     }
 
     // User-related operations
+    // 对外提供用户数据的读取和保存入口
     public static List<User> getUsers() {
         return users;
     }
@@ -600,6 +612,7 @@ public class DataStorage {
     }
 
     // Job-related operations
+    // 对外提供岗位数据的读取和保存入口
     public static List<Job> getJobs() {
         return jobs;
     }
@@ -634,6 +647,7 @@ public class DataStorage {
     }
 
     // Application-related operations
+    // 对外提供申请数据的读取、保存和批量更新入口
     public static List<Application> getApplications() {
         return applications;
     }
@@ -701,6 +715,7 @@ public class DataStorage {
     }
 
     // Log-related operations
+    // 写入系统日志：记录关键操作，支持管理员审计和问题追踪
     public static void addLog(String action, String user, String details, String ip) {
         Log log = new Log(action, user, details, ip);
         logs.add(log);

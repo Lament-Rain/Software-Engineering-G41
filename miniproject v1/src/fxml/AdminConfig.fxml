@@ -5,12 +5,15 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminConfigController">
     <VBox spacing="16" style="-fx-padding: 24; -fx-background-color: #f8f9fa;" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <!-- 页面顶部：返回按钮和配置页面标题 -->
         <HBox spacing="10" alignment="CENTER_LEFT">
             <Button text="Back" onAction="#handleBack" />
             <Label text="Admin Configuration" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
         </HBox>
 
+        <!-- 配置表单区域：管理员在这里设置工作量阈值、报告时间和AI权重 -->
         <GridPane hgap="12" vgap="12" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8;">
+            <!-- 工作量阈值：用于后续判断TA工作量等级 -->
             <Label text="Workload low threshold (start)" GridPane.rowIndex="0" GridPane.columnIndex="0" />
             <TextField fx:id="lowThresholdField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
 
@@ -23,12 +26,14 @@
             <Label text="Workload max threshold" GridPane.rowIndex="3" GridPane.columnIndex="0" />
             <TextField fx:id="maxThresholdField" GridPane.rowIndex="3" GridPane.columnIndex="1" />
 
+            <!-- 自动报告相关设置 -->
             <Label text="Auto report enabled" GridPane.rowIndex="4" GridPane.columnIndex="0" />
             <CheckBox fx:id="autoReportCheck" GridPane.rowIndex="4" GridPane.columnIndex="1" />
 
             <Label text="Report hour (0-23)" GridPane.rowIndex="5" GridPane.columnIndex="0" />
             <TextField fx:id="reportHourField" GridPane.rowIndex="5" GridPane.columnIndex="1" />
 
+            <!-- AI权重参数：用于表示不同匹配因素的重要程度 -->
             <Label text="AI skill weight" GridPane.rowIndex="6" GridPane.columnIndex="0" />
             <TextField fx:id="skillWeightField" GridPane.rowIndex="6" GridPane.columnIndex="1" />
 
@@ -39,6 +44,7 @@
             <TextField fx:id="historyWeightField" GridPane.rowIndex="8" GridPane.columnIndex="1" />
         </GridPane>
 
+        <!-- 保存按钮：触发AdminConfigController中的handleSave方法 -->
         <HBox spacing="10" alignment="CENTER_RIGHT">
             <Button text="Save" onAction="#handleSave" />
         </HBox>

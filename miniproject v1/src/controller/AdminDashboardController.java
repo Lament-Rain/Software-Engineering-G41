@@ -24,7 +24,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+// 管理员首页控制器：负责首页统计、功能入口、配置弹窗和日志查看。
 public class AdminDashboardController {
+    // FXML 注入控件：这些变量对应 AdminDashboard.fxml 里的 fx:id。
     @FXML
     private Label totalUsersLabel;
     @FXML
@@ -38,6 +40,7 @@ public class AdminDashboardController {
     private Stage stage;
     private KeyboardShortcutService shortcutService;
     
+    // 保存当前窗口对象，并在页面加载后设置快捷键。
     public void setStage(Stage stage) {
         this.stage = stage;
         setupKeyboardShortcuts();
@@ -54,11 +57,13 @@ public class AdminDashboardController {
         }
     }
     
+    // 登录后的 Admin 用户对象会传进来，再初始化 Dashboard 数据。
     public void setUser(Admin user) {
         this.user = user;
         initializeDashboard();
     }
     
+    // 初始化首页：加载统计数字和系统状态表。
     private void initializeDashboard() {
         if (user == null) return;
         
@@ -79,6 +84,7 @@ public class AdminDashboardController {
         }
     }
     
+    // 首页三张统计卡片的数据来自用户、岗位和申请三个 Service。
     private void loadStatistics() {
         // Get total number of users
         int totalUsersCount = UserService.getAllUsers().size();
@@ -93,6 +99,7 @@ public class AdminDashboardController {
         totalApplicationsLabel.setText(String.valueOf(totalApplicationsCount));
     }
     
+    // 系统状态表：当前是演示数据，真实项目中可连接数据库/服务器监控。
     private void loadSystemStatus() {
         // Get system status from database or services
         // Use mock data for demonstration
@@ -109,6 +116,7 @@ public class AdminDashboardController {
     }
     
     // Admin configuration
+    // 跳转到管理员配置页面，用于设置工作量阈值等系统参数。
     @FXML
     private void handleAdminConfiguration(ActionEvent event) {
         try {
@@ -173,6 +181,7 @@ public class AdminDashboardController {
     }
     
     // AI workload balancing
+    // 跳转到工作量监控页面，查看 TA 是否存在过载情况。
     @FXML
     private void handleAIWorkloadBalancing(ActionEvent event) {
         try {
@@ -193,6 +202,7 @@ public class AdminDashboardController {
     }
     
     // 大模型API配置
+    // 打开 API 配置弹窗：测试并保存大模型 API Key 和模型名称。
     @FXML
     private void handleModelAPIConfig(ActionEvent event) {
         // 创建API配置对话框
@@ -410,6 +420,7 @@ public class AdminDashboardController {
     }
     
     // API Key选择
+    // 从已保存的 API 配置中选择当前要使用的一组配置。
     @FXML
     private void handleApiKeyChoose(ActionEvent event) {
         // 创建API Key选择对话框
@@ -485,6 +496,7 @@ public class AdminDashboardController {
     }
     
     // Log out
+    // 退出登录时清空导航历史，并返回 Login.fxml。
     @FXML
     private void handleLogout(ActionEvent event) {
         // Clear navigation history on logout
@@ -555,6 +567,7 @@ public class AdminDashboardController {
     }
     
     // Handle user management button click
+    // 以下几个方法主要负责从 Admin 首页跳转到用户、审批和岗位管理页面。
     @FXML
     private void handleUserManagement(ActionEvent event) {
         try {
@@ -625,6 +638,7 @@ public class AdminDashboardController {
 
 
     // 处理系统配置按钮点击
+    // 系统配置弹窗入口：包含系统参数、邮箱、备份、日志和角色管理。
     @FXML
     private void handleSystemConfiguration(ActionEvent event) {
         // 创建系统配置对话框
@@ -1154,6 +1168,7 @@ public class AdminDashboardController {
     }
     
     // 处理统计分析按钮点击
+    // 统计分析弹窗：用图表/列表方式展示用户、岗位和申请等汇总信息。
     @FXML
     private void handleStatisticsAnalysis(ActionEvent event) {
         // 创建统计分析对话框
@@ -1581,6 +1596,7 @@ public class AdminDashboardController {
         }
     }
     
+    // 快捷键入口：Esc 返回/刷新，Ctrl+F 打开搜索。
     private void handleHomeAction() {
         // If we can go back, do so; otherwise, stay on the dashboard
         if (NavigationHistory.getInstance().canGoBack()) {

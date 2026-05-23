@@ -8,9 +8,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+// Admin 配置服务：负责从 properties 文件读取/保存管理员配置。
 public class AdminConfigService {
     private static final String CONFIG_FILE = "src/data/admin_config.properties";
 
+    // 读取配置文件；如果某项不存在或读取失败，就使用默认值。
     public static AdminConfig loadConfig() {
         ensureFile();
         AdminConfig config = new AdminConfig();
@@ -33,6 +35,7 @@ public class AdminConfigService {
         return config;
     }
 
+    // 把当前 AdminConfig 对象写回配置文件，供下次打开系统时继续使用。
     public static void saveConfig(AdminConfig config) {
         ensureFile();
         Properties p = new Properties();
@@ -53,6 +56,7 @@ public class AdminConfigService {
         }
     }
 
+    // 安全转换工具：输入异常时返回默认值，避免配置文件格式错误导致程序崩溃。
     private static int parseInt(String value, int def) {
         try { return Integer.parseInt(value); } catch (Exception e) { return def; }
     }
@@ -61,6 +65,7 @@ public class AdminConfigService {
         try { return Double.parseDouble(value); } catch (Exception e) { return def; }
     }
 
+    // 确保配置文件和所在目录存在；如果文件不存在，就创建默认配置。
     private static void ensureFile() {
         try {
             File file = new File(CONFIG_FILE);

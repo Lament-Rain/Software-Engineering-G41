@@ -1,6 +1,8 @@
 package model;
 
+// 用于 Admin Dashboard 的系统状态表格数据模型。
 public class SystemStatus {
+    // item 表示检查项；status 表示当前状态；details 表示补充说明。
     private String item;
     private String status;
     private String details;
