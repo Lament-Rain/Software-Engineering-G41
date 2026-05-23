@@ -288,7 +288,12 @@ public class MODashboardController {
 
     @FXML
     private void handleHome(ActionEvent event) {
-        initializeDashboard();
+        // If we can go back, do so; otherwise, stay on the dashboard
+        if (NavigationHistory.getInstance().canGoBack()) {
+            NavigationHistory.getInstance().goBack();
+        } else {
+            initializeDashboard();
+        }
     }
 
     @FXML

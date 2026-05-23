@@ -8,21 +8,29 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminApprovalController">
     <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <HBox alignment="CENTER_LEFT" style="-fx-padding: 20 24 20 24; -fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true;">
-            <Label text="BUPT International School TA Recruitment System" styleClass="navbar-title" />
-            <HBox style="-fx-spacing: 24; -fx-alignment: center; -fx-fill-width: true; -fx-max-width: infinity;">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
+                <StackPane style="-fx-background-radius: 50%; -fx-background-color: #003366; -fx-pref-width: 36px; -fx-pref-height: 36px; -fx-alignment: center;">
+                    <Label text="Ad" style="-fx-text-fill: #ffffff; -fx-font-weight: 600; -fx-font-size: 14px;" />
+                </StackPane>
+                <Label text="Welcome, Admin" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
                 <Button text="Home" styleClass="navbar-menu" onAction="#handleHome" />
                 <Button text="User Management" styleClass="navbar-menu" onAction="#handleUserManagement" />
+                <Button text="Job Management" styleClass="navbar-menu" onAction="#handleJobManagement" />
+                <Button text="System Settings" styleClass="navbar-menu" onAction="#handleSystemSettings" />
                 <Button text="Approval Center" styleClass="navbar-menu active" onAction="#handleApprovalCenter" />
-            </HBox>
-            <HBox style="-fx-spacing: 24; -fx-alignment: center;">
-                <Label text="Welcome, Admin" textFill="rgba(255,255,255,0.85)" />
-                <Separator orientation="VERTICAL" styleClass="navbar-separator" />
-                <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" />
+                <Button text="Analytics" styleClass="navbar-menu" onAction="#handleAnalytics" />
+                <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" />
             </HBox>
         </HBox>
     </VBox>
@@ -95,3 +103,9 @@
         </VBox>
     </VBox>
 </AnchorPane>
+
+
+
+
+
+

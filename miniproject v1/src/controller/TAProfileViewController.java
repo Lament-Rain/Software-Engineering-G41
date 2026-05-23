@@ -579,6 +579,10 @@ public class TAProfileViewController {
                 currentStage.setHeight(600);
             }
             currentStage.setTitle("BUPT International School TA Recruitment System - Login");
+                
+                // Force layout update to ensure components resize properly
+                root.requestLayout();
+                currentStage.sizeToScene();
         } catch (Exception e) {
             e.printStackTrace();
         }

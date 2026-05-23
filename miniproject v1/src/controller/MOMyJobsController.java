@@ -565,20 +565,24 @@ public class MOMyJobsController {
 
     @FXML
     private void handleBack() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
-            Parent root = loader.load();
-            MODashboardController controller = loader.getController();
-            controller.setUser(user);
-            controller.setStage(stage);
+        // If we can go back, do so; otherwise, go to dashboard
+        if (NavigationHistory.getInstance().canGoBack()) {
+            NavigationHistory.getInstance().goBack();
+        } else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
+                Parent root = loader.load();
+                MODashboardController controller = loader.getController();
+                controller.setUser(user);
 
-            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-            stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Module Organizer Dashboard");
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to return: " + e.getMessage());
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - Module Organizer Dashboard");
+            } catch (Exception e) {
+                e.printStackTrace();
+                showAlert(Alert.AlertType.ERROR, "Error", "Failed to return: " + e.getMessage());
+            }
         }
     }
 
@@ -587,8 +591,31 @@ public class MOMyJobsController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOJobBoard.fxml"));
             Parent root = loader.load();
-            JobListController controller = loader.getController();
-            controller.setUser(user, model.UserRole.MO);
+            MODashboardController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Job Board");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to open job board: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleReviewApplicationsNav() {
+        handleReviewApplications();
+    }
+
+    @FXML
+    private void handleLogout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MOJobBoard.fxml"));
+            Parent root = loader.load();
+            LoginController controller = loader.getController();
             controller.setStage(stage);
 
             // Add navigation entry for back functionality
@@ -617,10 +644,10 @@ public class MOMyJobsController {
             Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
             scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
             stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Job Board");
+            stage.setTitle("BUPT International School TA Recruitment System - Login");
         } catch (Exception e) {
             e.printStackTrace();
-            showAlert(Alert.AlertType.ERROR, "Error", "Failed to open job board: " + e.getMessage());
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to logout: " + e.getMessage());
         }
     }
 
