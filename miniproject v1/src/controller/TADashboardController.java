@@ -1798,16 +1798,41 @@ public class TADashboardController {
     // Logout
     @FXML
     private void handleLogout(ActionEvent event) {
+        service.NavigationHistory.getInstance().clear();
         try {
+            Stage currentStage = this.stage;
+            if (currentStage == null && event.getSource() instanceof Button) {
+                currentStage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            }
+            if (currentStage == null && openPositionsLabel != null && openPositionsLabel.getScene() != null) {
+                currentStage = (Stage) openPositionsLabel.getScene().getWindow();
+            }
+            if (currentStage == null) {
+                throw new IllegalStateException("Stage is not available.");
+            }
+
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
             LoginController controller = loader.getController();
-            controller.setStage((Stage) ((Button) event.getSource()).getScene().getWindow());
-            
-            Scene scene = new Scene(root, 800, 600);
-            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.setTitle("BUPT International School TA Recruitment System - Login");
+            controller.setStage(currentStage);
+
+            boolean isFullScreen = currentStage.isFullScreen();
+            double currentWidth = currentStage.getWidth();
+            double currentHeight = currentStage.getHeight();
+
+            Scene scene = new Scene(root);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            currentStage.setScene(scene);
+            if (isFullScreen) {
+                currentStage.setFullScreen(true);
+            } else if (currentWidth > 0 && currentHeight > 0) {
+                currentStage.setWidth(currentWidth);
+                currentStage.setHeight(currentHeight);
+            } else {
+                currentStage.setWidth(800);
+                currentStage.setHeight(600);
+            }
+            currentStage.setTitle("BUPT International School TA Recruitment System - Login");
         } catch (Exception e) {
             e.printStackTrace();
             Alert alert = new Alert(AlertType.ERROR);

@@ -17,6 +17,8 @@ import model.User;
 import service.JobService;
 import service.ApplicationService;
 import service.UserService;
+import service.DataStorage;
+import service.NavigationHistory;
 import service.KeyboardShortcutService;
 import service.ToastService;
 import javafx.collections.FXCollections;
@@ -101,12 +103,19 @@ public class JobListController {
 
     private void setupKeyboardShortcuts() {
         shortcutService = new KeyboardShortcutService(stage);
-        shortcutService.registerShortcut("ctrl+f", this::showSearchBar);
+        shortcutService.registerShortcut("ctrl+f", this::focusSearchField);
         shortcutService.registerShortcut("escape", this::handleResetAction);
 
         if (stage.getScene() != null) {
             Parent root = stage.getScene().getRoot();
             shortcutService.setupEnterKeyNavigation(root);
+        }
+    }
+
+    private void focusSearchField() {
+        if (searchField != null) {
+            searchField.requestFocus();
+            searchField.selectAll();
         }
     }
 
@@ -864,6 +873,10 @@ public class JobListController {
 
     @FXML
     private void handleLogout() {
+        NavigationHistory.getInstance().clear();
+        String actor = currentUser instanceof User ? ((User) currentUser).getId() : "unknown";
+        DataStorage.addLog("LOGOUT", actor, "User logged out from Job Board");
+
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
@@ -896,10 +909,6 @@ public class JobListController {
                 stage.setHeight(600);
             }
             stage.setTitle("BUPT International School TA Recruitment System - Login");
-                
-                // Force layout update to ensure components resize properly
-                root.requestLayout();
-                stage.sizeToScene();
             ToastService.showToast(stage, "Logged out successfully", ToastService.ToastType.INFO);
         } catch (Exception e) {
             e.printStackTrace();

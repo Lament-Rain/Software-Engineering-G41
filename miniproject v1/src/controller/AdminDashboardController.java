@@ -927,12 +927,15 @@ public class AdminDashboardController {
             
             // 加载日志内容
             try {
-                java.nio.file.Path logPath = java.nio.file.Paths.get("d:\\Soft Engineering\\miniproject(version1)\\src\\data\\logs.txt");
-                if (java.nio.file.Files.exists(logPath)) {
-                    String logContent = new String(java.nio.file.Files.readAllBytes(logPath));
-                    logTextArea.setText(logContent);
+                StringBuilder sb = new StringBuilder();
+                java.util.List<service.Log> logs = service.DataStorage.getLogs();
+                if (logs == null || logs.isEmpty()) {
+                    logTextArea.setText("No logs available");
                 } else {
-                    logTextArea.setText("Log file does not exist");
+                    for (service.Log log : logs) {
+                        sb.append(log == null ? "" : log.toString()).append("\n");
+                    }
+                    logTextArea.setText(sb.toString());
                 }
             } catch (Exception ex) {
                 logTextArea.setText("Failed to load logs: " + ex.getMessage());
@@ -957,10 +960,11 @@ public class AdminDashboardController {
                 java.util.Optional<javafx.scene.control.ButtonType> result = confirmAlert.showAndWait();
                 if (result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK) {
                     try {
-                        java.nio.file.Path logPath = java.nio.file.Paths.get("d:\\Soft Engineering\\miniproject(version1)\\src\\data\\logs.txt");
-                        java.nio.file.Files.write(logPath, new byte[0]);
-                        logTextArea.setText("");
-                        
+                        java.util.List<service.Log> allLogs = service.DataStorage.getLogs();
+                        allLogs.clear();
+                        service.DataStorage.addLog("ADMIN_LOGS_CLEARED", user == null ? "admin" : user.getId(), "System logs were cleared by admin");
+                        logTextArea.setText("Logs cleared. A clear event has been recorded.");
+
                         javafx.scene.control.Alert successAlert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
                         successAlert.setTitle("Success");
                         successAlert.setHeaderText("Logs cleared successfully");

@@ -727,41 +727,39 @@ public class MOCreateJobController {
 
     @FXML
     private void handleHome() {
-        // If we can go back, do so; otherwise, go to dashboard
-        if (NavigationHistory.getInstance().canGoBack()) {
-            NavigationHistory.getInstance().goBack();
-        } else {
-            try {
-                if (userRole == UserRole.MO && moUser != null) {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
-                    Parent root = loader.load();
-                    MODashboardController controller = loader.getController();
-                    controller.setUser(moUser);
+        try {
+            if (userRole == UserRole.MO && moUser != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/MODashboard.fxml"));
+                Parent root = loader.load();
+                MODashboardController controller = loader.getController();
+                controller.setUser(moUser);
+                controller.setStage(stage);
 
-                    Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                    stage.setScene(scene);
-                    stage.setTitle("BUPT International School TA Recruitment System - Module Organizer Dashboard");
-                } else if (userRole == UserRole.ADMIN && adminUser != null) {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
-                    Parent root = loader.load();
-                    AdminDashboardController controller = loader.getController();
-                    controller.setUser(adminUser);
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - MO Dashboard");
+            } else if (userRole == UserRole.ADMIN && adminUser != null) {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/AdminDashboard.fxml"));
+                Parent root = loader.load();
+                AdminDashboardController controller = loader.getController();
+                controller.setUser(adminUser);
+                controller.setStage(stage);
 
-                    Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-                    scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                    stage.setScene(scene);
-                    stage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                ToastService.showToast(stage, "Failed to load page: " + e.getMessage(), ToastService.ToastType.ERROR);
+                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("BUPT International School TA Recruitment System - Admin Dashboard");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ToastService.showToast(stage, "Failed to return home: " + e.getMessage(), ToastService.ToastType.ERROR);
         }
     }
 
     @FXML
     private void handleLogout() {
+        NavigationHistory.getInstance().clear();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();

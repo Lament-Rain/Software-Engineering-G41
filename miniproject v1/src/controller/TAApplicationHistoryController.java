@@ -525,29 +525,26 @@ public class TAApplicationHistoryController {
 
     @FXML
     private void handleBack() {
-        // If we can go back, do so; otherwise, go to dashboard
-        if (NavigationHistory.getInstance().canGoBack()) {
-            NavigationHistory.getInstance().goBack();
-        } else {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TADashboard.fxml"));
-                Parent root = loader.load();
-                TADashboardController controller = loader.getController();
-                controller.setUser(user);
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TADashboard.fxml"));
+            Parent root = loader.load();
+            TADashboardController controller = loader.getController();
+            controller.setUser(user);
+            controller.setStage(stage);
 
-                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                stage.setScene(scene);
-                stage.setTitle("BUPT International School TA Recruitment System - Dashboard");
-            } catch (Exception e) {
-                e.printStackTrace();
-                showAlert(Alert.AlertType.ERROR, "Error", "Failed to go back: " + e.getMessage());
-            }
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - Dashboard");
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert(Alert.AlertType.ERROR, "Error", "Failed to go back: " + e.getMessage());
         }
     }
 
     @FXML
     private void handleLogout() {
+        NavigationHistory.getInstance().clear();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();

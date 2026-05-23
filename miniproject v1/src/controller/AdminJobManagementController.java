@@ -165,7 +165,13 @@ public class AdminJobManagementController {
         }
 
         String comment = commentInput.get().trim().isEmpty() ? "Reviewed in Admin Job Management" : commentInput.get().trim();
-        JobStatus next = selected.getStatus() == JobStatus.PUBLISHED ? JobStatus.REJECTED : JobStatus.PUBLISHED;
+        JobStatus next;
+        if (selected.getStatus() == JobStatus.PENDING) {
+            next = JobStatus.PUBLISHED;
+        } else {
+            next = selected.getStatus() == JobStatus.PUBLISHED ? JobStatus.REJECTED : JobStatus.PUBLISHED;
+        }
+
         boolean ok = JobService.reviewJob(selected.getId(), next, comment, user == null ? "admin" : user.getId());
         if (!ok) {
             showError("Failed to review selected job.");
@@ -277,6 +283,12 @@ public class AdminJobManagementController {
     private void handleToggleSelected() {
         Job selected = jobTable.getSelectionModel().getSelectedItem();
         if (selected == null) return;
+
+        if (selected.getStatus() == JobStatus.PENDING) {
+            showError("Pending jobs cannot be enabled or disabled. Please review first.");
+            return;
+        }
+
         JobStatus next = selected.getStatus() == JobStatus.CLOSED ? JobStatus.PUBLISHED : JobStatus.CLOSED;
 
         selected.setStatus(next);

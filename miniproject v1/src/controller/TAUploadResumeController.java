@@ -367,29 +367,26 @@ public class TAUploadResumeController {
     
     @FXML
     private void handleBack(ActionEvent event) {
-        // If we can go back, do so; otherwise, go to dashboard
-        if (NavigationHistory.getInstance().canGoBack()) {
-            NavigationHistory.getInstance().goBack();
-        } else {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TADashboard.fxml"));
-                Parent root = loader.load();
-                TADashboardController controller = loader.getController();
-                controller.setUser(user, false);
-                
-                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                stage.setScene(scene);
-                stage.setTitle("BUPT International School TA Recruitment System - TA Dashboard");
-            } catch (Exception e) {
-                e.printStackTrace();
-                messageLabel.setText("Failed to load page");
-            }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TADashboard.fxml"));
+            Parent root = loader.load();
+            TADashboardController controller = loader.getController();
+            controller.setUser(user, false);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+            stage.setTitle("BUPT International School TA Recruitment System - TA Dashboard");
+        } catch (Exception e) {
+            e.printStackTrace();
+            messageLabel.setText("Failed to load page");
         }
     }
     
     @FXML
     private void handleLogout(ActionEvent event) {
+        NavigationHistory.getInstance().clear();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
@@ -428,8 +425,8 @@ public class TAUploadResumeController {
             currentStage.setTitle("BUPT International School TA Recruitment System - Login");
                 
                 // Force layout update to ensure components resize properly
-                root.requestLayout();
-                currentStage.sizeToScene();
+
+
         } catch (Exception e) {
             e.printStackTrace();
             messageLabel.setText("Failed to load page");

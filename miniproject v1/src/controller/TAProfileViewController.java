@@ -377,30 +377,24 @@ public class TAProfileViewController {
     
     @FXML
     private void handleHome(ActionEvent event) {
-        // If we can go back, do so; otherwise, go to dashboard
-        if (NavigationHistory.getInstance().canGoBack()) {
-            NavigationHistory.getInstance().goBack();
-        } else {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TADashboard.fxml"));
-                Parent root = loader.load();
-                TADashboardController controller = loader.getController();
-                // Returning from other pages, don't show welcome guide
-                controller.setUser(user, false);
-                
-                // Keep current window size and add stylesheet
-                Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
-                // Add stylesheet
-                scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
-                stage.setScene(scene);
-                    
-                    // Force layout update to ensure components resize properly
-                    root.requestLayout();
-                    stage.sizeToScene();
-                stage.setTitle("BUPT International School TA Recruitment System - TA Dashboard");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/TADashboard.fxml"));
+            Parent root = loader.load();
+            TADashboardController controller = loader.getController();
+            // Returning from other pages, don't show welcome guide
+            controller.setUser(user, false);
+            controller.setStage(stage);
+
+            Scene scene = new Scene(root, stage.getWidth(), stage.getHeight());
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm());
+            stage.setScene(scene);
+
+            // Force layout update to ensure components resize properly
+            root.requestLayout();
+            stage.sizeToScene();
+            stage.setTitle("BUPT International School TA Recruitment System - TA Dashboard");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     
@@ -547,6 +541,7 @@ public class TAProfileViewController {
     
     @FXML
     private void handleLogout(ActionEvent event) {
+        NavigationHistory.getInstance().clear();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();

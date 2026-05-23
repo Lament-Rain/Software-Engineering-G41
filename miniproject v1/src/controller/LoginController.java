@@ -257,6 +257,8 @@ public class LoginController {
             }
 
             saveRememberedLogin();
+            NavigationHistory.getInstance().clear();
+            DataStorage.addLog("LOGIN", user.getId(), "User logged in as " + selectedRole.name());
 
             switch (selectedRole) {
                 case TA:

@@ -52,7 +52,6 @@ public class MODashboardController {
     
     private void setupKeyboardShortcuts() {
         shortcutService = new KeyboardShortcutService(stage);
-        shortcutService.registerShortcut("ctrl+f", this::handleSearchAction);
         shortcutService.registerShortcut("escape", this::handleHomeAction);
 
         if (stage.getScene() != null) {

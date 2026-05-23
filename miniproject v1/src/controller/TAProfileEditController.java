@@ -450,6 +450,7 @@ public class TAProfileEditController {
     
     @FXML
     private void handleLogout() {
+        service.NavigationHistory.getInstance().clear();
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Login.fxml"));
             Parent root = loader.load();
