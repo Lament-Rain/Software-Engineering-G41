@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MOMyJobsController">
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
+                <StackPane styleClass="user-avatar mo">
+                    <Label text="MO" style="-fx-text-fill: white; -fx-font-weight: 600; -fx-font-size: 14px;" />
+                </StackPane>
+                <Label text="Welcome, Module Organizer" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu" onAction="#handleBack" />
+                <Button text="Job Board" styleClass="navbar-menu" onAction="#handleOpenJobBoard" />
+                <Button text="My Jobs" styleClass="navbar-menu active" />
+                <Button text="Application Review" styleClass="navbar-menu" onAction="#handleReviewApplicationsNav" />
+                <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" />
+                <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" />
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <ScrollPane fitToWidth="true" style="-fx-background-color: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
+        <VBox style="-fx-padding: 48px; -fx-spacing: 32px; -fx-background-color: #f9fafb; -fx-pref-width: 1260px;">
+            <VBox style="-fx-spacing: 8; -fx-fill-width: true;">
+                <Label fx:id="pageTitleLabel" text="My Jobs" styleClass="page-title" />
+                <Label fx:id="subtitleLabel" text="Only jobs you created can be edited or withdrawn here" styleClass="page-subtitle" />
+            </VBox>
+
+            <HBox spacing="24" alignment="TOP_LEFT">
+                <VBox styleClass="card" style="-fx-pref-width: 760px;">
+                    <HBox style="-fx-spacing: 4; -fx-padding: 0 0 16 0; -fx-fill-width: true;">
+                        <VBox style="-fx-spacing: 4;" HBox.hgrow="ALWAYS">
+                            <Label text="Jobs I Created" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #374151;" />
+                            <Label text="Double-click a row to focus it in the editor on the right." style="-fx-font-size: 12px; -fx-text-fill: #6b7280;" />
+                        </VBox>
+                        <Label fx:id="resultCountLabel" text="0 results" style="-fx-font-size: 13px; -fx-text-fill: #6b7280;" />
+                    </HBox>
+                    <TableView fx:id="jobsTable" styleClass="table-view" style="-fx-pref-height: 520px;">
+                        <placeholder>
+                            <VBox alignment="CENTER" style="-fx-spacing: 10; -fx-padding: 48px;">
+                                <Label text="No jobs found" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #4b5563;" />
+                                <Label text="Any job you publish will appear here" style="-fx-font-size: 13px; -fx-text-fill: #6b7280;" />
+                            </VBox>
+                        </placeholder>
+                    </TableView>
+                </VBox>
+
+                <VBox styleClass="card" style="-fx-pref-width: 440px;">
+                    <VBox style="-fx-spacing: 4; -fx-padding: 0 0 16 0;">
+                        <Label fx:id="selectedJobLabel" text="No job selected" style="-fx-font-size: 18px; -fx-font-weight: 600; -fx-text-fill: #374151;" wrapText="true" />
+                        <Label fx:id="statusHintLabel" text="Select a job from the left first." style="-fx-font-size: 13px; -fx-text-fill: #6b7280;" wrapText="true" />
+                    </VBox>
+                    <Separator />
+
+                    <VBox style="-fx-spacing: 12;">
+                        <VBox style="-fx-spacing: 4;">
+                            <Label text="Job Title" style="-fx-font-size: 13px; -fx-font-weight: 500; -fx-text-fill: #4b5563;" />
+                            <TextField fx:id="titleField" promptText="Enter the job title" styleClass="form-field" />
+                        </VBox>
+                        <HBox spacing="12">
+                            <VBox style="-fx-spacing: 4;" HBox.hgrow="ALWAYS">
+                                <Label text="Job Type" style="-fx-font-size: 13px; -fx-font-weight: 500; -fx-text-fill: #4b5563;" />
+                                <ComboBox fx:id="typeComboBox" promptText="Select job type" styleClass="combo-box" />
+                            </VBox>
+                            <VBox style="-fx-spacing: 4;" HBox.hgrow="ALWAYS">
+                                <Label text="Department" style="-fx-font-size: 13px; -fx-font-weight: 500; -fx-text-fill: #4b5563;" />
+                                <ComboBox fx:id="departmentComboBox" promptText="Select department" styleClass="combo-box" />
+                            </VBox>
+                        </HBox>
+                        <VBox style="-fx-spacing: 4;">
+                            <Label text="Weekly Schedule" style="-fx-font-size: 13px; -fx-font-weight: 500; -fx-text-fill: #4b5563;" />
+                            <GridPane hgap="8" vgap="6">
+                                <columnConstraints>
+                                    <ColumnConstraints minWidth="64" prefWidth="64" />
+                                    <ColumnConstraints minWidth="110" prefWidth="120" hgrow="ALWAYS" />
+                                </columnConstraints>
+                                <CheckBox fx:id="monCheckBox" text="Mon" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                <TextField fx:id="monHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                                <CheckBox fx:id="tueCheckBox" text="Tue" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                                <TextField fx:id="tueHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <CheckBox fx:id="wedCheckBox" text="Wed" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                                <TextField fx:id="wedHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                <CheckBox fx:id="thuCheckBox" text="Thu" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                                <TextField fx:id="thuHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                <CheckBox fx:id="friCheckBox" text="Fri" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                                <TextField fx:id="friHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                <CheckBox fx:id="satCheckBox" text="Sat" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                                <TextField fx:id="satHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                <CheckBox fx:id="sunCheckBox" text="Sun" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                                <TextField fx:id="sunHoursField" promptText="periods: 1-14, comma-separated" styleClass="form-field" disable="true" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                            </GridPane>
+                        </VBox>
+                        <HBox spacing="12">
+                            <VBox style="-fx-spacing: 4;" HBox.hgrow="ALWAYS">
+                                <Label text="Start Date" style="-fx-font-size: 13px; -fx-font-weight: 500; -fx-text-fill: #4b5563;" />
+                                <TextField fx:id="startDateField" promptText="MM-DD-YYYY" styleClass="form-field" />
+                            </VBox>
+                            <VBox style="-fx-spacing: 4;" HBox.hgrow="ALWAYS">
+                                <Label text="End Date" style="-fx-font-size: 13px; -fx-font-weight: 500; -fx-text-fill: #4b5563;" />
+                                <TextField fx:id="deadlineField" promptText="MM-DD-YYYY" styleClass="form-field" />
+                            </VBox>
+                        </HBox>
+                        <VBox style="-fx-spacing: 4;">
+                            <Label text="Openings" style="-fx-font-size: 13px; -fx-font-weight: 500; -fx-text-fill: #4b5563;" />
+                            <TextField fx:id="recruitNumField" promptText="Enter number of openings" styleClass="form-field" />
+                        </VBox>
+                        <VBox style="-fx-spacing: 4;">
+                            <Label text="Job Description" style="-fx-font-size: 13px; -fx-font-weight: 500; -fx-text-fill: #4b5563;" />
+                            <TextArea fx:id="descriptionArea" promptText="Describe the role" wrapText="true" style="-fx-min-height: 100px; -fx-border-color: #e5e7eb; -fx-border-width: 2px; -fx-border-radius: 12px; -fx-padding: 12px;" />
+                        </VBox>
+                        <VBox style="-fx-spacing: 4;">
+                            <Label text="Skills" style="-fx-font-size: 13px; -fx-font-weight: 500; -fx-text-fill: #4b5563;" />
+                            <TextArea fx:id="skillsArea" promptText="Separate multiple skills with commas" wrapText="true" style="-fx-min-height: 90px; -fx-border-color: #e5e7eb; -fx-border-width: 2px; -fx-border-radius: 12px; -fx-padding: 12px;" />
+                        </VBox>
+
+                        <HBox spacing="12">
+                            <Button fx:id="saveButton" text="Save Changes" styleClass="btn btn-primary" onAction="#handleSaveChanges" />
+                            <Button fx:id="withdrawButton" text="Withdraw Job" styleClass="btn btn-danger" onAction="#handleWithdrawJob" />
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>
