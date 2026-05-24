@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUPT International School TA Recruitment System - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+</head>
+<body class="with-gradient with-pattern">
+    <div class="container-narrow p-2xl">
+        <div class="auth-card">
+            <div class="auth-card-header">
+                <div class="auth-brand">
+                    <i class="fas fa-university"></i>
+                    <div>
+                        <h1 class="auth-card-title">BUPT International School</h1>
+                        <h2 class="auth-card-subtitle">TA Recruitment System</h2>
+                    </div>
+                </div>
+                <p class="auth-card-desc">Please log in to access the system</p>
+            </div>
+            
+            <div class="avatar-section text-center mb-lg">
+                <div class="user-avatar large">
+                    <i class="fas fa-user-graduate"></i>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <form id="loginForm" novalidate>
+                    <div class="form-group">
+                        <label class="form-label" for="username">
+                            <i class="fas fa-user"></i>
+                            <span>Username</span>
+                        </label>
+                        <div class="form-field-wrapper">
+                            <input type="text" id="username" class="form-field" placeholder="Please enter username" autocomplete="username">
+                            <span class="form-field-icon" id="usernameIcon"></span>
+                        </div>
+                        <div id="usernameError" class="form-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Please enter username</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">
+                            <i class="fas fa-lock"></i>
+                            <span>Password</span>
+                        </label>
+                        <div class="form-field-wrapper">
+                            <input type="password" id="password" class="form-field password-field" placeholder="Please enter password" autocomplete="current-password">
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="fas fa-eye-slash"></i>
+                            </button>
+                        </div>
+                        <div id="passwordError" class="form-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Please enter password</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="role">
+                            <i class="fas fa-user-tag"></i>
+                            <span>Role</span>
+                        </label>
+                        <div class="form-field-wrapper">
+                            <select id="role" class="form-field combo-box" required>
+                                <option value="">Please select role</option>
+                                <option value="TA">Teaching Assistant</option>
+                                <option value="MO">Module Organizer</option>
+                                <option value="Admin">Administrator</option>
+                            </select>
+                            <span class="form-field-icon">
+                                <i class="fas fa-chevron-down"></i>
+                            </span>
+                        </div>
+                        <div id="roleError" class="form-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <span>Please select role</span>
+                        </div>
+                    </div>
+                    
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="checkmark"></span>
+                            <span>Remember me</span>
+                        </label>
+                        <a href="#" class="link">Forgot password?</a>
+                    </div>
+                    
+                    <div id="errorMessage" class="form-error message visible" style="display: none;">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Please fill in all required fields</span>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancelButton">
+                            <i class="fas fa-times"></i>
+                            <span>Cancel</span>
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="loginButton">
+                            <span id="loginText">Login</span>
+                            <span id="loginSpinner" class="spinner" style="display: none;">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </span>
+                        </button>
+                        <button type="button" class="btn btn-success" id="registerButton">
+                            <i class="fas fa-user-plus"></i>
+                            <span>Register</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="divider">
+                <span class="divider-text">or</span>
+            </div>
+            
+            <div class="social-login">
+                <button class="btn btn-outline" id="guestLogin">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Continue as Guest</span>
+                </button>
+            </div>
+            
+            <div class="keyboard-shortcuts mt-xl">
+                <span class="shortcut-text">Keyboard shortcuts:</span>
+                <kbd>Enter</kbd>
+                <span class="shortcut-text">to login</span>
+                <kbd>Tab</kbd>
+                <span class="shortcut-text">to navigate</span>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p class="footer-text">&copy; 2026 BUPT International School. All rights reserved.</p>
+        </div>
+    </div>
+    
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script>
+        function showToast(type, title, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    ${type === 'success' ? '<i class="fas fa-check-circle"></i>' : ''}
+                    ${type === 'error' ? '<i class="fas fa-exclamation-circle"></i>' : ''}
+                    ${type === 'warning' ? '<i class="fas fa-exclamation-triangle"></i>' : ''}
+                    ${type === 'info' ? '<i class="fas fa-info-circle"></i>' : ''}
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease-out forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+        
+        function validateField(fieldId, errorId, validationFn, errorMsg) {
+            const field = document.getElementById(fieldId);
+            const error = document.getElementById(errorId);
+            
+            if (validationFn(field.value)) {
+                field.classList.remove('error');
+                field.classList.add('success');
+                error.style.display = 'none';
+                return true;
+            } else {
+                field.classList.remove('success');
+                field.classList.add('error');
+                error.querySelector('span').textContent = errorMsg;
+                error.style.display = 'flex';
+                return false;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const cancelButton = document.getElementById('cancelButton');
+            const registerButton = document.getElementById('registerButton');
+            const togglePassword = document.getElementById('togglePassword');
+            const loginButton = document.getElementById('loginButton');
+            const loginText = document.getElementById('loginText');
+            const loginSpinner = document.getElementById('loginSpinner');
+            
+            const username = document.getElementById('username');
+            const password = document.getElementById('password');
+            const role = document.getElementById('role');
+            
+            username.addEventListener('blur', function() {
+                validateField('username', 'usernameError', 
+                    value => value.trim().length >= 3, 
+                    'Username must be at least 3 characters');
+            });
+            
+            username.addEventListener('input', function() {
+                if (this.classList.contains('error') || this.classList.contains('success')) {
+                    validateField('username', 'usernameError', 
+                        value => value.trim().length >= 3, 
+                        'Username must be at least 3 characters');
+                }
+            });
+            
+            password.addEventListener('blur', function() {
+                validateField('password', 'passwordError', 
+                    value => value.length >= 6, 
+                    'Password must be at least 6 characters');
+            });
+            
+            password.addEventListener('input', function() {
+                if (this.classList.contains('error') || this.classList.contains('success')) {
+                    validateField('password', 'passwordError', 
+                        value => value.length >= 6, 
+                        'Password must be at least 6 characters');
+                }
+            });
+            
+            role.addEventListener('change', function() {
+                validateField('role', 'roleError', 
+                    value => value !== '', 
+                    'Please select a role');
+            });
+            
+            togglePassword.addEventListener('click', function() {
+                const passwordField = document.getElementById('password');
+                const type = passwordField.type === 'password' ? 'text' : 'password';
+                passwordField.type = type;
+                this.querySelector('i').classList.toggle('fa-eye');
+                this.querySelector('i').classList.toggle('fa-eye-slash');
+            });
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const isUsernameValid = validateField('username', 'usernameError', 
+                    value => value.trim().length >= 3, 
+                    'Username must be at least 3 characters');
+                const isPasswordValid = validateField('password', 'passwordError', 
+                    value => value.length >= 6, 
+                    'Password must be at least 6 characters');
+                const isRoleValid = validateField('role', 'roleError', 
+                    value => value !== '', 
+                    'Please select a role');
+                
+                if (isUsernameValid && isPasswordValid && isRoleValid) {
+                    document.getElementById('errorMessage').style.display = 'none';
+                    
+                    loginButton.disabled = true;
+                    loginText.style.display = 'none';
+                    loginSpinner.style.display = 'inline-block';
+                    
+                    showToast('info', 'Authenticating', 'Verifying your credentials...');
+                    
+                    setTimeout(() => {
+                        const selectedRole = role.value;
+                        if (selectedRole === 'TA') {
+                            showToast('success', 'Login Successful', 'Welcome back! Redirecting...');
+                            setTimeout(() => window.location.href = 'ta-dashboard.html', 1500);
+                        } else if (selectedRole === 'MO') {
+                            showToast('success', 'Login Successful', 'Welcome back! Redirecting...');
+                            setTimeout(() => window.location.href = 'mo-dashboard.html', 1500);
+                        } else if (selectedRole === 'Admin') {
+                            showToast('success', 'Login Successful', 'Welcome back! Redirecting...');
+                            setTimeout(() => window.location.href = 'admin-dashboard.html', 1500);
+                        }
+                    }, 2000);
+                } else {
+                    document.getElementById('errorMessage').style.display = 'flex';
+                    document.getElementById('errorMessage').querySelector('span').textContent = 
+                        'Please fix the errors above';
+                }
+            });
+            
+            cancelButton.addEventListener('click', function() {
+                loginForm.reset();
+                document.querySelectorAll('.form-error').forEach(el => {
+                    el.style.display = 'none';
+                });
+                document.querySelectorAll('.form-field').forEach(el => {
+                    el.classList.remove('error', 'success');
+                });
+                loginButton.disabled = false;
+                loginText.style.display = 'inline';
+                loginSpinner.style.display = 'none';
+                password.type = 'password';
+                togglePassword.querySelector('i').classList.remove('fa-eye');
+                togglePassword.querySelector('i').classList.add('fa-eye-slash');
+            });
+            
+            registerButton.addEventListener('click', function() {
+                showToast('info', 'Redirecting', 'Taking you to registration page...');
+                setTimeout(() => window.location.href = 'register.html', 800);
+            });
+            
+            document.getElementById('guestLogin').addEventListener('click', function() {
+                showToast('info', 'Guest Access', 'Entering as guest...');
+                setTimeout(() => window.location.href = 'ta-dashboard.html', 1000);
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    if (!loginButton.disabled) {
+                        loginButton.click();
+                    }
+                }
+            });
+            
+            document.querySelectorAll('.form-field').forEach(field => {
+                field.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                field.addEventListener('blur', function() {
+                    this.parentElement.classList.remove('focused');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

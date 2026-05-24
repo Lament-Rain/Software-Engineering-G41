@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminConfigController">
+    <VBox spacing="16" style="-fx-padding: 24; -fx-background-color: #f8f9fa;" AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Button text="Back" onAction="#handleBack" />
+            <Label text="Admin Configuration" style="-fx-font-size: 24px; -fx-font-weight: bold;" />
+        </HBox>
+
+        <GridPane hgap="12" vgap="12" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 8;">
+            <Label text="Workload low threshold (start)" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+            <TextField fx:id="lowThresholdField" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+            <Label text="Workload mid threshold" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+            <TextField fx:id="midThresholdField" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+            <Label text="Workload high threshold" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+            <TextField fx:id="highThresholdField" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+            <Label text="Workload max threshold" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+            <TextField fx:id="maxThresholdField" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+            <Label text="Auto report enabled" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+            <CheckBox fx:id="autoReportCheck" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+            <Label text="Report hour (0-23)" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+            <TextField fx:id="reportHourField" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+
+            <Label text="AI skill weight" GridPane.rowIndex="6" GridPane.columnIndex="0" />
+            <TextField fx:id="skillWeightField" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+
+            <Label text="AI availability weight" GridPane.rowIndex="7" GridPane.columnIndex="0" />
+            <TextField fx:id="availabilityWeightField" GridPane.rowIndex="7" GridPane.columnIndex="1" />
+
+            <Label text="AI history weight" GridPane.rowIndex="8" GridPane.columnIndex="0" />
+            <TextField fx:id="historyWeightField" GridPane.rowIndex="8" GridPane.columnIndex="1" />
+        </GridPane>
+
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button text="Save" onAction="#handleSave" />
+        </HBox>
+    </VBox>
+</AnchorPane>

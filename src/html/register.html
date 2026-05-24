@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUPT International School TA Recruitment System - Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+</head>
+<body>
+    <div class="header-bar">
+        <div class="header-bar-primary"></div>
+        <div class="header-bar-secondary"></div>
+        <div class="header-bar-accent"></div>
+        <div class="header-bar-success"></div>
+    </div>
+    
+    <div class="container-narrow p-2xl">
+        <div class="auth-card">
+            <div class="auth-card-header">
+                <h1 class="auth-card-title">BUPT International School TA Recruitment System</h1>
+                <p class="auth-card-subtitle">Create a new account</p>
+            </div>
+            
+            <div class="role-selection">
+                <label class="role-label">Select Role</label>
+                <div class="role-buttons">
+                    <button class="role-btn active" id="taToggle">TA Applicant</button>
+                    <button class="role-btn" id="moToggle">Module Organizer</button>
+                    <button class="role-btn" id="adminToggle">System Admin</button>
+                </div>
+            </div>
+            
+            <form id="registerForm">
+                <div class="grid grid-cols-2 gap-lg">
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" id="email" class="form-field" placeholder="Enter your email" required>
+                        <div id="emailError" class="form-error">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" class="password-field" placeholder="Enter password (at least 8 characters)" required>
+                        <div id="passwordError" class="form-error">Password must be at least 8 characters</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="confirmPassword">Confirm Password</label>
+                        <input type="password" id="confirmPassword" class="password-field" placeholder="Confirm your password" required>
+                        <div id="confirmPasswordError" class="form-error">Passwords do not match</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="username">Username</label>
+                        <input type="text" id="username" class="form-field" placeholder="Enter a username" required>
+                        <div id="usernameError" class="form-error">Username must be between 3 and 20 characters</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone</label>
+                        <input type="tel" id="phone" class="form-field" placeholder="Enter your phone number" required>
+                        <div id="phoneError" class="form-error">Please enter a valid phone number</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="department">Department</label>
+                        <input type="text" id="department" class="form-field" placeholder="Required for Module Organizer">
+                        <div id="departmentError" class="form-error">Department is required for Module Organizers</div>
+                    </div>
+                </div>
+                
+                <div id="errorMessage" class="form-error visible text-center mb-md" style="display: none;">Please fix the errors above</div>
+                <div id="successMessage" class="text-success text-center mb-md" style="display: none;">Registration successful! Redirecting...</div>
+                
+                <div class="flex justify-center gap-md">
+                    <button type="button" class="btn btn-secondary" id="backButton">Back to Login</button>
+                    <button type="submit" class="btn btn-primary" id="registerButton">Create Account</button>
+                </div>
+            </form>
+            
+            <div class="keyboard-shortcuts mt-xl">
+                <span class="shortcut-text">Keyboard shortcuts:</span>
+                <kbd>Enter</kbd>
+                <span class="shortcut-text">to register</span>
+                <kbd>Esc</kbd>
+                <span class="shortcut-text">to go back</span>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p class="footer-text">&copy; 2026 BUPT International School. All rights reserved.</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerForm = document.getElementById('registerForm');
+            const backButton = document.getElementById('backButton');
+            const roleButtons = document.querySelectorAll('.role-btn');
+            
+            roleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    roleButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const username = document.getElementById('username').value;
+                const phone = document.getElementById('phone').value;
+                const department = document.getElementById('department').value;
+                const selectedRole = document.querySelector('.role-btn.active').textContent;
+                
+                let isValid = true;
+                
+                if (!email || !email.includes('@')) {
+                    document.getElementById('emailError').classList.add('visible');
+                    isValid = false;
+                } else {
+                    document.getElementById('emailError').classList.remove('visible');
+                }
+                
+                if (!password || password.length < 8) {
+                    document.getElementById('passwordError').classList.add('visible');
+                    isValid = false;
+                } else {
+                    document.getElementById('passwordError').classList.remove('visible');
+                }
+                
+                if (password !== confirmPassword) {
+                    document.getElementById('confirmPasswordError').classList.add('visible');
+                    isValid = false;
+                } else {
+                    document.getElementById('confirmPasswordError').classList.remove('visible');
+                }
+                
+                if (!username || username.length < 3 || username.length > 20) {
+                    document.getElementById('usernameError').classList.add('visible');
+                    isValid = false;
+                } else {
+                    document.getElementById('usernameError').classList.remove('visible');
+                }
+                
+                if (!phone) {
+                    document.getElementById('phoneError').classList.add('visible');
+                    isValid = false;
+                } else {
+                    document.getElementById('phoneError').classList.remove('visible');
+                }
+                
+                if (selectedRole === 'Module Organizer' && !department) {
+                    document.getElementById('departmentError').classList.add('visible');
+                    isValid = false;
+                } else {
+                    document.getElementById('departmentError').classList.remove('visible');
+                }
+                
+                if (isValid) {
+                    document.getElementById('errorMessage').style.display = 'none';
+                    document.getElementById('successMessage').style.display = 'block';
+                    
+                    setTimeout(function() {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    document.getElementById('errorMessage').style.display = 'block';
+                    document.getElementById('successMessage').style.display = 'none';
+                }
+            });
+            
+            backButton.addEventListener('click', function() {
+                window.location.href = 'login.html';
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    document.getElementById('registerButton').click();
+                }
+                if (e.key === 'Escape') {
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

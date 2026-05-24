@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUPT International School TA Recruitment System - TA Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/global.css">
+</head>
+<body class="with-gradient with-pattern">
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="ta-dashboard.html" class="navbar-brand">
+                <i class="fas fa-university"></i>
+                <span>BUPT TA System</span>
+            </a>
+            
+            <div class="navbar-menu">
+                <a href="ta-dashboard.html" class="navbar-item active">Home</a>
+                <a href="#" class="navbar-item">Job Requirements</a>
+                <a href="#" class="navbar-item">Application Management</a>
+                <a href="#" class="navbar-item">Personal Center</a>
+            </div>
+            
+            <div class="navbar-user">
+                <div class="user-info">
+                    <div class="user-avatar">TA</div>
+                    <span class="user-name">Welcome, TA Applicant</span>
+                </div>
+                <button class="btn btn-text" onclick="window.location.href='login.html'">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Skeleton Loading State -->
+    <div id="skeletonLoader" class="container-wide p-2xl">
+        <div class="skeleton-card mb-2xl">
+            <div class="skeleton-text skeleton-text-lg mb-md"></div>
+            <div class="skeleton-text skeleton-text-md"></div>
+        </div>
+        
+        <div class="grid grid-cols-auto gap-lg mb-2xl">
+            <div class="skeleton-card">
+                <div class="skeleton-header">
+                    <div class="skeleton-circle"></div>
+                </div>
+                <div class="skeleton-text skeleton-text-lg mt-lg"></div>
+                <div class="skeleton-text skeleton-text-short"></div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-header">
+                    <div class="skeleton-circle"></div>
+                </div>
+                <div class="skeleton-text skeleton-text-lg mt-lg"></div>
+                <div class="skeleton-text skeleton-text-short"></div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-header">
+                    <div class="skeleton-circle"></div>
+                </div>
+                <div class="skeleton-text skeleton-text-lg mt-lg"></div>
+                <div class="skeleton-text skeleton-text-short"></div>
+            </div>
+        </div>
+        
+        <div class="skeleton-card mb-2xl">
+            <div class="skeleton-header mb-lg">
+                <div class="flex justify-between items-center">
+                    <div class="skeleton-text skeleton-text-lg"></div>
+                    <div class="skeleton-text skeleton-text-md" style="width: 120px;"></div>
+                </div>
+            </div>
+            <div class="skeleton-row"><div class="skeleton-avatar"></div><div class="skeleton-text skeleton-text-md flex-1"></div></div>
+            <div class="skeleton-row"><div class="skeleton-avatar"></div><div class="skeleton-text skeleton-text-md flex-1"></div></div>
+            <div class="skeleton-row"><div class="skeleton-avatar"></div><div class="skeleton-text skeleton-text-md flex-1"></div></div>
+        </div>
+        
+        <div class="skeleton-card">
+            <div class="skeleton-text skeleton-text-lg mb-lg"></div>
+            <div class="grid grid-cols-2 gap-md">
+                <div class="skeleton-text skeleton-text-md"></div>
+                <div class="skeleton-text skeleton-text-md"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div id="mainContent" class="container-wide p-2xl" style="display: none;">
+        <main>
+            <div class="page-header">
+                <h1 class="page-title">TA Applicant Dashboard</h1>
+                <p class="page-subtitle">View your application status and available positions</p>
+            </div>
+            
+            <div class="grid grid-cols-auto gap-lg mb-2xl">
+                <div class="stat-card" onclick="navigateTo('jobs')">
+                    <div class="stat-card-header">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="positionsCount">12</div>
+                    <div class="stat-label">Available Positions</div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+3 this week</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card" onclick="navigateTo('applications')">
+                    <div class="stat-card-header">
+                        <div class="stat-icon secondary">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="applicationsCount">5</div>
+                    <div class="stat-label">My Applications</div>
+                    <div class="stat-trend up">
+                        <i class="fas fa-arrow-up"></i>
+                        <span>+2 this week</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card" onclick="navigateTo('tasks')">
+                    <div class="stat-card-header">
+                        <div class="stat-icon accent">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="tasksCount">3</div>
+                    <div class="stat-label">Pending Tasks</div>
+                    <div class="stat-trend down">
+                        <i class="fas fa-arrow-down"></i>
+                        <span>-1 since last week</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mb-2xl">
+                <div class="card-header">
+                    <h2 class="card-title">Profile Completion</h2>
+                    <p class="card-subtitle">Complete your profile to increase your chances of being selected</p>
+                </div>
+                
+                <div class="progress-bar">
+                    <span class="progress-label">Completion</span>
+                    <div class="progress-track">
+                        <div class="progress-fill" id="profileProgress" style="width: 65%"></div>
+                    </div>
+                    <span class="progress-text">65%</span>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-md mt-lg">
+                    <div class="flex items-center gap-md p-sm rounded-lg bg-success-50">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span class="text-sm">Basic Information</span>
+                    </div>
+                    <div class="flex items-center gap-md p-sm rounded-lg bg-success-50">
+                        <i class="fas fa-check-circle text-success"></i>
+                        <span class="text-sm">Academic Background</span>
+                    </div>
+                    <div class="flex items-center gap-md p-sm rounded-lg bg-warning-50">
+                        <i class="fas fa-clock text-warning"></i>
+                        <span class="text-sm">Resume Upload</span>
+                    </div>
+                    <div class="flex items-center gap-md p-sm rounded-lg bg-warning-50">
+                        <i class="fas fa-clock text-warning"></i>
+                        <span class="text-sm">Skill Assessment</span>
+                    </div>
+                    <div class="flex items-center gap-md p-sm rounded-lg bg-error-50">
+                        <i class="fas fa-times-circle text-error"></i>
+                        <span class="text-sm">Reference Letters</span>
+                    </div>
+                    <div class="flex items-center gap-md p-sm rounded-lg bg-error-50">
+                        <i class="fas fa-times-circle text-error"></i>
+                        <span class="text-sm">Interview</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="task-card mb-2xl" id="tasks">
+                <div class="task-card-header">
+                    <div>
+                        <h2 class="task-card-title">Pending Tasks</h2>
+                        <p class="task-card-description">Please complete these tasks before the deadline</p>
+                    </div>
+                    <button class="btn btn-primary btn-ripple">
+                        <i class="fas fa-plus"></i>
+                        <span>Add Task</span>
+                    </button>
+                </div>
+                
+                <ul class="task-list">
+                    <li class="task-item">
+                        <div class="task-info">
+                            <div class="task-name">Complete Personal Profile</div>
+                            <div class="task-due">
+                                <i class="fas fa-calendar"></i>
+                                <span>Due: 2026-04-30</span>
+                            </div>
+                            <div class="task-progress">
+                                <div class="task-progress-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <span class="task-status pending">Pending</span>
+                    </li>
+                    <li class="task-item">
+                        <div class="task-info">
+                            <div class="task-name">Upload Resume</div>
+                            <div class="task-due">
+                                <i class="fas fa-calendar"></i>
+                                <span>Due: 2026-04-25</span>
+                            </div>
+                            <div class="task-progress">
+                                <div class="task-progress-fill" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <span class="task-status pending">Pending</span>
+                    </li>
+                    <li class="task-item">
+                        <div class="task-info">
+                            <div class="task-name">Complete Skill Assessment</div>
+                            <div class="task-due">
+                                <i class="fas fa-calendar"></i>
+                                <span>Due: 2026-05-05</span>
+                            </div>
+                            <div class="task-progress">
+                                <div class="task-progress-fill" style="width: 30%"></div>
+                            </div>
+                        </div>
+                        <span class="task-status pending">Pending</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="card mb-2xl">
+                <div class="card-header">
+                    <h2 class="card-title">Recommended Jobs</h2>
+                    <p class="card-subtitle">Based on your skills and preferences</p>
+                </div>
+                
+                <div class="card-body">
+                    <div class="grid grid-cols-auto gap-lg">
+                        <div class="p-lg rounded-xl border border-border-light hover:border-primary-300 hover:shadow-md transition-all cursor-pointer group">
+                            <div class="flex items-start justify-between mb-md">
+                                <div>
+                                    <h3 class="font-semibold text-primary mb-xs">Data Structures TA</h3>
+                                    <p class="text-sm text-secondary">Department of Computer Science</p>
+                                </div>
+                                <span class="badge badge-active">Open</span>
+                            </div>
+                            <div class="flex items-center gap-sm mb-md">
+                                <i class="fas fa-clock text-text-disabled"></i>
+                                <span class="text-sm text-secondary">10-15 hours/week</span>
+                            </div>
+                            <div class="flex flex-wrap gap-xs mb-md">
+                                <span class="px-sm py-xs bg-primary-50 text-primary-500 rounded-md text-xs font-medium">Python</span>
+                                <span class="px-sm py-xs bg-primary-50 text-primary-500 rounded-md text-xs font-medium">Algorithms</span>
+                                <span class="px-sm py-xs bg-primary-50 text-primary-500 rounded-md text-xs font-medium">Teaching</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-text-disabled">Match: 85%</span>
+                                <button class="btn btn-sm btn-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <i class="fas fa-external-link"></i>
+                                    <span>Apply</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="p-lg rounded-xl border border-border-light hover:border-primary-300 hover:shadow-md transition-all cursor-pointer group">
+                            <div class="flex items-start justify-between mb-md">
+                                <div>
+                                    <h3 class="font-semibold text-primary mb-xs">Machine Learning TA</h3>
+                                    <p class="text-sm text-secondary">AI Research Lab</p>
+                                </div>
+                                <span class="badge badge-active">Open</span>
+                            </div>
+                            <div class="flex items-center gap-sm mb-md">
+                                <i class="fas fa-clock text-text-disabled"></i>
+                                <span class="text-sm text-secondary">15-20 hours/week</span>
+                            </div>
+                            <div class="flex flex-wrap gap-xs mb-md">
+                                <span class="px-sm py-xs bg-primary-50 text-primary-500 rounded-md text-xs font-medium">PyTorch</span>
+                                <span class="px-sm py-xs bg-primary-50 text-primary-500 rounded-md text-xs font-medium">ML</span>
+                                <span class="px-sm py-xs bg-primary-50 text-primary-500 rounded-md text-xs font-medium">Deep Learning</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-text-disabled">Match: 78%</span>
+                                <button class="btn btn-sm btn-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <i class="fas fa-external-link"></i>
+                                    <span>Apply</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="p-lg rounded-xl border border-border-light hover:border-primary-300 hover:shadow-md transition-all cursor-pointer group">
+                            <div class="flex items-start justify-between mb-md">
+                                <div>
+                                    <h3 class="font-semibold text-primary mb-xs">Database Systems TA</h3>
+                                    <p class="text-sm text-secondary">Department of Software Engineering</p>
+                                </div>
+                                <span class="badge badge-pending">Closing Soon</span>
+                            </div>
+                            <div class="flex items-center gap-sm mb-md">
+                                <i class="fas fa-clock text-text-disabled"></i>
+                                <span class="text-sm text-secondary">8-12 hours/week</span>
+                            </div>
+                            <div class="flex flex-wrap gap-xs mb-md">
+                                <span class="px-sm py-xs bg-primary-50 text-primary-500 rounded-md text-xs font-medium">SQL</span>
+                                <span class="px-sm py-xs bg-primary-50 text-primary-500 rounded-md text-xs font-medium">MySQL</span>
+                                <span class="px-sm py-xs bg-primary-50 text-primary-500 rounded-md text-xs font-medium">PostgreSQL</span>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs text-text-disabled">Match: 92%</span>
+                                <button class="btn btn-sm btn-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <i class="fas fa-external-link"></i>
+                                    <span>Apply</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quick-actions mb-2xl">
+                <h2 class="quick-actions-title">Quick Actions</h2>
+                <div class="actions-grid">
+                    <button class="btn btn-primary btn-ripple">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Complete Profile</span>
+                    </button>
+                    <button class="btn btn-primary btn-ripple">
+                        <i class="fas fa-file-upload"></i>
+                        <span>Upload Resume</span>
+                    </button>
+                    <button class="btn btn-primary btn-ripple">
+                        <i class="fas fa-robot"></i>
+                        <span>AI Job Matching</span>
+                    </button>
+                    <button class="btn btn-secondary btn-ripple">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Skill Gap Analysis</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="keyboard-shortcuts">
+                <span class="shortcut-text">Keyboard shortcuts:</span>
+                <kbd>Ctrl+F</kbd>
+                <span class="shortcut-text">to search</span>
+                <kbd>Esc</kbd>
+                <span class="shortcut-text">to go home</span>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <script>
+        function animateCounter(element, target) {
+            let current = 0;
+            const increment = target / 60;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current);
+            }, 12);
+        }
+        
+        function animateProgress(element, targetWidth) {
+            let currentWidth = 0;
+            const increment = targetWidth / 40;
+            const timer = setInterval(() => {
+                currentWidth += increment;
+                if (currentWidth >= targetWidth) {
+                    currentWidth = targetWidth;
+                    clearInterval(timer);
+                }
+                element.style.width = currentWidth + '%';
+            }, 15);
+        }
+        
+        function showToast(type, title, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            
+            toast.innerHTML = `
+                <div class="toast-icon">
+                    ${type === 'success' ? '<i class="fas fa-check-circle"></i>' : ''}
+                    ${type === 'error' ? '<i class="fas fa-exclamation-circle"></i>' : ''}
+                    ${type === 'warning' ? '<i class="fas fa-exclamation-triangle"></i>' : ''}
+                    ${type === 'info' ? '<i class="fas fa-info-circle"></i>' : ''}
+                </div>
+                <div class="toast-content">
+                    <div class="toast-title">${title}</div>
+                    <div class="toast-message">${message}</div>
+                </div>
+                <button class="toast-close" onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease-out forwards';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+        
+        function navigateTo(page) {
+            showToast('info', 'Navigation', `Navigating to ${page}...`);
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.getElementById('skeletonLoader').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'block';
+                
+                animateCounter(document.getElementById('positionsCount'), 12);
+                animateCounter(document.getElementById('applicationsCount'), 5);
+                animateCounter(document.getElementById('tasksCount'), 3);
+                
+                animateProgress(document.getElementById('profileProgress'), 65);
+                
+                showToast('success', 'Welcome Back', 'Your dashboard is ready');
+            }, 800);
+            
+            const navbarItems = document.querySelectorAll('.navbar-item');
+            navbarItems.forEach(item => {
+                item.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    navbarItems.forEach(i => i.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            document.querySelectorAll('.btn-ripple').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple-effect');
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => ripple.remove(), 600);
+                });
+            });
+            
+            document.querySelectorAll('.btn').forEach(btn => {
+                if (!btn.classList.contains('btn-text')) {
+                    btn.addEventListener('click', function() {
+                        if (!this.classList.contains('btn-ripple')) {
+                            showToast('info', 'Functionality', 'This feature is under development');
+                        }
+                    });
+                }
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === 'f') {
+                    e.preventDefault();
+                    showToast('info', 'Search', 'Search functionality under development');
+                }
+                if (e.key === 'Escape') {
+                    window.location.href = 'ta-dashboard.html';
+                }
+            });
+            
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                if (window.scrollY > 20) {
+                    navbar.classList.add('navbar-scrolled');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                }
+            });
+            
+            document.querySelectorAll('.task-item').forEach(task => {
+                task.addEventListener('click', function() {
+                    const taskName = this.querySelector('.task-name').textContent;
+                    showToast('info', 'Task Selected', `Opening task: ${taskName}`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
