@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.JobListController">
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-alignment: center; -fx-fill-width: true;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center; -fx-padding: 0 0 0 8;">
+                <StackPane styleClass="user-avatar mo">
+                    <Label text="MO" style="-fx-text-fill: white; -fx-font-weight: 600; -fx-font-size: 14px;" />
+                </StackPane>
+                <Label text="Welcome, Module Organizer" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu" onAction="#handleBack" accessibleText="Go back to dashboard" />
+                <Button text="Job Board" styleClass="navbar-menu active" onAction="#handleBack" accessibleText="Browse jobs" />
+                <Button text="My Jobs" styleClass="navbar-menu" onAction="#handleMyJobs" accessibleText="View my jobs" />
+                <Button text="Application Review" styleClass="navbar-menu" onAction="#handleReviewApplications" accessibleText="Review applications" />
+                <Button text="Personal Center" styleClass="navbar-menu" onAction="#handlePersonalCenter" accessibleText="Go to personal center" />
+                <Button text="Logout" styleClass="navbar-menu" style="-fx-pref-width: 150px;" onAction="#handleLogout" accessibleText="Log out" />
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
+        <VBox style="-fx-padding: 48px; -fx-spacing: 32px; -fx-fill-width: true; -fx-background-color: #f9fafb; -fx-alignment: center; -fx-pref-width: 1240px;">
+            <VBox style="-fx-spacing: 8; -fx-fill-width: true;">
+                <Label fx:id="pageTitleLabel" text="Job Board" styleClass="page-title" />
+                <Label fx:id="subtitleLabel" text="Browse and manage published positions" styleClass="page-subtitle" />
+            </VBox>
+
+            <VBox styleClass="card" style="-fx-fill-width: true;">
+                <VBox style="-fx-spacing: 4; -fx-padding: 0 0 16 0;">
+                    <Label text="Search and Filters" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #374151;" />
+                    <Label text="Combine filters and search as many times as you need" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;" />
+                </VBox>
+                <HBox style="-fx-spacing: 16; -fx-alignment: center-left; -fx-fill-width: true;">
+                    <VBox style="-fx-spacing: 6;" HBox.hgrow="ALWAYS">
+                        <Label text="Keyword" style="-fx-font-size: 13px; -fx-font-weight: 500; -fx-text-fill: #4b5563;" />
+                        <TextField fx:id="searchField" promptText="Search by title or requirement..." styleClass="form-field" style="-fx-pref-width: 340px;" accessibleText="Enter keywords to search jobs" focusTraversable="true" />
+                    </VBox>
+                    <VBox style="-fx-spacing: 6;">
+                        <Label text="Department" style="-fx-font-size: 13px; -fx-font-weight: 500; -fx-text-fill: #4b5563;" />
+                        <ComboBox fx:id="departmentFilter" promptText="Select department" styleClass="combo-box" style="-fx-pref-width: 170px;" accessibleText="Filter by department" />
+                    </VBox>
+                    <VBox style="-fx-spacing: 6;">
+                        <Label text="Type" style="-fx-font-size: 13px; -fx-font-weight: 500; -fx-text-fill: #4b5563;" />
+                        <ComboBox fx:id="typeFilter" promptText="Select type" styleClass="combo-box" style="-fx-pref-width: 170px;" accessibleText="Filter by job type" />
+                    </VBox>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <HBox style="-fx-spacing: 10;">
+                        <Button text="Search" styleClass="btn btn-primary" onAction="#handleSearch" style="-fx-pref-width: 92px;" accessibleText="Search jobs" />
+                        <Button text="Reset" styleClass="btn btn-secondary" onAction="#handleReset" style="-fx-pref-width: 92px;" accessibleText="Reset filters" />
+                    </HBox>
+                </HBox>
+            </VBox>
+
+            <VBox styleClass="card" style="-fx-fill-width: true;">
+                <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true; -fx-padding: 0 0 16 0;">
+                    <VBox style="-fx-spacing: 4;" HBox.hgrow="ALWAYS">
+                        <Label text="Job List" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #374151;" />
+                        <Label text="Narrow results by keyword, department, and job type" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;" />
+                    </VBox>
+                    <Label fx:id="resultCountLabel" text="Results: 0 positions" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;" />
+                    <Label text="Double-click for details" style="-fx-font-size: 12px; -fx-text-fill: #9ca3af; -fx-padding: 4px 10px; -fx-background-color: #f3f4f6; -fx-background-radius: 6px;" />
+                </HBox>
+                <TableView fx:id="jobsTable" styleClass="table-view" style="-fx-pref-height: 450px; -fx-min-height: 300px; -fx-max-height: 500px;" accessibleText="List of available job positions">
+                    <columns>
+                        <TableColumn fx:id="jobTitleCol" text="Job Title" prefWidth="160" />
+                        <TableColumn fx:id="deptCol" text="Department" prefWidth="150" />
+                        <TableColumn fx:id="moCol" text="MO" prefWidth="120" />
+                        <TableColumn fx:id="typeCol" text="Job Type" prefWidth="120" />
+                        <TableColumn fx:id="reqCol" text="Requirements" prefWidth="250" />
+                        <TableColumn fx:id="deadlineCol" text="Deadline" prefWidth="110" />
+                        <TableColumn fx:id="statusCol" text="Status" prefWidth="100" />
+                        <TableColumn fx:id="headcountCol" text="Headcount" prefWidth="100" />
+                    </columns>
+                    <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                    </columnResizePolicy>
+                    <placeholder>
+                        <VBox alignment="CENTER" style="-fx-spacing: 10; -fx-padding: 48px;">
+                            <Label text="No positions available" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #4b5563;" />
+                            <Label text="Try adjusting the filters or check again later" style="-fx-font-size: 13px; -fx-text-fill: #6b7280;" />
+                        </VBox>
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+            <HBox alignment="CENTER_LEFT" style="-fx-spacing: 16; -fx-fill-width: true;">
+                <Label text="Tip: review positions with the nearest deadlines first" style="-fx-font-size: 13px; -fx-text-fill: #6b7280;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Button fx:id="backButton" text="Back to Dashboard" styleClass="btn btn-secondary" onAction="#handleBack" style="-fx-pref-width: 150px;" accessibleText="Go back to dashboard" />
+                <Button fx:id="createJobButton" text="Create Job" styleClass="btn btn-primary" onAction="#handleCreateJob" style="-fx-pref-width: 150px;" accessibleText="Create a new job posting" visible="false" />
+            </HBox>
+
+            <HBox styleClass="keyboard-shortcuts">
+                <Label text="Keyboard shortcuts:" />
+                <Label text="Ctrl+F" styleClass="kbd" />
+                <Label text="to search" />
+                <Region style="-fx-pref-width: 16px;" />
+                <Label text="Enter" styleClass="kbd" />
+                <Label text="to confirm" />
+                <Region style="-fx-pref-width: 16px;" />
+                <Label text="Esc" styleClass="kbd" />
+                <Label text="to reset" />
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>

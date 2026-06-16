@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="adminDashboardPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AdminDashboardController">
+    <VBox styleClass="navbar" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <HBox alignment="CENTER_LEFT" style="-fx-padding: 16 24; -fx-spacing: 16; -fx-fill-width: true; -fx-min-height: 72px;">
+            <Label text="BUPT TA System" styleClass="navbar-title" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <StackPane styleClass="user-avatar admin">
+                    <Label text="Ad" style="-fx-text-fill: #ffffff; -fx-font-weight: 600; -fx-font-size: 14px;" />
+                </StackPane>
+                <Label text="Welcome, Admin" style="-fx-font-size: 14px; -fx-text-fill: #4b5563;" />
+            </HBox>
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox style="-fx-spacing: 8; -fx-alignment: center;">
+                <Button text="Home" styleClass="navbar-menu active" onAction="#handleHome" />
+                <Button text="User Management" styleClass="navbar-menu" onAction="#handleUserManagement" />
+                <Button text="Job Management" styleClass="navbar-menu" onAction="#handleJobManagement" />
+                <Button text="System Settings" styleClass="navbar-menu" onAction="#handleSystemConfiguration" />
+                <Button text="Approval Center" styleClass="navbar-menu" onAction="#handleApprovalCenter" />
+                <Button text="Analytics" styleClass="navbar-menu" onAction="#handleStatisticsAnalysis" />
+                <Button text="Logout" styleClass="navbar-menu" onAction="#handleLogout" />
+            </HBox>
+        </HBox>
+    </VBox>
+
+    <ScrollPane fitToWidth="true" fitToHeight="true" style="-fx-background-color: #f9fafb;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="72.0">
+        <VBox style="-fx-padding: 48px 24px; -fx-spacing: 48px; -fx-fill-width: true; -fx-alignment: center; -fx-pref-width: 1440px;">
+            <VBox style="-fx-spacing: 8; -fx-alignment: center-left; -fx-fill-width: true;">
+                <Label text="Admin Dashboard" styleClass="page-title" />
+                <Label text="Manage users, jobs, and core system settings" styleClass="page-subtitle" />
+            </VBox>
+
+            <HBox style="-fx-spacing: 24; -fx-fill-width: true; -fx-alignment: center;">
+                <VBox styleClass="stat-card">
+                    <Label text="👥" style="-fx-font-size: 36px;" />
+                    <Label fx:id="totalUsersLabel" text="128" styleClass="stat-value" />
+                    <Label text="Total Users" styleClass="stat-label" />
+                </VBox>
+                <VBox styleClass="stat-card">
+                    <Label text="📄" style="-fx-font-size: 36px;" />
+                    <Label fx:id="totalJobsLabel" text="45" styleClass="stat-value" />
+                    <Label text="Total Jobs" styleClass="stat-label" />
+                </VBox>
+                <VBox styleClass="stat-card">
+                    <Label text="📋" style="-fx-font-size: 36px;" />
+                    <Label fx:id="totalApplicationsLabel" text="237" styleClass="stat-value" />
+                    <Label text="Total Applications" styleClass="stat-label" />
+                </VBox>
+            </HBox>
+
+            <VBox styleClass="card" maxWidth="Infinity">
+                <VBox style="-fx-spacing: 4; -fx-padding: 0 0 16 0;">
+                    <Label text="System Status" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #374151;" />
+                    <Label text="Monitor the runtime status of core system components" style="-fx-font-size: 12px; -fx-text-fill: #6b7280;" />
+                </VBox>
+                <TableView fx:id="systemStatusTable" styleClass="table-view">
+                    <columns>
+                        <TableColumn text="Item" prefWidth="300">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="item" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn text="Status" prefWidth="150">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="status" />
+                            </cellValueFactory>
+                        </TableColumn>
+                        <TableColumn text="Details" prefWidth="400">
+                            <cellValueFactory>
+                                <PropertyValueFactory property="details" />
+                            </cellValueFactory>
+                        </TableColumn>
+                    </columns>
+                    <placeholder>
+                        <VBox alignment="CENTER" style="-fx-spacing: 8; -fx-padding: 32px;">
+                            <Label text="Loading system status..." style="-fx-font-size: 14px; -fx-text-fill: #6b7280;" />
+                        </VBox>
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+            <VBox styleClass="card" style="-fx-fill-width: true;">
+                <Label text="Quick Actions" style="-fx-font-size: 16px; -fx-font-weight: 600; -fx-text-fill: #374151; -fx-padding: 0 0 16 0;" />
+                <HBox style="-fx-spacing: 16; -fx-alignment: center-left; -fx-fill-width: true;">
+                    <Button text="Admin Configuration" styleClass="btn btn-primary" onAction="#handleAdminConfiguration" />
+                    <Button text="Scheduled Reports" styleClass="btn btn-primary" onAction="#handleScheduledReports" />
+                    <Button text="Bulk Operations" styleClass="btn btn-primary" onAction="#handleBulkOperations" />
+                    <Button text="AI Workload Balancing" styleClass="btn btn-secondary" onAction="#handleAIWorkloadBalancing" />
+                    <Button text="Model API Config" styleClass="btn btn-secondary" onAction="#handleModelAPIConfig" />
+                    <Button text="API Key Management" styleClass="btn btn-secondary" onAction="#handleApiKeyChoose" />
+                </HBox>
+            </VBox>
+
+            <HBox styleClass="keyboard-shortcuts">
+                <Label text="Keyboard shortcuts:" />
+                <Label text="Ctrl+F" styleClass="kbd" />
+                <Label text="to search" />
+                <Region style="-fx-pref-width: 16px;" />
+                <Label text="Esc" styleClass="kbd" />
+                <Label text="to go home" />
+            </HBox>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>
